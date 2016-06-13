@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
+        <title>登陆</title>
+
+        <link href="/libs/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/libs/css/flat-ui.min.css" rel="stylesheet">
+        <script src="https://cdn1.lncld.net/static/js/av-min-1.0.0.js"></script>
+        <script src="/libs/js/jquery-1.9.1.min.js"></script>
+        <script src="/libs/js/flat-ui.min.js"></script>
+
+        <!--feedback-->
+        <script>
+          ChatraID = '72tq2uiPFcGwkLwZs';
+          (function(d, w, c) {
+              var n = d.getElementsByTagName('script')[0],
+                  s = d.createElement('script');
+              w[c] = w[c] || function() {
+                  (w[c].q = w[c].q || []).push(arguments);
+              };
+              s.async = true;
+              s.src = (d.location.protocol === 'https:' ? 'https:': 'http:')
+                  + '//call.chatra.io/chatra.js';
+              n.parentNode.insertBefore(s, n);
+          })(document, window, 'Chatra');
+        </script>
+
+        <style>
+          body{
+            background-color: #12AAC5;
+          }
+          .content{
+            padding-top: 60px;
+            text-align: center;
+            background: #12AAC5;
+            color: #ffffff;
+            height:100vh;
+          }
+          .btn{
+            width:49%;
+          }
+          .logo{
+            width: 640px;
+            height: 260px;
+            margin: 0 auto 50px;
+            overflow: hidden;
+            text-indent: -9999em;
+            background: #12AAC5 url('/img/bike.gif') center 0 no-repeat;
+            background-size: 80%;
+          }
+          .signup-input{
+            padding-top: 20px;
+            padding-bottom: 20px;
+          }
+          .signin-input{
+            margin: 10px auto 10px auto;
+            text-align: center;
+            width: 290px;
+          }
+          </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-embossed navbar-fixed-top" role="navigation">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+              <span class="sr-only">Toggle navigation</span>
+            </button>
+            <a class="navbar-brand" href="https://sidkwok.github.io">SID</a>
+          </div>
+          <div class="navbar-collapse collapse in" id="navbar-collapse-01">
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="#fakelink"><span class="fui-user">   </span>About Me</a></li>
+              <li><a href="https://github.com/sidkwok"><span class="fui-github">   </span></a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="content">
+          <div class="logo"></div>
+          <h1>Sign in</h1>
+          <p id="sign_info"></p>
+          <form method="post">
+            <div class="row signin-input container">
+              <div class="form-group" id="user">
+                <input class="input-lg form-control login-field " id="username" type="text" name="username" placeholder="Username">
+              </div>
+              <div class="form-group" id="psw">
+                <input class="input-lg form-control" id="password" type="password" name="password" placeholder="Password"/>
+              </div>
+              <input class="btn btn-primary btn-lg" id="login" type="submit" value="Sign In">
+              <button type="button" class="btn btn-inverse btn-lg" data-toggle="modal" data-target="#mySignupModal">Sign Up</button>
+              <input type="hidden" name="next">
+              </div>
+
+          </form>
+        </div>
+
+      <!-- SignupModal -->
+      <div class="modal fade" id="mySignupModal" tabindex="-1" role="dialog" aria-labelledby="mySignupModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="mySignupModalLabel">注册</h4>
+            </div>
+            <div class="modal-body">
+              <div id="signup_info"></div>
+              <div class="modal-body" id="info">
+                <div class="signup-input" id="n_new_user">
+                  <lable>用户名</label>
+                  <input type="text" class="form-control input-lg" id="new_user"></input>
+                </div>
+                <div class="signup-input" id="n_new_email">
+                  <lable>邮箱</label>
+                  <input type="email" class="form-control input-lg" id="new_email"></input>
+                </div>
+                <div class="signup-input">
+                  <lable>密码</label>
+                  <input type="password" class="form-control input-lg" id="new_psw"></input>
+                </div>
+                <div class="signup-input" id="n_new_repsw">
+                  <lable>再输入一次密码</label>
+                  <input type="password" class="form-control input-lg" id="new_repsw"></input>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="signup">确定</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="/js/login.js"></script>
+    </body>
+</html>
