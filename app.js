@@ -8,6 +8,8 @@ var todos = require('./routes/todos');
 var AV = require('leanengine');
 
 var app = express();
+// 加载 cookieSession 以支持 AV.User 的会话状态
+app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));
@@ -26,8 +28,39 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// 处理url
 app.get('/', function(req, res) {
   res.render('login');
+});
+app.get('/login', function(req, res) {
+    res.render('login.ejs');
+});
+app.post('/login', function(req, res) {
+    // console.log(AV.User);
+    AV.User.logIn(req.body.username, req.body.password)
+           .then(function(user) {
+               res.saveCurrentUser(user);
+               res.redirect('/index');
+    }, function(error) {
+        res.redirect('/login');
+    });
+});
+app.get('/index', function(req, res) {
+    // 判断用户是否已经登录
+    if (req.currentUser) {
+        // 如果已经登录，发送当前登录用户信息。
+        res.render('index');
+    } else {
+        // 没有登录，跳转到登录页面。
+        res.redirect('/login');
+    }
+});
+
+// 登出账号
+app.get('/logout', function(req, res) {
+    req.currentUser.logOut();
+    res.clearCurrentUser(); // 从 Cookie 中删除用户
+    res.redirect('/login');
 });
 
 // 可以将一类的路由单独保存在一个文件中

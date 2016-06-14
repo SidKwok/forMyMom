@@ -1,13 +1,831 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <title>LeanEngine</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-  </head>
-  <body>
-    <h1>LeanEngine</h1>
-    <p>这是 LeanEngine 的示例应用</p>
-    <p>当前时间：<%= currentTime %></p>
-    <p><a href="/todos">一个简单的「TODO 列表」示例</a></p>
-  </body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--author:Sid-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
+  <title>A System</title>
+
+  <link href="/libs/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/libs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="/libs/css/flat-ui.min.css" rel="stylesheet">
+  <!-- <link type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+  <link type="text/css" href="http://fonts.googleapis.com/css?family=Shadows+Into+Light:400,700,400italic,700italic" rel="stylesheet"> -->
+  <link href="/stylesheets/main.css" type="text/css" rel="stylesheet"/>
+
+</head>
+
+<body>
+  <div class="headline">
+    <div class="logo">
+      <div class="myLogo"></div>
+        Designed by Sid.
+        <!-- <div id="uid">{{ user.username }}</div> -->
+        <div id="count"></div>
+    </div>
+  </div>
+
+  <!-- nav bar -->
+  <div class="nav-area">
+  <nav class="navbar navbar-inverse navbar-embossed navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+      <a class="navbar-brand" href="#" id="uid">mingyou</a>
+    </div>
+    <div class="navbar-collapse collapse in" id="navbar-collapse-01">
+      <ul class="nav navbar-nav navbar-left">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">仓库 <b class="caret"></b></a>
+          <span class="dropdown-arrow"></span>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target="#myAddModal"><span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp&nbsp添加鞋子</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#myReturnModal"><span class="glyphicon glyphicon-indent-right"></span>&nbsp&nbsp&nbsp退货</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#myExportModal"><span class="glyphicon glyphicon-export"></span>&nbsp&nbsp&nbsp出货</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#myImportModal"><span class="glyphicon glyphicon-import"></span>&nbsp&nbsp&nbsp进货</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 客户 <b class="caret"></b></a>
+          <span class="dropdown-arrow"></span>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target="#myAddClientModal"><span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp&nbsp添加客户</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 订单 <b class="caret"></b></a>
+          <span class="dropdown-arrow"></span>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target="#myAddOrderModal"><span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp&nbsp添加订单</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#myConfirmOrderModal"><span class="glyphicon glyphicon-saved"></span>&nbsp&nbsp&nbsp确认订单</a></li>
+          </ul>
+        </li>
+        <li><a href="#fakelink"><span class="fui-user">   </span>关于我</a></li>
+        <li><a href="https://github.com/sidkwok"><span class="fui-github">   </span></a></li>
+        <li><a href="/logout/">Log out</a></li>
+      </ul>
+    </div>
+  </nav>
+  </div>
+<!--   <button id="test">test</button> -->
+  <div class="count-tab">
+    <div class="count-info">
+      <p><span id="number_count"></span>Counts</p>
+      <p><span id="returns_count"></span>Returns</p>
+      <p><span id="export_count"></span>Exports</p>
+    </div>
+  </div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#s_table" aria-controls="s_table" role="tab" data-toggle="tab">仓库表</a></li>
+      <li role="presentation"><a href="#c_table" aria-controls="c_table" role="tab" data-toggle="tab">客户表</a></li>
+      <li role="presentation"><a href="#o_table" aria-controls="o_table" role="tab" data-toggle="tab">订单表</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="alert alert-success" role="alert" style="display:none;" id="works"></div>
+      <div class="alert alert-danger" role="alert" style="display:none;" id="fails"></div>
+
+      <div role="tabpanel" class="table-area tab-pane active" id="s_table" style="width:95%">
+        <button type="button" data-toggle="modal" data-target="#myExShoeTableModal" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+        <table class="table table-hover table2excel" id="shoes_table" style="width:100%">
+          <thead>
+            <tr>
+              <th>品牌</th>
+              <th>型号</th>
+              <th>颜色</th>
+              <th>34</th>
+              <th>35</th>
+              <th>36</th>
+              <th>37</th>
+              <th>38</th>
+              <th>39</th>
+              <th>40</th>
+              <th>41</th>
+              <th>42</th>
+              <th>43</th>
+              <th>44</th>
+              <th>数量</th>
+              <th>退货量</th>
+              <th>出货量</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div role="tabpanel" class="table-area tab-pane" id="c_table" style="width:95%px">
+        <button type="button" data-toggle="modal" data-target="#myExClientTableModal" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+          <table class="table table-hover table-content table2excel" id="clients_table" style="width:100%">
+            <thead>
+              <tr>
+                <th>客&nbsp户&nbsp名</th>
+                <th>固&nbsp定&nbsp电&nbsp话</th>
+                <th>移&nbsp动&nbsp电&nbsp话</th>
+                <th>地&nbsp址</th>
+                <th>操&nbsp作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+      </div>
+
+      <div role="tabpanel" class="table-area tab-pane" id="o_table" style="width:95%">
+        <button type="button" data-toggle="modal" data-target="#myExOrderTableModal" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+        <table class="table table-hover table-content table2excel" id="order_table" style="width:100%">
+          <thead>
+            <tr>
+              <th>订&nbsp单&nbsp号</th>
+              <th>日&nbsp期</th>
+              <th>客&nbsp户</th>
+              <th>品&nbsp牌</th>
+              <th>型&nbsp号</th>
+              <th>颜&nbsp色</th>
+              <th>34</th>
+              <th>35</th>
+              <th>36</th>
+              <th>37</th>
+              <th>38</th>
+              <th>39</th>
+              <th>40</th>
+              <th>41</th>
+              <th>42</th>
+              <th>43</th>
+              <th>44</th>
+              <th>数&nbsp量</th>
+              <th>状&nbsp&nbsp&nbsp态</th>
+              <th>操&nbsp&nbsp作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+  </div>
+
+  </div>
+    <!-- addModal -->
+    <div class="modal fade " id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myAddModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myAddModalLabel">添加信息</h4>
+          </div>
+          <div class="modal-body">
+            <div id="add_info"></div>
+            <div class="all-input" id="new_a_brand">
+              <input type="text" class="form-control" id="a_brand" placeholder="品牌"></input>
+              </div>
+            <div class="all-input" id="new_a_id">
+              <input type="text" class="form-control" id="a_id" placeholder="型号"></input>
+              </div>
+            <div class="all-input" id="new_a_color">
+              <input type="text" class="form-control" id="a_color" placeholder="颜色"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s34" placeholder="size 34"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s35" placeholder="size 35"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s36" placeholder="size 36"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s37" placeholder="size 37"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s38" placeholder="size 38"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s39" placeholder="size 39"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s40" placeholder="size 40"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s41" placeholder="size 41"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s42" placeholder="size 42"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s43" placeholder="size 43"></input>
+              </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="a_s44" placeholder="size 44"></input>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="add" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- updateModal -->
+    <div class="modal fade" id="myUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myUpdateModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myUpdateModalLabel">更新信息</h4>
+          </div>
+          <div class="modal-body" id="u_info">
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_brand" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_id" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_color" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s34"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s35"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s36"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s37"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s38"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s39"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s40"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s41"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s42"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s43"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_s44"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_returns"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="u_exportation"></input>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="update" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- deleteModal -->
+    <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myDeleteModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body" id="info">
+            <br>
+            确定要删除吗？想好了吗！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="delete" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- returnModal -->
+    <div class="modal fade" id="myReturnModal" tabindex="-1" role="dialog" aria-labelledby="myReturnModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myReturnModalLabel">退货信息</h4>
+          </div>
+          <div class="modal-body" id="r_info">
+            <div id="return_info"></div>
+            <div class="all-input" id="input_r_brand">
+              <input type="text" class="form-control" id="r_brand" placeholder="品牌"></input>
+            </div>
+            <div class="all-input" id="input_r_id">
+              <input type="text" class="form-control" id="r_id" placeholder="型号"></input>
+            </div>
+            <div class="all-input" id="input_r_color">
+              <input type="text" class="form-control" id="r_color" placeholder="颜色"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s34" placeholder="size 34"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s35" placeholder="size 35"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s36" placeholder="size 36"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s37" placeholder="size 37"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s38" placeholder="size 38"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s39" placeholder="size 39"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s40" placeholder="size 40"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s41" placeholder="size 41"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s42" placeholder="size 42"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s43" placeholder="size 43"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="r_s44" placeholder="size 44"></input>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="returns" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- exportModal -->
+    <div class="modal fade" id="myExportModal" tabindex="-1" role="dialog" aria-labelledby="myExportModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myExportModalLabel">出货信息</h4>
+          </div>
+          <div class="modal-body" id="e_info">
+            <div id="export_info"></div>
+            <div class="all-input" id="input_e_brand">
+              <input type="text" class="form-control" id="e_brand" placeholder="品牌"></input>
+            </div>
+            <div class="all-input" id="input_e_id">
+              <input type="text" class="form-control" id="e_id" placeholder="型号"></input>
+            </div>
+            <div class="all-input" id="input_e_color">
+              <input type="text" class="form-control" id="e_color" placeholder="颜色"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s34" placeholder="size 34"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s35" placeholder="size 35"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s36" placeholder="size 36"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s37" placeholder="size 37"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s38" placeholder="size 38"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s39" placeholder="size 39"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s40" placeholder="size 40"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s41" placeholder="size 41"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s42" placeholder="size 42"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s43" placeholder="size 43"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="e_s44" placeholder="size 44"></input>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="export" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- importModal -->
+    <div class="modal fade" id="myImportModal" tabindex="-1" role="dialog" aria-labelledby="myImportModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myImportModalLabel">进货信息</h4>
+          </div>
+          <div class="modal-body" id="i_info">
+            <div id="import_info"></div>
+            <div class="all-input" id="input_i_brand">
+              <input type="text" class="form-control" id="i_brand" placeholder="品牌"></input>
+            </div>
+            <div class="all-input" id="input_i_id">
+              <input type="text" class="form-control" id="i_id" placeholder="型号"></input>
+            </div>
+            <div class="all-input" id="input_i_color">
+              <input type="text" class="form-control" id="i_color" placeholder="颜色"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s34" placeholder="size 34"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s35" placeholder="size 35"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s36" placeholder="size 36"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s37" placeholder="size 37"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s38" placeholder="size 38"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s39" placeholder="size 39"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s40" placeholder="size 40"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s41" placeholder="size 41"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s42" placeholder="size 42"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s43" placeholder="size 43"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="i_s44" placeholder="size 44"></input>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="imports" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- addClientModal -->
+    <div class="modal fade" id="myAddClientModal" tabindex="-1" role="dialog" aria-labelledby="myAddClientModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myAddClientModalLabel">添加客户</h4>
+          </div>
+          <div class="modal-body" id="ac_info">
+            <div id="add_client_info"></div>
+            <div class="all-input" id="new_client_name">
+              <input type="text" class="form-control" id="ac_name" placeholder="姓名"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="ac_telephone" placeholder="固定电话"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="ac_mobilephone" placeholder="手机"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="ac_address" placeholder="地址"></input>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="add_client" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- updateClientModal -->
+    <div class="modal fade" id="myUpdateClientModal" tabindex="-1" role="dialog" aria-labelledby="myUpdateClientModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myUpdateClientModalLabel">添加客户</h4>
+          </div>
+          <div class="modal-body" id="uc_info">
+            <div id="update_client_info"></div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uc_name" disabled=""></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uc_telephone"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uc_mobilephone"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uc_address"></input>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="update_client" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- deleteClientModal -->
+    <div class="modal fade" id="myDeleteClientModal" tabindex="-1" role="dialog" aria-labelledby="myDeleteClientModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <br>
+            确定要删除该用户吗？
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="delete_client" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- addOrderModal -->
+    <div class="modal fade " id="myAddOrderModal" tabindex="-1" role="dialog" aria-labelledby="myAddOrderModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myAddOrderModalLabel">添加订单信息</h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-success" role="alert" style="display:none;" id="order_works"></div>
+            <div class="alert alert-danger" role="alert" style="display:none;" id="order_fails"></div>
+            <div id="add_order_info"></div>
+            <div class="add-order-input" id="add_order_no">
+              <input class="input-sm form-control" id="order_no" type="text" placeholder="订单号">
+            </div>
+            <div class="add-order-input" id="add_order_name">
+              <input class="input-sm form-control" id="order_name" type="text" placeholder="客户名">
+            </div>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>品牌</th>
+                  <th>型号</th>
+                  <th>颜色</th>
+                  <th>34</th>
+                  <th>35</th>
+                  <th>36</th>
+                  <th>37</th>
+                  <th>38</th>
+                  <th>39</th>
+                  <th>40</th>
+                  <th>41</th>
+                  <th>42</th>
+                  <th>43</th>
+                  <th>44</th>
+                </tr>
+              </thead>
+              <tbody id="add_order_table"></tbody>
+            </table>
+            <button type="button" class="btn btn-info btn-sm" id="add_order_row">&nbsp添加一行&nbsp</button>
+            <button type="button" class="btn btn-warning btn-sm" id="clear_order_row">清除所有行</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="add_order">添加订单</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- confirmOrderModal -->
+    <div class="modal fade" id="myConfirmOrderModal" tabindex="-1" role="dialog" aria-labelledby="myConfirmOrderModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myConfirmOrderModalLabel">确认订单</h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-success" role="alert" style="display:none;" id="co_order_works"></div>
+            <div class="alert alert-danger" role="alert" style="display:none;" id="co_order_fails"></div>
+            <div id="confirm_order_info"></div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="co_no" placeholder="订单号"></input>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" id="confirm_order">确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- updateOrderModal -->
+    <div class="modal fade" id="myUpdateOrderModal" tabindex="-1" role="dialog" aria-labelledby="myUpdateOrderModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myUpdateOrderModalLabel">修改订单信息</h4>
+          </div>
+          <div class="modal-body" id="uo_info">
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_state" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_no" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_name" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_brand" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_id" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_color" disabled></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s34"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s35"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s36"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s37"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s38"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s39"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s40"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s41"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s42"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s43"></input>
+            </div>
+            <div class="all-input">
+              <input type="text" class="form-control" id="uo_s44"></input>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="update_order" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- deleteOrderModal -->
+    <div class="modal fade" id="myDeleteOrderModal" tabindex="-1" role="dialog" aria-labelledby="myDeleteOrderModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body" id="info">
+            <br>
+            确定要删除吗？已发货的订单是无法删除的！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="delete_order" data-dismiss="modal">
+              确认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- exportShoeTableModal -->
+    <div class="modal fade" id="myExShoeTableModal" tabindex="-1" role="dialog" aria-labelledby="myExShoeTableModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body" id="info">
+            <br>
+            请输入该库存表的文件名
+            <div class="all-input">
+              <input type="text" class="form-control" id="est_input"></input>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="export_shoeTable" data-dismiss="modal">
+              保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- exportClientTableModal -->
+    <div class="modal fade" id="myExClientTableModal" tabindex="-1" role="dialog" aria-labelledby="myExClientTableModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body" id="info">
+            <br>
+            请输入该客户表的文件名
+            <div class="all-input">
+              <input type="text" class="form-control" id="ect_input"></input>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="export_clientTable" data-dismiss="modal">
+              保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- exportOrderTableModal -->
+    <div class="modal fade" id="myExOrderTableModal" tabindex="-1" role="dialog" aria-labelledby="myExOrderTableModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body" id="info">
+            <br>
+            请输入该订单表的文件名
+            <div class="all-input">
+              <input type="text" class="form-control" id="eot_input"></input>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="export_orderTable" data-dismiss="modal">
+              保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="bs-docs-footer" role="contentinfo">
+      <div class="container">
+        <p>Designed and built with all the love in the world by <a href="https://sidkwok.github.io" target="_blank">Sid</a>.</p>
+        <div class="clock">
+        <!--embed src="/static/img/clock.swf" quality="high" allowscriptaccess="always" allownetworking="internal" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" height="90" width="260"-->
+        </div>
+      </div>
+    </footer>
+</body>
+
+<script src="/libs/js/jquery-1.9.1.min.js"></script>
+<script src="/libs/js/jquery.dataTables.min.js"></script>
+<script src="/libs/js/dataTables.bootstrap.min.js"></script>
+<script src="/libs/js/flat-ui.min.js"></script>
+<script src="/libs/js/jquery.table2excel.js"></script>
+<script src="/libs/js/easyWeather.js"></script>
+<!-- <script src="/js/main.js"></script> -->
+
 </html>

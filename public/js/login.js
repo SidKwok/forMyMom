@@ -7,8 +7,8 @@
 /**
 * 绑定应用
 */
-var APP_ID = 'EhxylSbOFzi0oOBBpwzuADAP-gzGzoHsz';
-var APP_KEY = 'rI4ofrdR0Et0q8h8qRnzY3fm';
+var APP_ID = 'qhkXeU7Q1EA3Nyr27ruDqYdf-gzGzoHsz';
+var APP_KEY = 'nAiDCK62B8tA3zaBwE7zJNqM';
 AV.init({
   appId: APP_ID,
   appKey: APP_KEY

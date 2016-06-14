@@ -37,7 +37,7 @@ author:sid;
   margin: 0 auto 0px;
   overflow: hidden;
   text-indent: -9999em;
-  background: #42B0CE url('/static/icon/bike2.gif') center 0 no-repeat;
+  background: #42B0CE url('../img/bike2.gif') center 0 no-repeat;
   background-size: 90%;
 }
 .all-input{
