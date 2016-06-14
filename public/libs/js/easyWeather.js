@@ -100,7 +100,7 @@
                           "}" +
                           "#ew-img{" +
                           "width:130px;height: 130px;" +
-                          "background-image: url('/static/icon/icon.gif');" +
+                          "background-image: url('/img/icon.gif');" +
                           "background-size: 580%;" +
                           "background-repeat: no-repeat;" +
                           "background-position: 13% 33%;" +

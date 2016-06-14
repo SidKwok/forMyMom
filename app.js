@@ -30,13 +30,16 @@ app.use(cookieParser());
 
 // 处理url
 app.get('/', function(req, res) {
-  res.render('login');
+    if (req.currentUser) {
+        res.render('index', {username: req.currentUser.username});
+    } else {
+        res.render('login');
+    }
 });
 app.get('/login', function(req, res) {
     res.render('login.ejs');
 });
 app.post('/login', function(req, res) {
-    // console.log(AV.User);
     AV.User.logIn(req.body.username, req.body.password)
            .then(function(user) {
                res.saveCurrentUser(user);
@@ -49,7 +52,7 @@ app.get('/index', function(req, res) {
     // 判断用户是否已经登录
     if (req.currentUser) {
         // 如果已经登录，发送当前登录用户信息。
-        res.render('index');
+        res.render('index', {username: req.currentUser.attributes.username});
     } else {
         // 没有登录，跳转到登录页面。
         res.redirect('/login');
