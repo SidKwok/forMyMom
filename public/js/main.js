@@ -49,6 +49,228 @@ function getCount () {
 }
 
 /**
+* 展示板块
+*/
+// 库存表格
+function loadShoe () {
+    $('#shoes_table tbody').children().detach();
+    var dataset = [];
+    var query = getQuery('Shoe', [['uid', 'mingyou']]);
+    query.limit(100);
+    var gap = 0;
+    query.count().then(function(count) {
+        while (gap < count) {
+            query.skip(gap);
+            query.find().then(function(results) {
+                $.each(results, function(i, e) {
+                    dataset.push([
+                        e.get('brand'),
+                        e.get('shoeid'),
+                        e.get('color'),
+                        e.get('s34'),
+                        e.get('s35'),
+                        e.get('s36'),
+                        e.get('s37'),
+                        e.get('s38'),
+                        e.get('s39'),
+                        e.get('s40'),
+                        e.get('s41'),
+                        e.get('s42'),
+                        e.get('s43'),
+                        e.get('s44'),
+                        e.get('number'),
+                        e.get('returns'),
+                        e.get('exportation'),
+                        '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
+                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'
+                    ]);
+                });
+                if (dataset.length === count) {
+                    $('#shoes_table').DataTable({
+                        paging: false,
+                        language:{
+                          sSearch:     "",
+                          zeroRecords: "没有这鞋子啦！",
+                          infoEmpty:   "还没有鞋子啦！",
+                          paginate: {
+                            previous:  "",
+                            next:      "",
+                          }
+                        },
+                        pagingType: "full_numbers",
+                        data: dataset,
+                        columns: [
+                            {title: '品牌'},
+                            {title: '型号', sortable: false},
+                            {title: '颜色', sortable: false},
+                            {title: '34', sortable: false},
+                            {title: '35', sortable: false},
+                            {title: '36', sortable: false},
+                            {title: '37', sortable: false},
+                            {title: '38', sortable: false},
+                            {title: '39', sortable: false},
+                            {title: '40', sortable: false},
+                            {title: '41', sortable: false},
+                            {title: '42', sortable: false},
+                            {title: '43', sortable: false},
+                            {title: '44', sortable: false},
+                            {title: '数量'},
+                            {title: '退货量'},
+                            {title: '出货量'},
+                            {title: '操作', sortable: false},
+                        ]
+                    });
+
+                    $("#shoes_table_filter input").attr("placeholder","search");
+                    $("#shoes_table_filter input").addClass("input-lg");
+                    $("#shoes_table_first").removeClass("disabled");
+                }
+            });
+            gap += 100;
+        }
+    });
+}
+
+// 客户表格
+function loadClient () {
+    $('#clients_table tbody').children().detach();
+    var dataset = [];
+    var query = getQuery('Client', [['uid', 'mingyou']]);
+    query.limit(100);
+    var gap = 0;
+    query.count().then(function(count) {
+        while (gap < count) {
+            query.skip(gap);
+            query.find().then(function(results) {
+                $.each(results, function(i, e) {
+                    dataset.push([
+                        e.get('name'),
+                        e.get('telephone'),
+                        e.get('mobilephone'),
+                        e.get('address'),
+                        '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
+                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteClientDlg" data-toggle="modal" data-target="#myDeleteClientModal"></span>'
+                    ]);
+                });
+
+                if (dataset.length === count) {
+                    $('#clients_table').DataTable({
+                        paging: false,
+                        language:{
+                          sSearch:     "",
+                          zeroRecords: "没有这客户啦！",
+                          infoEmpty:   "还没有客户啦！",
+                          paginate: {
+                            previous:  "",
+                            next:      "",
+                          }
+                        },
+                        pagingType: "full_numbers",
+                        data: dataset,
+                        columns: [
+                            {title: '客&nbsp户&nbsp名'},
+                            {title: '固&nbsp定&nbsp电&nbsp话', sortable: false},
+                            {title: '移&nbsp动&nbsp电&nbsp话', sortable: false},
+                            {title: '地&nbsp址', sortable: false},
+                            {title: '操&nbsp作', sortable: false},
+                        ]
+                    });
+
+                    $("#clients_table_filter input").attr("placeholder","search");
+                    $("#clients_table_filter input").addClass("input-lg");
+                    $("#clients_table_first").removeClass("disabled");
+                }
+            });
+            gap += 100;
+        }
+    });
+}
+
+// 订单表格
+function loadOrder () {
+    $('#order_table tbody').children().detach();
+    var dataset = [];
+    var query = getQuery('Order', [['uid', 'mingyou']]);
+    query.limit(1000);
+    var gap = 0;
+    query.count().then(function(count) {
+        while (gap < count) {
+            query.skip(gap);
+            query.find().then(function(results) {
+                $.each(results, function(i, e) {
+                    dataset.push([
+                        e.get('no'),
+                        e.get('date'),
+                        e.get('name'),
+                        e.get('brand'),
+                        e.get('shoeid'),
+                        e.get('color'),
+                        e.get('s34'),
+                        e.get('s35'),
+                        e.get('s36'),
+                        e.get('s37'),
+                        e.get('s38'),
+                        e.get('s39'),
+                        e.get('s40'),
+                        e.get('s41'),
+                        e.get('s42'),
+                        e.get('s43'),
+                        e.get('s44'),
+                        e.get('number'),
+                        e.get('state'),
+                        '<span style="cursor:pointer" class="fui-new" id="updateOrderDlg" data-toggle="modal" data-target="#myUpdateOrderModal">   </span>'+
+                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteOrderDlg" data-toggle="modal" data-target="#myDeleteOrderModal"></span>'
+                    ]);
+                });
+                if (dataset.length === count) {
+                    $('#order_table').DataTable({
+                        paging: false,
+                        language:{
+                          sSearch:     "",
+                          zeroRecords: "没有这订单啦！",
+                          infoEmpty:   "还没有订单啦！",
+                          paginate: {
+                            previous:  "",
+                            next:      "",
+                          }
+                        },
+                        pagingType: "full_numbers",
+                        data: dataset,
+                        columns: [
+                            {title: '订&nbsp单&nbsp号'},
+                            {title: '日&nbsp期'},
+                            {title: '客&nbsp户'},
+                            {title: '品&nbsp牌'},
+                            {title: '型&nbsp号', sortable: false},
+                            {title: '颜&nbsp色', sortable: false},
+                            {title: '34', sortable: false},
+                            {title: '35', sortable: false},
+                            {title: '36', sortable: false},
+                            {title: '37', sortable: false},
+                            {title: '38', sortable: false},
+                            {title: '39', sortable: false},
+                            {title: '40', sortable: false},
+                            {title: '41', sortable: false},
+                            {title: '42', sortable: false},
+                            {title: '43', sortable: false},
+                            {title: '44', sortable: false},
+                            {title: '数&nbsp量'},
+                            {title: '状&nbsp&nbsp&nbsp态', sortable: false},
+                            {title: '操&nbsp&nbsp作', sortable: false},
+                        ]
+                    });
+
+                    $("#order_table_filter input").attr("placeholder","search");
+                    $("#order_table_filter input").addClass("input-lg");
+                    $("#order_table_first").removeClass("disabled");
+                }
+            });
+            gap += 1000;
+        }
+    });
+}
+
+/**
 * 库存板块
 *
 */
@@ -230,7 +452,12 @@ function clientEvent() {
             }
         });
     });
+
+
 }
 
+loadShoe();
+loadClient();
+loadOrder();
 clientEvent();
 shoeEvent();
