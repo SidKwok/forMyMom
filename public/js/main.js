@@ -1168,7 +1168,174 @@ function orderEvent () {
     });
 
     // 确认订单
-    
+    $("#confirm_order").on('click',function(){
+      var no = $("#co_no").val();
+      var query = getQuery('Order', [['uid', uid], ['no', no]]);
+      var pkgs = [];
+      query.find().then(function(results) {
+          if (results[0].get('state') === '未发货') {
+              $.each(results, function(i, e) {
+                  var shoeQuery = getQuery('Shoe', [
+                      ['uid', uid],
+                      ['brand', e.get('brand')],
+                      ['shoeid', e.get('shoeid')],
+                      ['color', e.get('color')]
+                  ]);
+                  shoeQuery.find().then(function(shoe) {
+                      if (shoe.length) {
+                          pkgs.push([
+                              1, // 0:没有鞋子, 1:有鞋子
+                              {
+                                  no: no,
+                                  uid: uid,
+                                  brand: e.get('brand'),
+                                  shoeid: e.get('shoeid'),
+                                  color: e.get('color'),
+                              },
+                              {
+                                  s34: (parseInt(shoe[0].get('s34')) - parseInt(e.get('s34'))).toString(),
+                                  s35: (parseInt(shoe[0].get('s35')) - parseInt(e.get('s35'))).toString(),
+                                  s36: (parseInt(shoe[0].get('s36')) - parseInt(e.get('s36'))).toString(),
+                                  s37: (parseInt(shoe[0].get('s37')) - parseInt(e.get('s37'))).toString(),
+                                  s38: (parseInt(shoe[0].get('s38')) - parseInt(e.get('s38'))).toString(),
+                                  s39: (parseInt(shoe[0].get('s39')) - parseInt(e.get('s39'))).toString(),
+                                  s40: (parseInt(shoe[0].get('s40')) - parseInt(e.get('s40'))).toString(),
+                                  s41: (parseInt(shoe[0].get('s41')) - parseInt(e.get('s41'))).toString(),
+                                  s42: (parseInt(shoe[0].get('s42')) - parseInt(e.get('s42'))).toString(),
+                                  s43: (parseInt(shoe[0].get('s43')) - parseInt(e.get('s43'))).toString(),
+                                  s44: (parseInt(shoe[0].get('s44')) - parseInt(e.get('s44'))).toString(),
+                                  number: (parseInt(shoe[0].get('number')) - parseInt(e.get('number'))).toString(),
+                              }
+                          ]);
+                      } else {
+                          pkgs.push([0,
+                          {
+                              no: no,
+                              uid: uid,
+                              brand: e.get('brand'),
+                              shoeid: e.get('shoeid'),
+                              color: e.get('color'),
+                          }
+                          , {}]);
+                      }
+                      if (pkgs.length === results.length) {
+                          var error = {
+                              status: 1,
+                              existError: '',
+                              enoughError: ''
+                          };
+                          var realPkgs = [];
+                          $.each(pkgs, function(i, pkg) {
+                              if (!pkg[0]) {
+                                  error.status = 0;
+                                  error.existError = "确认订单失败！请检查 " + pkg[1].brand + ' ' + pkg[1].shoeid + ' ' + pkg[1].color + " 是否存在";
+                              } else {
+                                  var status = 1;
+                                  $.each(pkg[2], function(k, v) {
+                                      if (parseInt(v) < 0) {
+                                          status = 0;
+                                      }
+                                  });
+                                  if (!status) {
+                                      error.status = 0;
+                                      error.enoughError = "确认订单失败！请检查" + pkg[1].brand + ' ' + pkg[1].shoeid + ' ' + pkg[1].color + "的库存是否足够";
+                                  } else {
+                                      realPkgs.push(pkg);
+                                  }
+                              }
+                          });
+
+                          var shoe = [];
+                          var order = [];
+                          if (error.status) {
+                              // TODO
+                              console.log('allright');
+                              console.log(realPkgs);
+                              $.each(realPkgs, function(i, realPkg) {
+                                  var confirmShoeQuery = getQuery('Shoe', [
+                                      ['uid', uid],
+                                      ['brand', realPkg[1].brand],
+                                      ['shoeid', realPkg[1].shoeid],
+                                      ['color', realPkg[1].color]
+                                  ]);
+                                  var confirmOrderQuery = getQuery('Order', [
+                                      ['uid', uid],
+                                      ['no', realPkg[1].no]
+                                  ]);
+
+                                  confirmShoeQuery.find().then(function(result) {
+                                      console.log('save');
+                                      shoe[i] = AV.Object.createWithoutData('Shoe', result[0].id);
+                                      $.each(realPkg[2], function(k, v) {
+                                          shoe[i].set(k, v);
+                                      });
+                                      shoe[i].save();
+                                  });
+                                  confirmOrderQuery.find().then(function(result) {
+                                      order[i] = AV.Object.createWithoutData('Order', result[0].id);
+                                      order[i].set('state', '已发货');
+                                      order[i].save();
+                                  })
+                                  if (i + 1 === pkgs.length) {
+                                      $("#co_order_works").text("确认订单成功！").slideToggle('slow');
+                                      $("#co_order_works").delay(3000).slideToggle('slow');
+                                  }
+                              });
+                          } else {
+                              var info = error.existError ? error.existError : error.enoughError;
+                              $("#co_order_fails").text(info).slideToggle('slow');
+                              $("#co_order_fails").delay(3000).slideToggle('slow');
+                          }
+                      }
+                  });
+              });
+          } else {
+              $("#co_order_fails").text("已经确认过该订单！").slideToggle('slow');
+              $("#co_order_fails").delay(3000).slideToggle('slow');
+          }
+      });
+  });
+}
+
+/**
+* 输出表格
+*/
+function exportTable () {
+    $("#export_shoeTable").on('click',function(){
+      var filename = $("#est_input").val();
+      $("#shoes_table").table2excel({
+        exclude: ".noExl",
+        name: "Excel Document Name",
+        filename: filename,
+        exclude_img: true,
+        exclude_links: true,
+        exclude_inputs: true
+      });
+    });
+
+    $("#export_clientTable").on('click',function(){
+      var filename = $("#ect_input").val();
+      $("#clients_table").table2excel({
+        exclude: ".noExl",
+        name: "Excel Document Name",
+        filename: filename,
+        exclude_img: true,
+        exclude_links: true,
+        exclude_inputs: true
+      });
+    });
+
+    $("#export_orderTable").on('click',function(){
+      var filename = $("#eot_input").val();
+      $("#order_table").table2excel({
+        exclude: ".noExl",
+        name: "Excel Document Name",
+        filename: filename,
+        exclude_img: true,
+        exclude_links: true,
+        exclude_inputs: true
+      });
+    });
 }
 
 loadShoe();
@@ -1177,3 +1344,4 @@ loadOrder();
 clientEvent();
 shoeEvent();
 orderEvent();
+exportTable();
