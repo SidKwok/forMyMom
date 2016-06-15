@@ -23,6 +23,8 @@ var updateShoeTmp;
 var deleteShowTmp;
 var updateClientTmp;
 var deleteClientTmp;
+var updateOrderTmp;
+var deleteOrderTmp;
 
 $.extend( true, $.fn.dataTable.defaults, {
     "info": false,
@@ -353,37 +355,39 @@ function shoeEvent () {
                 $.each(params, function(k, v) {
                     shoeObject.set(k, v);
                 });
-                shoeObject.save().then(function(shoeObject) {
-                    getCount();
-                    var row = [
-                        shoeObject.get('brand'),
-                        shoeObject.get('shoeid'),
-                        shoeObject.get('color'),
-                        shoeObject.get('s34'),
-                        shoeObject.get('s35'),
-                        shoeObject.get('s36'),
-                        shoeObject.get('s37'),
-                        shoeObject.get('s38'),
-                        shoeObject.get('s39'),
-                        shoeObject.get('s40'),
-                        shoeObject.get('s41'),
-                        shoeObject.get('s42'),
-                        shoeObject.get('s43'),
-                        shoeObject.get('s44'),
-                        shoeObject.get('number'),
-                        shoeObject.get('returns'),
-                        shoeObject.get('exportation'),
-                        '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
-                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'
-                    ];
-                    $('#shoes_table').DataTable().row.add(row).draw(false);
-                    $("#works").text("添加信息成功！").slideToggle('slow');
-                    $("#works").delay(3000).slideToggle('slow');
-                }, function(error) {
-                    $("#fails").text("后台处理失败！").slideToggle('slow');
-                    $("#fails").delay(3000).slideToggle('slow');
-                });
+                return shoeObject.save();
             }
+        })
+        .then(function(shoeObject) {
+            getCount();
+            var row = [
+                shoeObject.get('brand'),
+                shoeObject.get('shoeid'),
+                shoeObject.get('color'),
+                shoeObject.get('s34'),
+                shoeObject.get('s35'),
+                shoeObject.get('s36'),
+                shoeObject.get('s37'),
+                shoeObject.get('s38'),
+                shoeObject.get('s39'),
+                shoeObject.get('s40'),
+                shoeObject.get('s41'),
+                shoeObject.get('s42'),
+                shoeObject.get('s43'),
+                shoeObject.get('s44'),
+                shoeObject.get('number'),
+                shoeObject.get('returns'),
+                shoeObject.get('exportation'),
+                '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
+                ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'
+            ];
+            $('#shoes_table').DataTable().row.add(row).draw(false);
+            $("#works").text("添加信息成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function() {
+            $("#fails").text("后台处理失败！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
         });
     });
 
@@ -450,13 +454,15 @@ function shoeEvent () {
             $.each(params, function(k, v) {
                 shoe.set(k, v);
             });
-            shoe.save().then(function() {
-                $("#works").text("退货成功！").slideToggle('slow');
-                $("#works").delay(3000).slideToggle('slow');
-            }, function() {
-                $("#fails").text("退货失败！").slideToggle('slow');
-                $("#fails").delay(3000).slideToggle('slow');
-            });
+            return shoe.save();
+        })
+        .then(function() {
+            $("#works").text("退货成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function () {
+            $("#fails").text("退货失败！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
         });
     });
 
@@ -522,13 +528,15 @@ function shoeEvent () {
               $.each(params, function(k, v) {
                   shoe.set(k, v);
               });
-              shoe.save().then(function() {
-                  $("#works").text("进货成功！").slideToggle('slow');
-                  $("#works").delay(3000).slideToggle('slow');
-              }, function() {
-                  $("#fails").text("进货失败！").slideToggle('slow');
-                  $("#fails").delay(3000).slideToggle('slow');
-              });
+              return shoe.save();
+          })
+          .then(function() {
+              $("#works").text("进货成功！").slideToggle('slow');
+              $("#works").delay(3000).slideToggle('slow');
+          })
+          .catch(function() {
+              $("#fails").text("进货失败！").slideToggle('slow');
+              $("#fails").delay(3000).slideToggle('slow');
           });
     });
 
@@ -595,13 +603,15 @@ function shoeEvent () {
               $.each(params, function(k, v) {
                   shoe.set(k, v);
               });
-              shoe.save().then(function() {
-                  $("#works").text("出货成功！").slideToggle('slow');
-                  $("#works").delay(3000).slideToggle('slow');
-              }, function() {
-                  $("#fails").text("出货失败！").slideToggle('slow');
-                  $("#fails").delay(3000).slideToggle('slow');
-              });
+              return shoe.save();
+          })
+          .then(function() {
+              $("#works").text("出货成功！").slideToggle('slow');
+              $("#works").delay(3000).slideToggle('slow');
+          })
+          .catch(function() {
+              $("#fails").text("出货失败！").slideToggle('slow');
+              $("#fails").delay(3000).slideToggle('slow');
           });
       });
 
@@ -652,36 +662,35 @@ function shoeEvent () {
             s43: s43,
             s44: s44,
             number: String(number),
-            returns: returns,
-            exportation: exportation,
         };
         var query = getQuery('Shoe', [['uid', uid], ['brand', brand], ['shoeid', shoeid], ['color', color]]);
         query.find().then(function(result) {
-            console.log(result[0].id);
             var shoe = AV.Object.createWithoutData('Shoe', result[0].id);
             $.each(params, function(k, v) {
                 shoe.set(k, v);
             });
-            shoe.save().then(function(result) {
-                $(updateShoeTmp[3]).text(result.get('s34'));
-                $(updateShoeTmp[4]).text(result.get('s35'));
-                $(updateShoeTmp[5]).text(result.get('s36'));
-                $(updateShoeTmp[6]).text(result.get('s37'));
-                $(updateShoeTmp[7]).text(result.get('s38'));
-                $(updateShoeTmp[8]).text(result.get('s39'));
-                $(updateShoeTmp[9]).text(result.get('s40'));
-                $(updateShoeTmp[10]).text(result.get('s41'));
-                $(updateShoeTmp[11]).text(result.get('s42'));
-                $(updateShoeTmp[12]).text(result.get('s43'));
-                $(updateShoeTmp[13]).text(result.get('s44'));
-                $(updateShoeTmp[14]).text(result.get('number'));
-                $(updateShoeTmp[15]).text(result.get('returns'));
-                $(updateShoeTmp[16]).text(result.get('exportation'));
+            return shoe.save();
+        })
+        .then(function(result) {
+            $(updateShoeTmp[3]).text(result.get('s34'));
+            $(updateShoeTmp[4]).text(result.get('s35'));
+            $(updateShoeTmp[5]).text(result.get('s36'));
+            $(updateShoeTmp[6]).text(result.get('s37'));
+            $(updateShoeTmp[7]).text(result.get('s38'));
+            $(updateShoeTmp[8]).text(result.get('s39'));
+            $(updateShoeTmp[9]).text(result.get('s40'));
+            $(updateShoeTmp[10]).text(result.get('s41'));
+            $(updateShoeTmp[11]).text(result.get('s42'));
+            $(updateShoeTmp[12]).text(result.get('s43'));
+            $(updateShoeTmp[13]).text(result.get('s44'));
+            $(updateShoeTmp[14]).text(result.get('number'));
+            $(updateShoeTmp[15]).text(result.get('returns'));
+            $(updateShoeTmp[16]).text(result.get('exportation'));
 
-                $("#works").text("更新信息成功！").slideToggle('slow');
-                $("#works").delay(3000).slideToggle('slow');
-            });
-        }, function(error) {
+            $("#works").text("更新信息成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function() {
             $("#fails").text("更新信息失败！").slideToggle('slow');
             $("#fails").delay(3000).slideToggle('slow');
         });
@@ -702,14 +711,16 @@ function shoeEvent () {
         var query = getQuery('Shoe', [['uid', uid], ['brand', brand], ['shoeid', shoeid], ['color', color]]);
         query.find().then(function(result) {
             var shoe = AV.Object.createWithoutData('Shoe', result[0].id);
-            shoe.destroy().then(function() {
-                $(deleteShoeTmp).detach();
-                $("#works").text("删除信息成功！").slideToggle('slow');
-                $("#works").delay(3000).slideToggle('slow');
-            }, function() {
-                $("#fails").text("删除信息失败！").slideToggle('slow');
-                $("#fails").delay(3000).slideToggle('slow');
-            });
+            return shoe.destroy();
+        })
+        .then(function() {
+            $(deleteShoeTmp).detach();
+            $("#works").text("删除信息成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function() {
+            $("#fails").text("删除信息失败！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
         });
     })
 
@@ -763,23 +774,25 @@ function clientEvent() {
                 $.each(params, function(k, v) {
                     clientObject.set(k, v);
                 });
-                clientObject.save().then(function(clientObject) {
-                    var row = [
-                        clientObject.get('name'),
-                        clientObject.get('telephone'),
-                        clientObject.get('mobilephone'),
-                        clientObject.get('address'),
-                        '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
-                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteClientDlg" data-toggle="modal" data-target="#myDeleteClientModal"></span>'
-                    ];
-                    $('#clients_table').DataTable().row.add(row).draw(false);
-                    $("#works").text("添加客户信息成功！").slideToggle('slow');
-                    $("#works").delay(3000).slideToggle('slow');
-                }, function(error) {
-                    $("#fails").text("后台处理失败！").slideToggle('slow');
-                    $("#fails").delay(3000).slideToggle('slow');
-                });
+                return clientObject.save();
             }
+        })
+        .then(function(clientObject) {
+            var row = [
+                clientObject.get('name'),
+                clientObject.get('telephone'),
+                clientObject.get('mobilephone'),
+                clientObject.get('address'),
+                '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
+                ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteClientDlg" data-toggle="modal" data-target="#myDeleteClientModal"></span>'
+            ];
+            $('#clients_table').DataTable().row.add(row).draw(false);
+            $("#works").text("添加客户信息成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function() {
+            $("#fails").text("添加客户信息失败！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
         });
     });
 
@@ -811,16 +824,18 @@ function clientEvent() {
             $.each(params, function(k, v) {
                 client.set(k, v);
             });
-            client.save().then(function(result) {
-                $(updateClientTmp[1]).text(result.get('telephone'));
-                $(updateClientTmp[2]).text(result.get('mobilephone'));
-                $(updateClientTmp[3]).text(result.get('address'));
-                $("#works").text("更新客户信息成功！").slideToggle('slow');
-                $("#works").delay(3000).slideToggle('slow');
-            }, function(error) {
-                $("#fails").text("更新客户信息失败！").slideToggle('slow');
-                $("#fails").delay(3000).slideToggle('slow');
-            });
+            return client.save();
+        })
+        .then(function(result) {
+            $(updateClientTmp[1]).text(result.get('telephone'));
+            $(updateClientTmp[2]).text(result.get('mobilephone'));
+            $(updateClientTmp[3]).text(result.get('address'));
+            $("#works").text("更新客户信息成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function() {
+            $("#fails").text("更新客户信息失败！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
         });
     });
 
@@ -835,14 +850,16 @@ function clientEvent() {
         var query = getQuery('Client', [['uid', uid], ['name', name]]);
         query.find().then(function(result) {
             var client = AV.Object.createWithoutData('Client', result[0].id);
-            client.destroy().then(function() {
-                $(deleteClientTmp).detach();
-                $("#works").text("删除客户信息成功！").slideToggle('slow');
-                $("#works").delay(3000).slideToggle('slow');
-            }, function() {
-                $("#fails").text("删除客户信息失败！").slideToggle('slow');
-                $("#fails").delay(3000).slideToggle('slow');
-            });
+            return client.destroy();
+        })
+        .then(function() {
+            $(deleteClientTmp).detach();
+            $("#works").text("删除客户信息成功！").slideToggle('slow');
+            $("#works").delay(3000).slideToggle('slow');
+        })
+        .catch(function() {
+            $("#fails").text("删除客户信息失败！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
         });
     });
 }
@@ -852,7 +869,306 @@ function clientEvent() {
 *
 */
 function orderEvent () {
+    // 添加订单
+    $("#order_no").blur(function(){
+         var no = $("#order_no").val();
+         if (!no) {
+             $("#add_order_no").addClass("has-error");
+             $("#add_order_info").text("订单号不能为空");
+         } else {
+             var query = getQuery('Order', [['uid', uid], ['no', no]]);
+             query.count().then(function(result) {
+                 if (result) {
+                     $("#add_order_info").text("已存在该订单号，请注意");
+                     $("#add_order_no").removeClass("has-success");
+                     $("#add_order_no").addClass("has-error");
+                 } else {
+                     $("#add_order_info").text("");
+                     $("#add_order_no").removeClass("has-error");
+                     $("#add_order_no").addClass("has-success");
+                 }
+             });
+         }
+    });
 
+    $("#order_name").blur(function(){
+        var name = $("#order_name").val();
+        if (!name) {
+            $("#add_order_name").addClass("has-error");
+            $("#add_order_info").text("客户姓名不能为空");
+        } else {
+            var query = getQuery('Client', [['uid', uid], ['name', name]]);
+            query.count().then(function(result) {
+                if (result) {
+                    $("#add_order_info").text("");
+                    $("#add_order_name").removeClass("has-error");
+                    $("#add_order_name").addClass("has-success");
+                } else {
+                    $("#add_order_info").text("不存在该客户，建议先添加该用户");
+                    $("#add_order_name").removeClass("has-success");
+                    $("#add_order_name").addClass("has-error");
+                }
+            });
+        }
+    });
+
+    // 添加一行
+    $("#add_order_row").on('click',function(){
+      var txt = "<tr><th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th>"+
+      "<th><input class='input-sm form-control'></th></tr>";
+      $("#add_order_table").append(txt);
+    });
+
+    // 确认添加
+    $("#add_order").on('click',function(){
+        var total = $('#add_order_table tr').length;
+        var array = [];
+        $('#add_order_table input').each(function(){
+          array.push($(this).val());
+        });
+
+        var no = $("#order_no").val();
+        var name = $("#order_name").val();
+        var order_array = [];
+        for(var i=0; i<total*14; i=i+14) {
+          var p = {};
+          p.uid = uid;
+          p.brand = array[i];
+          p.shoeid = array[i+1];
+          p.color = array[i+2];
+          p.s34 = array[i+3];
+          p.s35 = array[i+4];
+          p.s36 = array[i+5];
+          p.s37 = array[i+6];
+          p.s38 = array[i+7];
+          p.s39 = array[i+8];
+          p.s40 = array[i+9];
+          p.s41 = array[i+10];
+          p.s42 = array[i+11];
+          p.s43 = array[i+12];
+          p.s44 = array[i+13];
+          p.number = (parseInt(array[i+3]) + parseInt(array[i+4]) + parseInt(array[i+5]) +
+                      parseInt(array[i+6]) + parseInt(array[i+7]) +parseInt(array[i+8]) +
+                      parseInt(array[i+9]) + parseInt(array[i+10]) + parseInt(array[i+11]) +
+                      parseInt(array[i+12]) + parseInt(array[i+13])).toString();
+          p.no = no;
+          p.name = name;
+          p.state = '未发货';
+          var date = new Date();
+          p.date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+          order_array.push(p);
+        }
+        var rows = [];
+        $.each(order_array, function(i, e) {
+            var orderObject = new OrderObject();
+            $.each(e, function(k, v) {
+                orderObject.set(k, v);
+            });
+            orderObject.save().then(function(order) {
+                rows.push([
+                    order.get('no'),
+                    order.get('date'),
+                    order.get('name'),
+                    order.get('brand'),
+                    order.get('shoeid'),
+                    order.get('color'),
+                    order.get('s34'),
+                    order.get('s35'),
+                    order.get('s36'),
+                    order.get('s37'),
+                    order.get('s38'),
+                    order.get('s39'),
+                    order.get('s40'),
+                    order.get('s41'),
+                    order.get('s42'),
+                    order.get('s43'),
+                    order.get('s44'),
+                    order.get('number'),
+                    order.get('state'),
+                    '<span style="cursor:pointer" class="fui-new" id="updateOrderDlg" data-toggle="modal" data-target="#myUpdateOrderModal">   </span>'+
+                    ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteOrderDlg" data-toggle="modal" data-target="#myDeleteOrderModal"></span>'
+                ]);
+
+                if (rows.length === order_array.length) {
+                    $.each(rows, function(i, row) {
+                        $('#order_table').DataTable().row.add(row).draw(false);
+                    });
+                    $("#add_order_table").children("tr").remove();
+                    $("#order_works").text("添加订单成功！").slideToggle('slow');
+                    $("#order_works").delay(3000).slideToggle('slow');
+                }
+
+            }, function(error) {
+                $("#order_fails").text("添加订单失败！").slideToggle('slow');
+                $("#order_fails").delay(3000).slideToggle('slow');
+            });
+        });
+    });
+
+    // 删除所有行
+    $("#clear_order_row").on('click',function(){
+      $("#add_order_table").children("tr").remove();
+    });
+
+    //修改订单
+    $(document).on('click','#updateOrderDlg',function(event){
+      var array = [];
+      updateOrderTmp =  $(this).parents("tr").find('td');
+      updateOrderTmp.each(function(i){
+        array[i]=$(this).text();
+      });
+      $("#uo_state").attr("placeholder",array[18]);
+      $("#uo_no").attr("placeholder",array[0]);
+      $("#uo_name").attr("placeholder",array[2]);
+      $("#uo_brand").attr("placeholder",array[3]);
+      $("#uo_id").attr("placeholder",array[4]);
+      $("#uo_color").attr("placeholder",array[5]);
+      $("#uo_s34").attr("placeholder",array[6]).val("");
+      $("#uo_s35").attr("placeholder",array[7]).val("");
+      $("#uo_s36").attr("placeholder",array[8]).val("");
+      $("#uo_s37").attr("placeholder",array[9]).val("");
+      $("#uo_s38").attr("placeholder",array[10]).val("");
+      $("#uo_s39").attr("placeholder",array[11]).val("");
+      $("#uo_s40").attr("placeholder",array[12]).val("");
+      $("#uo_s41").attr("placeholder",array[13]).val("");
+      $("#uo_s42").attr("placeholder",array[14]).val("");
+      $("#uo_s43").attr("placeholder",array[15]).val("");
+      $("#uo_s44").attr("placeholder",array[16]).val("");
+    });
+
+    $("#update_order").on('click',function(){
+        var brand = $("#uo_brand").attr("placeholder"),shoeid = $("#uo_id").attr("placeholder"),
+        color = $("#uo_color").attr("placeholder"),s34 = $("#uo_s34").val(),
+        s35 = $("#uo_s35").val(),s36 = $("#uo_s36").val(),s37 = $("#uo_s37").val(),
+        s38 = $("#uo_s38").val(),s39 = $("#uo_s39").val(),s40 = $("#uo_s40").val(),
+        s41 = $("#uo_s41").val(),s42 = $("#uo_s42").val(),s43 = $("#uo_s43").val(),
+        s44 = $("#uo_s44").val(),name = $("#uo_name").attr("placeholder"),
+        no = $("#uo_no").attr("placeholder"),state = $("#uo_state").attr("placeholder"),
+        number = Number(s34)+Number(s35)+
+            Number(s36)+Number(s37)+Number(s38)+
+            Number(s39)+Number(s40)+Number(s41)+
+            Number(s42)+Number(s43)+Number(s44);
+
+        if (state === '未发货') {
+            var params = {
+                s34: s34,
+                s35: s35,
+                s36: s36,
+                s37: s37,
+                s38: s38,
+                s39: s39,
+                s40: s40,
+                s41: s41,
+                s42: s42,
+                s43: s43,
+                s44: s44,
+                number: number.toString(),
+            };
+            var query = getQuery('Order', [
+                ['uid', uid],
+                ['name', name],
+                ['no', no],
+                ['brand', brand],
+                ['shoeid', shoeid],
+                ['color', color]
+            ]);
+            query.find().then(function(result) {
+                var order = AV.Object.createWithoutData('Order', result[0].id);
+                $.each(params, function(k, v) {
+                    order.set(k, v);
+                });
+                return order.save();
+            })
+            .then(function(result) {
+                $(updateOrderTmp[6]).text(result.get('s34'));
+                $(updateOrderTmp[7]).text(result.get('s35'));
+                $(updateOrderTmp[8]).text(result.get('s36'));
+                $(updateOrderTmp[9]).text(result.get('s37'));
+                $(updateOrderTmp[10]).text(result.get('s38'));
+                $(updateOrderTmp[11]).text(result.get('s39'));
+                $(updateOrderTmp[12]).text(result.get('s40'));
+                $(updateOrderTmp[13]).text(result.get('s41'));
+                $(updateOrderTmp[14]).text(result.get('s42'));
+                $(updateOrderTmp[15]).text(result.get('s43'));
+                $(updateOrderTmp[16]).text(result.get('s44'));
+                $(updateOrderTmp[17]).text(result.get('number'));
+
+                $("#works").text("修改订单成功！").slideToggle('slow');
+                $("#works").delay(3000).slideToggle('slow');
+            })
+            .catch(function(){
+                $("#fails").text("修改订单失败！").slideToggle('slow');
+                $("#fails").delay(3000).slideToggle('slow');
+            });
+
+        } else {
+            $("#fails").text("无法修改已经发货的订单！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
+        }
+
+    });
+
+    // 删除订单
+    $(document).on('click','#deleteOrderDlg',function(){
+        deleteOrderTmp = $(this).parents("tr");
+        $('#myDeleteOrderModal').attr('data-no', $(deleteOrderTmp.find('td')[0]).text());
+        $('#myDeleteOrderModal').attr('data-name', $(deleteOrderTmp.find('td')[2]).text());
+        $('#myDeleteOrderModal').attr('data-brand', $(deleteOrderTmp.find('td')[3]).text());
+        $('#myDeleteOrderModal').attr('data-shoeid', $(deleteOrderTmp.find('td')[4]).text());
+        $('#myDeleteOrderModal').attr('data-color', $(deleteOrderTmp.find('td')[5]).text());
+        $('#myDeleteOrderModal').attr('data-state', $(deleteOrderTmp.find('td')[18]).text());
+    });
+
+    $(document).on('click','#delete_order',function(){
+        var no = $('#myDeleteOrderModal').attr('data-no'),
+            name = $('#myDeleteOrderModal').attr('data-name'),
+            brand = $('#myDeleteOrderModal').attr('data-brand'),
+            shoeid = $('#myDeleteOrderModal').attr('data-shoeid'),
+            color = $('#myDeleteOrderModal').attr('data-color'),
+            state = $('#myDeleteOrderModal').attr('data-state');
+        var query = getQuery('Order', [
+            ['uid', uid],
+            ['name', name],
+            ['no', no],
+            ['brand', brand],
+            ['shoeid', shoeid],
+            ['color', color]
+        ]);
+
+        if (state === '未发货') {
+            query.find().then(function(result) {
+                var order = AV.Object.createWithoutData('Order', result[0].id);
+                return order.destroy();
+            })
+            .then(function() {
+                $(deleteOrderTmp).detach();
+                $("#works").text("删除订单信息成功！").slideToggle('slow');
+                $("#works").delay(3000).slideToggle('slow');
+            })
+            .catch(function(){
+                $("#fails").text("删除订单信息失败！").slideToggle('slow');
+                $("#fails").delay(3000).slideToggle('slow');
+            });
+        } else {
+            $("#fails").text("无法删除已经发货的订单！").slideToggle('slow');
+            $("#fails").delay(3000).slideToggle('slow');
+        }
+    });
+
+    // 确认订单
+    
 }
 
 loadShoe();
