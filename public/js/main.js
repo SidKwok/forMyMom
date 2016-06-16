@@ -359,7 +359,6 @@ function shoeEvent () {
             }
         })
         .then(function(shoeObject) {
-            getCount();
             var row = [
                 shoeObject.get('brand'),
                 shoeObject.get('shoeid'),
@@ -382,6 +381,7 @@ function shoeEvent () {
                 ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'
             ];
             $('#shoes_table').DataTable().row.add(row).draw(false);
+            getCount();
             $("#works").text("添加信息成功！").slideToggle('slow');
             $("#works").delay(3000).slideToggle('slow');
         })
@@ -457,6 +457,7 @@ function shoeEvent () {
             return shoe.save();
         })
         .then(function() {
+            getCount();
             $("#works").text("退货成功！").slideToggle('slow');
             $("#works").delay(3000).slideToggle('slow');
         })
@@ -531,6 +532,7 @@ function shoeEvent () {
               return shoe.save();
           })
           .then(function() {
+              getCount();
               $("#works").text("进货成功！").slideToggle('slow');
               $("#works").delay(3000).slideToggle('slow');
           })
@@ -606,6 +608,7 @@ function shoeEvent () {
               return shoe.save();
           })
           .then(function() {
+              getCount();
               $("#works").text("出货成功！").slideToggle('slow');
               $("#works").delay(3000).slideToggle('slow');
           })
@@ -687,6 +690,7 @@ function shoeEvent () {
             $(updateShoeTmp[15]).text(result.get('returns'));
             $(updateShoeTmp[16]).text(result.get('exportation'));
 
+            getCount();
             $("#works").text("更新信息成功！").slideToggle('slow');
             $("#works").delay(3000).slideToggle('slow');
         })
@@ -714,6 +718,7 @@ function shoeEvent () {
             return shoe.destroy();
         })
         .then(function() {
+            getCount();
             $(deleteShoeTmp).detach();
             $("#works").text("删除信息成功！").slideToggle('slow');
             $("#works").delay(3000).slideToggle('slow');
@@ -1205,6 +1210,7 @@ function orderEvent () {
                                   s43: (parseInt(shoe[0].get('s43')) - parseInt(e.get('s43'))).toString(),
                                   s44: (parseInt(shoe[0].get('s44')) - parseInt(e.get('s44'))).toString(),
                                   number: (parseInt(shoe[0].get('number')) - parseInt(e.get('number'))).toString(),
+                                  exportation: e.get('number')
                               }
                           ]);
                       } else {
@@ -1248,9 +1254,6 @@ function orderEvent () {
                           var shoe = [];
                           var order = [];
                           if (error.status) {
-                              // TODO
-                              console.log('allright');
-                              console.log(realPkgs);
                               $.each(realPkgs, function(i, realPkg) {
                                   var confirmShoeQuery = getQuery('Shoe', [
                                       ['uid', uid],
@@ -1260,11 +1263,13 @@ function orderEvent () {
                                   ]);
                                   var confirmOrderQuery = getQuery('Order', [
                                       ['uid', uid],
-                                      ['no', realPkg[1].no]
+                                      ['no', realPkg[1].no],
+                                      ['brand', realPkg[1].brand],
+                                      ['shoeid', realPkg[1].shoeid],
+                                      ['color', realPkg[1].color]
                                   ]);
 
                                   confirmShoeQuery.find().then(function(result) {
-                                      console.log('save');
                                       shoe[i] = AV.Object.createWithoutData('Shoe', result[0].id);
                                       $.each(realPkg[2], function(k, v) {
                                           shoe[i].set(k, v);
@@ -1272,11 +1277,13 @@ function orderEvent () {
                                       shoe[i].save();
                                   });
                                   confirmOrderQuery.find().then(function(result) {
+                                      console.log(result[0].id);
                                       order[i] = AV.Object.createWithoutData('Order', result[0].id);
                                       order[i].set('state', '已发货');
                                       order[i].save();
                                   })
                                   if (i + 1 === pkgs.length) {
+                                      getCount();
                                       $("#co_order_works").text("确认订单成功！").slideToggle('slow');
                                       $("#co_order_works").delay(3000).slideToggle('slow');
                                   }
@@ -1338,6 +1345,26 @@ function exportTable () {
     });
 }
 
+/**
+* 各类总数
+*/
+function getCount () {
+    var query = getQuery('Shoe', [['uid', uid]]);
+    var counts = 0,
+        returns = 0,
+        exportations = 0;
+    query.find().then(function(results) {
+        $.each(results, function(i, e) {
+            counts += parseInt(e.get('number'));
+            returns += parseInt(e.get('returns'));
+            exportations += parseInt(e.get('exportation'));
+        });
+        $("#number_count").text(counts);
+        $("#returns_count").text(returns);
+        $("#export_count").text(exportations);
+    });
+}
+
 loadShoe();
 loadClient();
 loadOrder();
@@ -1345,3 +1372,4 @@ clientEvent();
 shoeEvent();
 orderEvent();
 exportTable();
+getCount();
