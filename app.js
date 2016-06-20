@@ -9,7 +9,7 @@ var AV = require('leanengine');
 
 var app = express();
 // 加载 cookieSession 以支持 AV.User 的会话状态
-app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
+app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 24*60*60*1000, fetchUser: true }));
 
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));

@@ -1350,6 +1350,7 @@ function exportTable () {
 */
 function getCount () {
     var query = getQuery('Shoe', [['uid', uid]]);
+    query.limit(1000);
     var counts = 0,
         returns = 0,
         exportations = 0;
