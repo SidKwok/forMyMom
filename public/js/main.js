@@ -26,11 +26,6 @@ var deleteClientTmp;
 var updateOrderTmp;
 var deleteOrderTmp;
 
-$.extend( true, $.fn.dataTable.defaults, {
-    "info": false,
-    "infoFiltered": false
-} );
-
 /**
 * 获取搜索结果
 *
@@ -49,18 +44,12 @@ function getQuery (schema, conArr) {
 }
 
 /**
-* 获取鞋子各项属性的总数
-*/
-function getCount () {
-
-}
-
-/**
 * 展示板块
 */
 // 库存表格
-function loadShoe () {
-    $('#shoes_table tbody').children().detach();
+
+// 初始化库存表格
+function initShoe () {
     var dataset = [];
     var query = getQuery('Shoe', [['uid', uid]]);
     query.limit(100);
@@ -70,67 +59,118 @@ function loadShoe () {
             query.skip(gap);
             query.find().then(function(results) {
                 $.each(results, function(i, e) {
-                    dataset.push([
-                        e.get('brand'),
-                        e.get('shoeid'),
-                        e.get('color'),
-                        e.get('s34'),
-                        e.get('s35'),
-                        e.get('s36'),
-                        e.get('s37'),
-                        e.get('s38'),
-                        e.get('s39'),
-                        e.get('s40'),
-                        e.get('s41'),
-                        e.get('s42'),
-                        e.get('s43'),
-                        e.get('s44'),
-                        e.get('number'),
-                        e.get('returns'),
-                        e.get('exportation'),
-                        '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
-                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'
-                    ]);
+                    dataset.push(
+                        {brand: e.get('brand'),
+                        shoeid: e.get('shoeid'),
+                        color: e.get('color'),
+                        s34: e.get('s34'),
+                        s35: e.get('s35'),
+                        s36: e.get('s36'),
+                        s37: e.get('s37'),
+                        s38: e.get('s38'),
+                        s39: e.get('s39'),
+                        s40: e.get('s40'),
+                        s41: e.get('s41'),
+                        s42: e.get('s42'),
+                        s43: e.get('s43'),
+                        s44: e.get('s44'),
+                        number: e.get('number'),
+                        returns: e.get('returns'),
+                        exportation: e.get('exportation'),
+                        opt: '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
+                              ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'}
+                    );
                 });
                 if (dataset.length === count) {
-                    $('#shoes_table').DataTable({
-                        paging: false,
-                        language:{
-                          sSearch:     "",
-                          zeroRecords: "没有这鞋子啦！",
-                          infoEmpty:   "还没有鞋子啦！",
-                          paginate: {
-                            previous:  "",
-                            next:      "",
-                          }
-                        },
-                        pagingType: "full_numbers",
-                        data: dataset,
+                    $('#shoes_table').bootstrapTable({
                         columns: [
-                            {title: '品牌'},
-                            {title: '型号', sortable: false},
-                            {title: '颜色', sortable: false},
-                            {title: '34', sortable: false},
-                            {title: '35', sortable: false},
-                            {title: '36', sortable: false},
-                            {title: '37', sortable: false},
-                            {title: '38', sortable: false},
-                            {title: '39', sortable: false},
-                            {title: '40', sortable: false},
-                            {title: '41', sortable: false},
-                            {title: '42', sortable: false},
-                            {title: '43', sortable: false},
-                            {title: '44', sortable: false},
-                            {title: '数量'},
-                            {title: '退货量'},
-                            {title: '出货量'},
-                            {title: '操作', sortable: false},
-                        ]
+                            {
+                                field: 'brand',
+                                title: '品牌',
+                                sortable: true
+                            },
+                            {
+                                field: 'shoeid',
+                                title: '型号',
+                                sortable: true
+                            },
+                            {
+                                field: 'color',
+                                title: '颜色',
+                                sortable: true
+                            },
+                            {
+                                field: 's34',
+                                title: '34'
+                            },
+                            {
+                                field: 's35',
+                                title: '35'
+                            },
+                            {
+                                field: 's36',
+                                title: '36'
+                            },
+                            {
+                                field: 's37',
+                                title: '37'
+                            },
+                            {
+                                field: 's38',
+                                title: '38'
+                            },
+                            {
+                                field: 's39',
+                                title: '39'
+                            },
+                            {
+                                field: 's40',
+                                title: '40'
+                            },
+                            {
+                                field: 's41',
+                                title: '41'
+                            },
+                            {
+                                field: 's42',
+                                title: '42'
+                            },
+                            {
+                                field: 's43',
+                                title: '43'
+                            },
+                            {
+                                field: 's44',
+                                title: '44'
+                            },
+                            {
+                                field: 'number',
+                                title: '数量',
+                                sortable: true
+                            },
+                            {
+                                field: 'returns',
+                                title: '退货量',
+                                sortable: true
+                            },
+                            {
+                                field: 'exportation',
+                                title: '出货量',
+                                sortable: true
+                            },
+                            {
+                                field: 'opt',
+                                title: '操作'
+                            },
+                        ],
+                        data: dataset,
+                        search: true,
+                        pagination: true,
+                        showExport: true,
+                        exportTypes: ['json', 'excel'],
+                        exportDataType: 'all',
+                        exportOptions: {fileName: '库存表'}
                     });
-
-                    $("#shoes_table_filter input").attr("placeholder","search");
-                    $("#shoes_table_filter input").addClass("input-lg");
-                    $("#shoes_table_first").removeClass("disabled");
                 }
             });
             gap += 100;
@@ -138,9 +178,15 @@ function loadShoe () {
     });
 }
 
+// 加载库存表格
+function loadShoe () {
+    // TODO
+}
+
 // 客户表格
-function loadClient () {
-    $('#clients_table tbody').children().detach();
+
+// 初始化客户表格
+function initClient () {
     var dataset = [];
     var query = getQuery('Client', [['uid', uid]]);
     query.limit(100);
@@ -150,42 +196,49 @@ function loadClient () {
             query.skip(gap);
             query.find().then(function(results) {
                 $.each(results, function(i, e) {
-                    dataset.push([
-                        e.get('name'),
-                        e.get('telephone'),
-                        e.get('mobilephone'),
-                        e.get('address'),
-                        '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
+                    dataset.push({
+                        name: e.get('name'),
+                        telephone: e.get('telephone'),
+                        mobilephone: e.get('mobilephone'),
+                        address: e.get('address'),
+                        opt: '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
                         ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteClientDlg" data-toggle="modal" data-target="#myDeleteClientModal"></span>'
-                    ]);
+                    });
                 });
 
                 if (dataset.length === count) {
-                    $('#clients_table').DataTable({
-                        paging: false,
-                        language:{
-                          sSearch:     "",
-                          zeroRecords: "没有这客户啦！",
-                          infoEmpty:   "还没有客户啦！",
-                          paginate: {
-                            previous:  "",
-                            next:      "",
-                          }
-                        },
-                        pagingType: "full_numbers",
-                        data: dataset,
+                    $('#clients_table').bootstrapTable({
                         columns: [
-                            {title: '客&nbsp户&nbsp名'},
-                            {title: '固&nbsp定&nbsp电&nbsp话', sortable: false},
-                            {title: '移&nbsp动&nbsp电&nbsp话', sortable: false},
-                            {title: '地&nbsp址', sortable: false},
-                            {title: '操&nbsp作', sortable: false},
-                        ]
+                            {
+                                field: 'name',
+                                title: '客户名',
+                                sortable: true
+                            },
+                            {
+                                field: 'telephone',
+                                title: '固定电话',
+                            },
+                            {
+                                field: 'mobilephone',
+                                title: '移动电话',
+                            },
+                            {
+                                field: 'address',
+                                title: '地址',
+                            },
+                            {
+                                field: 'opt',
+                                title: '操作',
+                            }
+                        ],
+                        data: dataset,
+                        search: true,
+                        pagination: true,
+                        showExport: true,
+                        exportTypes: ['json', 'excel'],
+                        exportDataType: 'all',
+                        exportOptions: {fileName: '客户表'}
                     });
-
-                    $("#clients_table_filter input").attr("placeholder","search");
-                    $("#clients_table_filter input").addClass("input-lg");
-                    $("#clients_table_first").removeClass("disabled");
                 }
             });
             gap += 100;
@@ -193,9 +246,15 @@ function loadClient () {
     });
 }
 
+// 加载客户表格
+function loadClient () {
+    // TODO
+}
+
 // 订单表格
-function loadOrder () {
-    $('#order_table tbody').children().detach();
+
+// 初始化订单表格
+function initOrder () {
     var dataset = [];
     var query = getQuery('Order', [['uid', uid]]);
     query.limit(1000);
@@ -205,76 +264,139 @@ function loadOrder () {
             query.skip(gap);
             query.find().then(function(results) {
                 $.each(results, function(i, e) {
-                    dataset.push([
-                        e.get('no'),
-                        e.get('date'),
-                        e.get('name'),
-                        e.get('brand'),
-                        e.get('shoeid'),
-                        e.get('color'),
-                        e.get('s34'),
-                        e.get('s35'),
-                        e.get('s36'),
-                        e.get('s37'),
-                        e.get('s38'),
-                        e.get('s39'),
-                        e.get('s40'),
-                        e.get('s41'),
-                        e.get('s42'),
-                        e.get('s43'),
-                        e.get('s44'),
-                        e.get('number'),
-                        e.get('state'),
-                        '<span style="cursor:pointer" class="fui-new" id="updateOrderDlg" data-toggle="modal" data-target="#myUpdateOrderModal">   </span>'+
-                        ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteOrderDlg" data-toggle="modal" data-target="#myDeleteOrderModal"></span>'
-                    ]);
+                    dataset.push({
+                        no: e.get('no'),
+                        date: e.get('date'),
+                        name: e.get('name'),
+                        brand: e.get('brand'),
+                        shoeid: e.get('shoeid'),
+                        color: e.get('color'),
+                        s34: e.get('s34'),
+                        s35: e.get('s35'),
+                        s36: e.get('s36'),
+                        s37: e.get('s37'),
+                        s38: e.get('s38'),
+                        s39: e.get('s39'),
+                        s40: e.get('s40'),
+                        s41: e.get('s41'),
+                        s42: e.get('s42'),
+                        s43: e.get('s43'),
+                        s44: e.get('s44'),
+                        number: e.get('number'),
+                        state: e.get('state'),
+                        opt: '<span style="cursor:pointer" class="fui-new" id="updateOrderDlg" data-toggle="modal" data-target="#myUpdateOrderModal">   </span>'+
+                             ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteOrderDlg" data-toggle="modal" data-target="#myDeleteOrderModal"></span>'
+                    });
                 });
                 if (dataset.length === count) {
-                    $('#order_table').DataTable({
-                        paging: false,
-                        language:{
-                          sSearch:     "",
-                          zeroRecords: "没有这订单啦！",
-                          infoEmpty:   "还没有订单啦！",
-                          paginate: {
-                            previous:  "",
-                            next:      "",
-                          }
-                        },
-                        pagingType: "full_numbers",
-                        data: dataset,
+                    $('#order_table').bootstrapTable({
                         columns: [
-                            {title: '订&nbsp单&nbsp号'},
-                            {title: '日&nbsp期'},
-                            {title: '客&nbsp户'},
-                            {title: '品&nbsp牌'},
-                            {title: '型&nbsp号', sortable: false},
-                            {title: '颜&nbsp色', sortable: false},
-                            {title: '34', sortable: false},
-                            {title: '35', sortable: false},
-                            {title: '36', sortable: false},
-                            {title: '37', sortable: false},
-                            {title: '38', sortable: false},
-                            {title: '39', sortable: false},
-                            {title: '40', sortable: false},
-                            {title: '41', sortable: false},
-                            {title: '42', sortable: false},
-                            {title: '43', sortable: false},
-                            {title: '44', sortable: false},
-                            {title: '数&nbsp量'},
-                            {title: '状&nbsp&nbsp&nbsp态', sortable: false},
-                            {title: '操&nbsp&nbsp作', sortable: false},
-                        ]
+                            {
+                                field: 'no',
+                                title: '订单号',
+                                sortable: true
+                            },
+                            {
+                                field: 'date',
+                                title: '日期',
+                                sortable: true
+                            },
+                            {
+                                field: 'name',
+                                title: '客户',
+                                sortable: true
+                            },
+                            {
+                                field: 'brand',
+                                title: '品牌',
+                                sortable: true
+                            },
+                            {
+                                field: 'shoeid',
+                                title: '型号',
+                                sortable: true
+                            },
+                            {
+                                field: 'color',
+                                title: '颜色',
+                                sortable: true
+                            },
+                            {
+                                field: 's34',
+                                title: '34',
+                            },
+                            {
+                                field: 's35',
+                                title: '35',
+                            },
+                            {
+                                field: 's36',
+                                title: '36',
+                            },
+                            {
+                                field: 's37',
+                                title: '37',
+                            },
+                            {
+                                field: 's38',
+                                title: '38',
+                            },
+                            {
+                                field: 's39',
+                                title: '39',
+                            },
+                            {
+                                field: 's40',
+                                title: '40',
+                            },
+                            {
+                                field: 's41',
+                                title: '41',
+                            },
+                            {
+                                field: 's42',
+                                title: '42',
+                            },
+                            {
+                                field: 's43',
+                                title: '43',
+                            },
+                            {
+                                field: 's44',
+                                title: '44',
+                            },
+                            {
+                                field: 'number',
+                                title: '数量',
+                                sortable: true
+                            },
+                            {
+                                field: 'state',
+                                title: '状态',
+                            },
+                            {
+                                field: 'opt',
+                                title: '操作',
+                            },
+                        ],
+                        data: dataset,
+                        search: true,
+                        pagination: true,
+                        showExport: true,
+                        exportTypes: ['json', 'excel'],
+                        exportDataType: 'all',
+                        exportOptions: {fileName: '订单表'}
                     });
-
-                    $("#order_table_filter input").attr("placeholder","search");
-                    $("#order_table_filter input").addClass("input-lg");
-                    $("#order_table_first").removeClass("disabled");
                 }
             });
             gap += 1000;
         }
     });
+}
+
+// 加载订单表格
+function loadOrder () {
+    // TODO
 }
 
 /**
@@ -359,28 +481,28 @@ function shoeEvent () {
             }
         })
         .then(function(shoeObject) {
-            var row = [
-                shoeObject.get('brand'),
-                shoeObject.get('shoeid'),
-                shoeObject.get('color'),
-                shoeObject.get('s34'),
-                shoeObject.get('s35'),
-                shoeObject.get('s36'),
-                shoeObject.get('s37'),
-                shoeObject.get('s38'),
-                shoeObject.get('s39'),
-                shoeObject.get('s40'),
-                shoeObject.get('s41'),
-                shoeObject.get('s42'),
-                shoeObject.get('s43'),
-                shoeObject.get('s44'),
-                shoeObject.get('number'),
-                shoeObject.get('returns'),
-                shoeObject.get('exportation'),
-                '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
+            var row = {
+                brand: shoeObject.get('brand'),
+                shoeid: shoeObject.get('shoeid'),
+                color: shoeObject.get('color'),
+                s34: shoeObject.get('s34'),
+                s35: shoeObject.get('s35'),
+                s36: shoeObject.get('s36'),
+                s37: shoeObject.get('s37'),
+                s38: shoeObject.get('s38'),
+                s39: shoeObject.get('s39'),
+                s40: shoeObject.get('s40'),
+                s41: shoeObject.get('s41'),
+                s42: shoeObject.get('s42'),
+                s43: shoeObject.get('s43'),
+                s44: shoeObject.get('s44'),
+                number: shoeObject.get('number'),
+                returns: shoeObject.get('returns'),
+                exportation: shoeObject.get('exportation'),
+                opt: '<span style="cursor:pointer" class="fui-new" id="updateDlg" data-toggle="modal" data-target="#myUpdateModal">   </span>'+
                 ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteDlg" data-toggle="modal" data-target="#myDeleteModal"></span>'
-            ];
-            $('#shoes_table').DataTable().row.add(row).draw(false);
+            };
+            $('#shoes_table').bootstrapTable('prepend', row);
             getCount();
             $("#works").text("添加信息成功！").slideToggle('slow');
             $("#works").delay(3000).slideToggle('slow');
@@ -783,15 +905,15 @@ function clientEvent() {
             }
         })
         .then(function(clientObject) {
-            var row = [
-                clientObject.get('name'),
-                clientObject.get('telephone'),
-                clientObject.get('mobilephone'),
-                clientObject.get('address'),
-                '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
-                ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteClientDlg" data-toggle="modal" data-target="#myDeleteClientModal"></span>'
-            ];
-            $('#clients_table').DataTable().row.add(row).draw(false);
+            var row = {
+                name: clientObject.get('name'),
+                telephone: clientObject.get('telephone'),
+                mobilephone: clientObject.get('mobilephone'),
+                address: clientObject.get('address'),
+                opt: '<span style="cursor:pointer" class="fui-new" id="updateClientDlg" data-toggle="modal" data-target="#myUpdateClientModal">   </span>'+
+                     ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteClientDlg" data-toggle="modal" data-target="#myDeleteClientModal"></span>'
+            };
+            $('#clients_table').bootstrapTable('prepend',row);
             $("#works").text("添加客户信息成功！").slideToggle('slow');
             $("#works").delay(3000).slideToggle('slow');
         })
@@ -982,33 +1104,33 @@ function orderEvent () {
                 orderObject.set(k, v);
             });
             orderObject.save().then(function(order) {
-                rows.push([
-                    order.get('no'),
-                    order.get('date'),
-                    order.get('name'),
-                    order.get('brand'),
-                    order.get('shoeid'),
-                    order.get('color'),
-                    order.get('s34'),
-                    order.get('s35'),
-                    order.get('s36'),
-                    order.get('s37'),
-                    order.get('s38'),
-                    order.get('s39'),
-                    order.get('s40'),
-                    order.get('s41'),
-                    order.get('s42'),
-                    order.get('s43'),
-                    order.get('s44'),
-                    order.get('number'),
-                    order.get('state'),
-                    '<span style="cursor:pointer" class="fui-new" id="updateOrderDlg" data-toggle="modal" data-target="#myUpdateOrderModal">   </span>'+
+                rows.push({
+                    no: order.get('no'),
+                    date: order.get('date'),
+                    name: order.get('name'),
+                    brand: order.get('brand'),
+                    shoeid: order.get('shoeid'),
+                    color: order.get('color'),
+                    s34: order.get('s34'),
+                    s35: order.get('s35'),
+                    s36: order.get('s36'),
+                    s37: order.get('s37'),
+                    s38: order.get('s38'),
+                    s39: order.get('s39'),
+                    s40: order.get('s40'),
+                    s41: order.get('s41'),
+                    s42: order.get('s42'),
+                    s43: order.get('s43'),
+                    s44: order.get('s44'),
+                    number: order.get('number'),
+                    state: order.get('state'),
+                    opt: '<span style="cursor:pointer" class="fui-new" id="updateOrderDlg" data-toggle="modal" data-target="#myUpdateOrderModal">   </span>'+
                     ' '+'<span style="cursor:pointer" class="fui-trash" id="deleteOrderDlg" data-toggle="modal" data-target="#myDeleteOrderModal"></span>'
-                ]);
+                });
 
                 if (rows.length === order_array.length) {
                     $.each(rows, function(i, row) {
-                        $('#order_table').DataTable().row.add(row).draw(false);
+                        $('#order_table').bootstrapTable('prepend',row);
                     });
                     $("#add_order_table").children("tr").remove();
                     $("#order_works").text("添加订单成功！").slideToggle('slow');
@@ -1210,7 +1332,7 @@ function orderEvent () {
                                   s43: (parseInt(shoe[0].get('s43')) - parseInt(e.get('s43'))).toString(),
                                   s44: (parseInt(shoe[0].get('s44')) - parseInt(e.get('s44'))).toString(),
                                   number: (parseInt(shoe[0].get('number')) - parseInt(e.get('number'))).toString(),
-                                  exportation: e.get('number')
+                                  exportation: (parseInt(shoe[0].get('exportation')) + parseInt(e.get('number'))).toString()
                               }
                           ]);
                       } else {
@@ -1307,43 +1429,43 @@ function orderEvent () {
 /**
 * 输出表格
 */
-function exportTable () {
-    $("#export_shoeTable").on('click',function(){
-      var filename = $("#est_input").val();
-      $("#shoes_table").table2excel({
-        exclude: ".noExl",
-        name: "Excel Document Name",
-        filename: filename,
-        exclude_img: true,
-        exclude_links: true,
-        exclude_inputs: true
-      });
-    });
-
-    $("#export_clientTable").on('click',function(){
-      var filename = $("#ect_input").val();
-      $("#clients_table").table2excel({
-        exclude: ".noExl",
-        name: "Excel Document Name",
-        filename: filename,
-        exclude_img: true,
-        exclude_links: true,
-        exclude_inputs: true
-      });
-    });
-
-    $("#export_orderTable").on('click',function(){
-      var filename = $("#eot_input").val();
-      $("#order_table").table2excel({
-        exclude: ".noExl",
-        name: "Excel Document Name",
-        filename: filename,
-        exclude_img: true,
-        exclude_links: true,
-        exclude_inputs: true
-      });
-    });
-}
+// function exportTable () {
+//     $("#export_shoeTable").on('click',function(){
+//       var filename = $("#est_input").val();
+//       $("#shoes_table").table2excel({
+//         exclude: ".noExl",
+//         name: "Excel Document Name",
+//         filename: filename,
+//         exclude_img: true,
+//         exclude_links: true,
+//         exclude_inputs: true
+//       });
+//     });
+//
+//     $("#export_clientTable").on('click',function(){
+//       var filename = $("#ect_input").val();
+//       $("#clients_table").table2excel({
+//         exclude: ".noExl",
+//         name: "Excel Document Name",
+//         filename: filename,
+//         exclude_img: true,
+//         exclude_links: true,
+//         exclude_inputs: true
+//       });
+//     });
+//
+//     $("#export_orderTable").on('click',function(){
+//       var filename = $("#eot_input").val();
+//       $("#order_table").table2excel({
+//         exclude: ".noExl",
+//         name: "Excel Document Name",
+//         filename: filename,
+//         exclude_img: true,
+//         exclude_links: true,
+//         exclude_inputs: true
+//       });
+//     });
+// }
 
 /**
 * 各类总数
@@ -1366,11 +1488,11 @@ function getCount () {
     });
 }
 
-loadShoe();
-loadClient();
-loadOrder();
+initShoe();
+initClient();
+initOrder();
 clientEvent();
 shoeEvent();
 orderEvent();
-exportTable();
+// exportTable();
 getCount();
