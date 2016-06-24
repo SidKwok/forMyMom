@@ -33,11 +33,10 @@ author:sid;
 .logo .myLogo {
   width: 760px;
   height: 540px;
-  margin: 0 auto 0px;
+  margin: 200px auto 0px;
   overflow: hidden;
-  text-indent: -9999em;
-  background: #42B0CE url('../img/bike2.gif') center 0 no-repeat;
-  background-size: 90%;
+  background: #42B0CE url('../img/work2.png') center 0 no-repeat;
+  background-size: 100%;
 }
 .all-input{
   padding-top: 10px;
