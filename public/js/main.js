@@ -181,6 +181,7 @@ function initShoe () {
 // 加载库存表格
 function loadShoe () {
     // TODO
+    
 }
 
 // 客户表格
