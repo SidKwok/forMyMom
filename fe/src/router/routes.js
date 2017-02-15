@@ -1,9 +1,15 @@
-import Hello from 'components/Hello';
+import HomeContainer from 'views/HomeContainer';
+import LoginPage from 'views/LoginPage';
 
 export default [
     {
         path: '/',
-        name: 'Hello',
-        component: Hello
+        name: 'home-container',
+        component: HomeContainer
+    },
+    {
+        path: '/login',
+        name: 'login-page',
+        component: LoginPage
     }
 ];
