@@ -1,17 +1,30 @@
+// http://eslint.org/docs/user-guide/configuring
+
 module.exports = {
   root: true,
   parser: 'babel-eslint',
   parserOptions: {
-    sourceType: 'module'
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true
+    }
   },
-  globals: {
-      'alert': true
+  env: {
+    es6: true,
+    commonjs: true,
+    browser: true,
   },
-  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: 'standard',
-  // required to lint *.vue files
+  extends: [
+      // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
+      'standard',
+      // https://github.com/feross/eslint-config-standard-react
+      'standard-react'
+  ],
+  // https://github.com/yannickcr/eslint-plugin-react
   plugins: [
-    'html'
+    'react',
+    'babel',
+    'promise'
   ],
   // add your custom rules here
   'rules': {
@@ -21,19 +34,7 @@ module.exports = {
     'generator-star-spacing': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'indent': ['error', 4, {
-        'SwitchCase': 1
-    }],
-    'comma-dangle': ['error', 'never'],
-    'no-extra-semi': 'error',
-    'eol-last': 'warn',
-    'space-before-function-paren': ['error', {
-        'anonymous': 'always',
-        'named': 'never'
-    }],
-    'space-before-blocks': 'error',
-    'operator-linebreak': ['error', 'before'],
-    'semi': ['error', 'always'],
-    'curly': ['error', 'all']
+    // ignore prop-types detectation by default
+    'react/prop-types': 0
   }
 }

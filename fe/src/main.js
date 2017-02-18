@@ -1,17 +1,19 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue';
-import UI from 'vue-material';
-import App from './App';
-import router from './router';
-import 'vue-material/dist/vue-material.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+import { AppContainer } from 'react-hot-loader'
 
-Vue.use(UI);
+const render = Component => {
+  ReactDOM.render(
+    <AppContainer>
+      <Component />
+    </AppContainer>,
+    document.getElementById('root')
+  )
+}
 
-/* eslint-disable no-new */
-new Vue({
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: { App }
-});
+render(App)
+
+if (module.hot) {
+  module.hot.accept('./App', () => render(App))
+}
