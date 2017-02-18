@@ -35,6 +35,22 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // ignore prop-types detectation by default
-    'react/prop-types': 0
+    'react/prop-types': 0,
+    'react/jsx-indent': ['error', 4],
+    'react/jsx-indent-props': ['error', 4],
+    'indent': ['error', 4, {
+        'SwitchCase': 1
+    }],
+    'comma-dangle': ['error', 'never'],
+    'no-extra-semi': 'error',
+    'eol-last': 'warn',
+    'space-before-function-paren': ['error', {
+        'anonymous': 'always',
+        'named': 'never'
+    }],
+    'space-before-blocks': 'error',
+    'operator-linebreak': ['error', 'before'],
+    'semi': ['error', 'always'],
+    'curly': ['error', 'all']
   }
 }
