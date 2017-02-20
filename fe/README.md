@@ -2,6 +2,12 @@
 
 > front-end
 
+## Note
+
+* React
+* SPA
+* How to adapt style files? (scoped, style-component, module)
+
 ## Usage
 
 ```bash

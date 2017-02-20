@@ -11,6 +11,9 @@ require('./cloud');
 
 const app = express();
 
+// 登陆测试
+app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
+
 app.use(require('connect-history-api-fallback')());
 
 app.use(express.static('public'));
@@ -33,13 +36,68 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
-app.use('/api', (req, res) => {
-    const query = new AV.Query('Test_order');
-    query.get('58a823f6128fe1006cbf9d0c')
-        .then((test) => {
-            res.send(test.get('shoes'));
+app.post('/api/login', function(req, res) {
+    AV.User.logIn(req.body.username, req.body.password)
+        .then((user) => {
+            res.saveCurrentUser(user);
+            res.send('success');
+        })
+        .catch(() => {
+            res.send('fail')
         });
 });
+
+// app.use('/api', (req, res) => {
+//     // const minyou = AV.Object.createWithoutData('_User', '575f6711df0eea0062c31d24');
+//     const purchaseInfo = AV.Object.createWithoutData('PurchaseInfo', '58a9c6dc128fe1006cc9a981');
+//     const query = new AV.Query('PurchaseOrder');
+//     query.equalTo('purchaseInfo', purchaseInfo);
+//     query.find().then((result) => {
+//         if (result.length) {
+//             const orderItem = result[0];
+//             console.log(orderItem.get('sizes'));
+//         }
+//         res.send('succ');
+//     });
+//     // let purchaseInfo = new AV.Object('PurchaseInfo');
+//     // purchaseInfo.set('user', minyou);
+//     // purchaseInfo.set('orderid', '002');
+//     // purchaseInfo.set('vender', 'bar');
+//     // purchaseInfo.set('note', 'yoyo');
+//     // let shoesType = new AV.Object('ShoesType');
+//     // shoesType.set('user', minyou);
+//     // shoesType.set('shoeid', '1102');
+//     // shoesType.set('color', 'black');
+//     // shoesType.set('brand', 'foo');
+//     // let purchaseOrder = new AV.Object('PurchaseOrder');
+//     // purchaseOrder.set('shoesType', shoesType);
+//     // purchaseOrder.set('purchaseInfo', purchaseInfo);
+//     // purchaseOrder.set('sizes', {
+//     //     s34: {
+//     //         need: 2,
+//     //         recieved: 0
+//     //     },
+//     //     s35: {
+//     //         need: 2,
+//     //         recieved: 0
+//     //     },
+//     //     s36: {
+//     //         need: 2,
+//     //         recieved: 0
+//     //     },
+//     //     s37: {
+//     //         need: 2,
+//     //         recieved: 0
+//     //     },
+//     // });
+//     // purchaseOrder.save()
+//     //     .then(() => {
+//     //         res.send('succ');
+//     //     })
+//     //     .catch(() => {
+//     //         res.send('fail');
+//     //     });
+// });
 
 // // 可以将一类的路由单独保存在一个文件中
 // app.use('/todos', require('./routes/todos'));
