@@ -1,20 +1,13 @@
 {
-    "presets": [
-        ["es2015", {"modules": false}],
-        "stage-3",
-        "react"
-    ],
-    "comments": false,
-    "plugins": [
-        "transform-runtime",
-        "transform-class-properties",
-        ["import", { "libraryName": "antd", "style": "css" }]
-    ],
-    "env": {
-        "development": {
-            "plugins": [
-                "react-hot-loader/babel"
-            ]
-        }
+  "presets": [
+    ["es2015", { "modules": false }],
+    "stage-2"
+  ],
+  "plugins": ["transform-runtime"],
+  "comments": false,
+  "env": {
+    "test": {
+      "plugins": [ "istanbul" ]
     }
+  }
 }

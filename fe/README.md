@@ -1,25 +1,21 @@
-# front-end
+# mommy-fe
 
-> front-end
+> front-end for mommy
 
-## Note
+## Build Setup
 
-* React
-* SPA
-* How to adapt style files? (scoped, style-component, module)
-
-## Usage
-
-```bash
-# install all this dependencies.
+``` bash
+# install dependencies
 npm install
 
-# development, default port: 8080
+# serve with hot reload at localhost:8080
 npm run dev
 
-# production
+# build for production with minification
 npm run build
 
-# lint the files
-npm run lint
+# build for production and view the bundle analyzer report
+npm run build --report
 ```
+
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
