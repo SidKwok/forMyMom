@@ -28,7 +28,10 @@
     - s34-s34 (number)
 
 - `/api/update-shoe` (更新鞋子) post
-  - id (objectid)
+  - stockObjectId (objectid)
+  - returns (number, 退货量)
+  - purchased  (number, 进货量)
+  - delivered (number，出货量)
   - sizes (object, 尺码)
     - s34-s34 (number)
 
@@ -103,10 +106,10 @@
 
 - `/api/create-purchase-order` (新建进货单) post
   - vender (objectid)
-  - orderid (string, 进货单号, unique)
+  - orderId (string, 进货单号, unique)
   - note (string, 备注)
   - items (object, 进货单项)
-    - {id(shoe, objectid), s34-s34: {needed: number, sent: number}}
+    - {shoeObjectId(shoe, objectid), s34-s34: {needed: number, sent: number}}
 
 - `/api/update-purchase-order` (更新进货单，修改了sent的话库存会有变化) post
   - id (objectid)

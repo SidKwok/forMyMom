@@ -6,10 +6,16 @@ router.use((req, res, next) => {
     if (req.currentUser) {
         next();
     } else {
-        res.send({ errNo: -1 });
+        res.send({
+            errNo: -1,
+            errMsg: '用户未登陆'
+        });
     }
 });
 
 require('./stock')(router);
+require('./client')(router);
+require('./vender')(router);
+require('./purchaseOrder')(router);
 
 module.exports = router;
