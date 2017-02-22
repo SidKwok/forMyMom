@@ -37,6 +37,9 @@ export default Form.create()(class LoginView extends Component {
                         <Form.Item>
                             <Button htmlType='submit'>Log In</Button>
                         </Form.Item>
+                        <Form.Item>
+                            <Button onClick={this.handleClick}>Log Out</Button>
+                        </Form.Item>
                     </Form>
                 </div>
             </div>

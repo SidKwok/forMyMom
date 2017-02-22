@@ -3,7 +3,7 @@
 ## Schemas
 
 * Stock (库存)
- - shoeid (string, 型号)
+ - shoeId (string, 型号)
  - brand (string, 品牌)
  - color (string, 颜色)
  - user (pointer, _User)
@@ -12,7 +12,7 @@
  - returns (number, 退货量)
  - isDel (boolean, 是否删除)
  - sizes (object, 尺码)
-   - s34-s34 (number)
+   - s34-s44 (number)
 
 * Client (客户)
  - name (string)
@@ -34,7 +34,7 @@
 
 * PurchaseOrder (进货单)
  - user (pointer, _User)
- - orderid (string, 进货单编号)
+ - orderId (string, 进货单编号)
  - vender (pointer, Vender)
  - createdAt (生成时间)
  - isDel (boolean, 是否删除)
@@ -48,25 +48,25 @@
      - needed (number, 需要的进货)
      - sent (number, 已到的进货)
 
-* DeliveryOrder (进货单)
+* DeliveryOrder (出货单)
  - orderid (string, 进货单编号)
  - createdAt (生成时间)
  - user (pointer, _User)
  - client (pointer, Client)
  - isDel (boolean, 是否删除)
  - items (relations, 出货单项)
- - count (number, 进货单总价值，由items的单价和数量决定)
+ - count (number, 出货单总价值，由items的单价和数量决定)
  - paid (number, 已付金额)
  - notyetCount (number, 欠货价值，可用于还款)
  - used (boolean, 是否已经用于还款)
  - isSentAll (boolean, 是否已经全部发货)
- - reliedDelivery: (relations, DeliveryOrder, 用于归还此订单的金额的进货单)
- - reliedReturns (relations, ReturnsLog, 用于归还此订单的金额的退货记录)
+ - reliedDelivery: (relations, DeliveryOrder, 用于归还此订单的金额的出货单)
+ - reliedReturns (relations, ReturnsOrder, 用于归还此订单的金额的退货记录)
  - isRetailed (boolean, 是否零售，如果是，则该订单的items长度应为1，且该订单的items只支持换)
  - note (string, 备注)
  - 该进货单的欠货能否还此订单的欠款？
 
-* DeliveryItems (进货单项)
+* DeliveryItems (出货单项)
  - shoeType (pointer, stock)
  - unitprice (number, 单价)
  - sizes (object, 尺码)

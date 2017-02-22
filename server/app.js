@@ -11,6 +11,7 @@ require('./cloud');
 
 const app = express();
 const auth = require('./router/auth');
+const api = require('./router/api');
 
 // 登陆测试
 app.use(AV.Cloud.CookieSession({ secret: 'mommy', maxAge: 3600000, fetchUser: true }));
@@ -39,6 +40,9 @@ app.get('/', (req, res) => {
 
 // 用户权限处理
 app.use(auth);
+
+// api 处理
+app.use(api);
 
 app.use((req, res, next) => {
     // 如果任何一个路由都没有返回响应，则抛出一个 404 异常给后续的异常处理器
