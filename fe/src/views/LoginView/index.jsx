@@ -6,7 +6,7 @@ import './LoginView.less';
 export default Form.create()(class LoginView extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/login', {
+        axios.post('/auth/login', {
             username: this.props.form.getFieldValue('username'),
             password: this.props.form.getFieldValue('password')
         })

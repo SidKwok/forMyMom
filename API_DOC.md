@@ -140,5 +140,7 @@
   - reliedReturns (Array, 用哪些退货单支付)
   - cash (number, 现金支付的数量)
 
+- `/api/` (展示出货单)
+
 - `/api/del-delivery-order` (删除出货单，later) post
   - id (object)
