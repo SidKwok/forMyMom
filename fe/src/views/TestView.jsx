@@ -44,21 +44,21 @@ export default class TestView extends Component {
      */
     createShoe = () => {
         axios.post('/api/create-shoe', {
-            shoeId: '1101',
-            brand: 'puma',
+            shoeId: '1102',
+            brand: 'adidas',
             color: 'red',
             sizes: {
-                s34: 1,
-                s35: 1,
-                s36: 1,
-                s37: 1,
-                s38: 1,
-                s39: 1,
-                s40: 1,
-                s41: 1,
-                s42: 1,
-                s43: 1,
-                s44: 1
+                s34: 2,
+                s35: 2,
+                s36: 2,
+                s37: 2,
+                s38: 2,
+                s39: 2,
+                s40: 2,
+                s41: 2,
+                s42: 2,
+                s43: 2,
+                s44: 2
             }
         })
         .then(({ data }) => {
@@ -247,23 +247,71 @@ export default class TestView extends Component {
      */
     createPurchaseOrder = () => {
         axios.post('/api/create-purchase-order', {
-            vender: '58ad90d5b123db00672fc72b',
-            orderId: '0001',
+            venderObjectId: '58ad917e2f301e006be64e14',
+            orderId: '0002',
             note: 'yyo',
-            items: [{
-                shoeObjectId: '58ad764a8fd9c50067036510',
-                s34: 1,
-                s35: 1,
-                s36: 1,
-                s37: 1,
-                s38: 1,
-                s39: 1,
-                s40: 1,
-                s41: 1,
-                s42: 1,
-                s43: 1,
-                s44: 1
-            }]
+            items: [
+                {
+                    shoeObjectId: '58ae51b6ac502e0069bd9830',
+                    s34: 1,
+                    s35: 1,
+                    s36: 1,
+                    s37: 1,
+                    s38: 1,
+                    s39: 1,
+                    s40: 1,
+                    s41: 1,
+                    s42: 1,
+                    s43: 1,
+                    s44: 1
+                },
+                {
+                    shoeObjectId: '58ad8aba5c497d005f7d24da',
+                    s34: 1,
+                    s35: 1,
+                    s36: 1,
+                    s37: 1,
+                    s38: 1,
+                    s39: 1,
+                    s40: 1,
+                    s41: 1,
+                    s42: 1,
+                    s43: 1,
+                    s44: 1
+                }
+            ]
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 展示所有进货单
+     */
+    showPurchaseOrders = () => {
+        axios.get('/api/show-purchase-orders')
+            .then(({ data }) => {
+                console.log(data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+    /**
+     * 展示进货单详情
+     */
+    showPurchaseOrderItems = () => {
+        axios.get('/api/show-purchase-order-items', {
+            params: { id: '58ae5741ac502e006c88fe95' }
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
     render() {
@@ -284,6 +332,8 @@ export default class TestView extends Component {
                 <Button onClick={this.delVender}>Delete Vender</Button>
                 <Button onClick={this.showVenders}>Show Venders</Button>
                 <Button onClick={this.createPurchaseOrder}>Create Purchase Order</Button>
+                <Button onClick={this.showPurchaseOrders}>Show Purchase Orders</Button>
+                <Button onClick={this.showPurchaseOrderItems}>Show Purchase Order Items</Button>
             </div>
         );
     }

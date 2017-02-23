@@ -89,8 +89,11 @@ module.exports = router => {
             .equalTo('user', user)
             .find()
             .then(result => {
-                const filtResult = result.filter(Vender => !Vender.get('isDel'));
-                res.send(filtResult);
+                const venders = result.filter(Vender => !Vender.get('isDel'));
+                res.send({
+                    errNo: 0,
+                    retData: { venders }
+                });
             })
             .catch(({ code }) => {
                 res.send(code);

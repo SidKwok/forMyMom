@@ -105,11 +105,16 @@
 ### 进货单操作
 
 - `/api/create-purchase-order` (新建进货单) post
-  - vender (objectid)
+  - venderObjectId (objectid)
   - orderId (string, 进货单号, unique)
   - note (string, 备注)
   - items (object, 进货单项)
     - {shoeObjectId(shoe, objectid), s34-s34: {needed: number, sent: number}}
+
+- `/api/show-purchase-order` (显示全部进货单) get
+
+- `/api/show-purchase-order-items` (展示进货单的详情) get
+  - id (进货单objectId)
 
 - `/api/update-purchase-order` (更新进货单，修改了sent的话库存会有变化) post
   - id (objectid)
