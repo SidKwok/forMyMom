@@ -11,21 +11,21 @@ module.exports = router => {
         const { shoeId, brand, color, sizes } = req.body;
         let newShoe = new av.Object('Stock');
         let Stock = new av.Query('Stock');
-        Stock.equalTo('user', user);
-        Stock.equalTo('shoeId', shoeId);
-        Stock.equalTo('brand', brand);
-        Stock.equalTo('color', color);
         Stock
+            .equalTo('user', user)
+            .equalTo('shoeId', shoeId)
+            .equalTo('brand', brand)
+            .equalTo('color', color)
             .find()
             .then(result => {
                 if (!result.length) {
-                    newShoe.set('user', user);
-                    newShoe.set('shoeId', shoeId);
-                    newShoe.set('brand', brand);
-                    newShoe.set('color', color);
-                    newShoe.set('sizes', sizes);
-
-                    return newShoe.save();
+                    return newShoe
+                        .set('user', user)
+                        .set('shoeId', shoeId)
+                        .set('brand', brand)
+                        .set('color', color)
+                        .set('sizes', sizes)
+                        .save();
                 } else {
                     return Promise.reject({
                         code: 101,
@@ -56,11 +56,12 @@ module.exports = router => {
                     .forEach(key => {
                         _sizes[key] = sizes[key];
                     });
-                result.set('sizes', _sizes);
-                result.set('returns', returns);
-                result.set('delivered', delivered);
-                result.set('purchased', purchased);
-                return result.save();
+                return result
+                    .set('sizes', _sizes)
+                    .set('returns', returns)
+                    .set('delivered', delivered)
+                    .set('purchased', purchased)
+                    .save();
             })
             .then(() => {
                 res.send({errNo: 0});
@@ -76,8 +77,9 @@ module.exports = router => {
         let shoe = new av.Query('Stock');
         shoe.get(stockObjectId)
             .then(result => {
-                result.set('isDel', true);
-                return result.save();
+                return result
+                    .set('isDel', true)
+                    .save();
             })
             .then(() => {
                 res.send({ errNo: 0 });

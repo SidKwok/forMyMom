@@ -69,8 +69,8 @@ module.exports = router => {
     router.get('/api/show-purchase-orders', (req, res) => {
         const user = req.currentUser;
         let purchaseOrder = new av.Query('PurchaseOrder');
-        purchaseOrder.equalTo('user', user);
         purchaseOrder
+            .equalTo('user', user)
             .find()
             .then(results => {
                 let orders = results
@@ -103,8 +103,9 @@ module.exports = router => {
         query.find()
             .then(items => {
                 let retData = items.map(item => ({
+                    itemId: item.id,
                     shoeType: {
-                        shoeObjectId: item.id,
+                        shoeObjectId: item.get('shoeType').id,
                         brand: item.get('shoeType').get('brand'),
                         color: item.get('shoeType').get('color'),
                         shoeId: item.get('shoeType').get('shoeId')
@@ -118,6 +119,39 @@ module.exports = router => {
             })
             .catch(({ code }) => {
                 res.send({ errNo: code });
+            });
+    });
+
+    // 更新进货单
+    router.post('/api/update-purchase-order', (req, res) => {
+        const { orderId, note, items } = req.body;
+        const order = av.Object.createWithoutData('PurchaseOrder', orderId);
+        // TODO: handle items
+        order.relation('items')
+            .query()
+            .include(['shoeType'])
+            .find()
+            .then(formerItems => {
+                console.log(items[0].get('shoeType').get('shoeId'));
+                res.send('1');
+            })
+            .catch(err => {
+                console.log(err);
+            });
+            // res.send('1');
+    });
+
+    // 更新进货单备注信息
+    router.post('/api/update-purchase-note', (req, res) => {
+        const { orderId, note } = req.body;
+        const order = av.Object.createWithoutData('PurchaseOrder', orderId);
+        order.set('note', note)
+            .save()
+            .then(() => {
+                res.send({ errNo: 0 });
+            })
+            .catch(() => {
+                res.send({ errNo: -1 });
             });
     });
 };

@@ -48,6 +48,10 @@
 
 - `/api/show-all-shoes` (展示所有鞋子)
 
+- `/api/update-purchase-note` (更新出货单备注)
+  - orderId (objectId, required)
+  - note (string, required)
+
 ### 客户操作
 
 - `/api/create-client` (新建客户) post
@@ -119,8 +123,8 @@
 - `/api/update-purchase-order` (更新进货单，修改了sent的话库存会有变化) post
   - id (objectid)
   - note (string, 备注)
-  - items (object, 进货单项)
-    - {id(shoe, objectid), s34-s34: {needed: number, sent: sent}}
+  - items (array, 进货单项)
+    - [{itemId(itemId, objectId), s34-s34: {needed: number, sent: number}}]
 
 - `/api/del-purchase-order` (删除进货单，同时询问是否将库存的数据还原为该单进货之前) post
   - id (objectid)

@@ -11,21 +11,21 @@ module.exports = router => {
         const { name, mobilephone, telephone, address, note } = req.body;
         let newClient = new av.Object('Clients');
         let Client = new av.Query('Clients');
-        Client.equalTo('user', user);
-        Client.equalTo('name', name);
 
         Client
+            .equalTo('user', user)
+            .equalTo('name', name)
             .find()
             .then(result => {
                 if (!result.length) {
-                    newClient.set('user', user);
-                    newClient.set('name', name);
-                    newClient.set('mobilephone', mobilephone);
-                    newClient.set('telephone', telephone);
-                    newClient.set('address', address);
-                    newClient.set('note', note);
-
-                    return newClient.save();
+                    return newClient
+                        .set('user', user)
+                        .set('name', name)
+                        .set('mobilephone', mobilephone)
+                        .set('telephone', telephone)
+                        .set('address', address)
+                        .set('note', note)
+                        .save()
                 } else {
                     return Promise.reject({
                         code: -1,
@@ -50,11 +50,12 @@ module.exports = router => {
         let client = new av.Query('Clients');
         client.get(clientObjectId)
             .then(result => {
-                result.set('address', address);
-                result.set('mobilephone', mobilephone);
-                result.set('telephone', telephone);
-                result.set('note', note);
-                return result.save();
+                return result
+                    .set('address', address)
+                    .set('mobilephone', mobilephone)
+                    .set('telephone', telephone)
+                    .set('note', note)
+                    .save();
             })
             .then(() => {
                 res.send({errNo: 0});
@@ -70,8 +71,9 @@ module.exports = router => {
         let client = new av.Query('Clients');
         client.get(clientObjectId)
             .then(result => {
-                result.set('isDel', true);
-                return result.save();
+                return result
+                    .set('isDel', true)
+                    .save();
             })
             .then(() => {
                 res.send({ errNo: 0 });

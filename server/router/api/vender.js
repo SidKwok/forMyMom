@@ -11,21 +11,21 @@ module.exports = router => {
         const { name, mobilephone, telephone, address, note } = req.body;
         let newVender = new av.Object('Vender');
         let Vender = new av.Query('Vender');
-        Vender.equalTo('user', user);
-        Vender.equalTo('name', name);
 
         Vender
+            .equalTo('user', user)
+            .equalTo('name', name)
             .find()
             .then(result => {
                 if (!result.length) {
-                    newVender.set('user', user);
-                    newVender.set('name', name);
-                    newVender.set('mobilephone', mobilephone);
-                    newVender.set('telephone', telephone);
-                    newVender.set('address', address);
-                    newVender.set('note', note);
-
-                    return newVender.save();
+                    return newVender
+                        .set('user', user)
+                        .set('name', name)
+                        .set('mobilephone', mobilephone)
+                        .set('telephone', telephone)
+                        .set('address', address)
+                        .set('note', note)
+                        .save();
                 } else {
                     return Promise.reject({
                         code: -1,
@@ -50,11 +50,12 @@ module.exports = router => {
         let Vender = new av.Query('Vender');
         Vender.get(venderObjectId)
             .then(result => {
-                result.set('address', address);
-                result.set('mobilephone', mobilephone);
-                result.set('telephone', telephone);
-                result.set('note', note);
-                return result.save();
+                return result
+                    .set('address', address)
+                    .set('mobilephone', mobilephone)
+                    .set('telephone', telephone)
+                    .set('note', note)
+                    .save();
             })
             .then(() => {
                 res.send({errNo: 0});
@@ -70,8 +71,9 @@ module.exports = router => {
         let Vender = new av.Query('Vender');
         Vender.get(venderObjectId)
             .then(result => {
-                result.set('isDel', true);
-                return result.save();
+                return result
+                    .set('isDel', true)
+                    .save();
             })
             .then(() => {
                 res.send({ errNo: 0 });

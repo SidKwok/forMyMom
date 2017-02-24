@@ -121,11 +121,11 @@ export default class TestView extends Component {
      */
     createClient = () => {
         axios.post('/api/create-client', {
-            name: '王小姐',
-            mobilephone: '18202724405',
-            telephone: '85245077',
-            address: '虎门',
-            note: 'wtf'
+            name: '孙小姐',
+            mobilephone: '18204405111',
+            telephone: '85247111',
+            address: '厚街',
+            note: 'wtfwtf'
         })
         .then(({ data }) => {
             console.log(data);
@@ -314,6 +314,35 @@ export default class TestView extends Component {
             console.log(err);
         });
     }
+    /**
+     * 更新进货单备注
+     */
+    updatePurchaseNote = () => {
+        axios.post('/api/update-purchase-note', {
+            orderId: '58ae5741ac502e006c88fe95',
+            note: 'yahahahahaha'
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 更新进货单详情
+     */
+    updatePurchaseOrder = () => {
+        axios.post('/api/update-purchase-order', {
+            orderId: '58ae5741ac502e006c88fe95'
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <div className='test-view'>
@@ -334,6 +363,8 @@ export default class TestView extends Component {
                 <Button onClick={this.createPurchaseOrder}>Create Purchase Order</Button>
                 <Button onClick={this.showPurchaseOrders}>Show Purchase Orders</Button>
                 <Button onClick={this.showPurchaseOrderItems}>Show Purchase Order Items</Button>
+                <Button onClick={this.updatePurchaseNote}>Update Purchase Note</Button>
+                <Button onClick={this.updatePurchaseOrder}>Update Purchase Order</Button>
             </div>
         );
     }
