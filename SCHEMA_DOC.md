@@ -11,6 +11,7 @@
  - delivered (number, 出货量)
  - returns (number, 退货量)
  - isDel (boolean, 是否删除)
+ - count (Number, 总数)
  - sizes (object, 尺码)
    - s34-s44 (number)
 
@@ -64,7 +65,7 @@
  - reliedReturns (relations, ReturnsOrder, 用于归还此订单的金额的退货记录)
  - isRetailed (boolean, 是否零售，如果是，则该订单的items长度应为1，且该订单的items只支持换)
  - note (string, 备注)
- - 该进货单的欠货能否还此订单的欠款？
+ - 该出货单的欠货能否还此订单的欠款？
 
 * DeliveryItems (出货单项)
  - shoeType (pointer, stock)

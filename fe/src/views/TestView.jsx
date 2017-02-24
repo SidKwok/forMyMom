@@ -44,9 +44,9 @@ export default class TestView extends Component {
      */
     createShoe = () => {
         axios.post('/api/create-shoe', {
-            shoeId: '1102',
-            brand: 'adidas',
-            color: 'red',
+            shoeId: '1105',
+            brand: 'nike',
+            color: 'blue',
             sizes: {
                 s34: 2,
                 s35: 2,
@@ -75,7 +75,7 @@ export default class TestView extends Component {
      */
     updateShoe = () => {
         axios.post('/api/update-shoe', {
-            stockObjectId: '58ad764a8fd9c50067036510',
+            stockObjectId: '58afcaf1128fe1006cb088c2',
             sizes: {
                 s34: 9,
                 s35: 8
@@ -333,8 +333,24 @@ export default class TestView extends Component {
      * 更新进货单详情
      */
     updatePurchaseOrder = () => {
-        axios.post('/api/update-purchase-order', {
-            orderId: '58ae5741ac502e006c88fe95'
+        axios.post('/api/purchase-to-stock', {
+            orderId: '58ae5741ac502e006c88fe95',
+            changedItems: [
+                {
+                    itemId: '58ae5741570c350069119710',
+                    sizes: {
+                        s34: 1,
+                        s35: 1
+                    }
+                },
+                {
+                    itemId: '58ae5741570c35006911970f',
+                    sizes: {
+                        s36: 1,
+                        s37: 1
+                    }
+                }
+            ]
         })
         .then(({ data }) => {
             console.log(data);

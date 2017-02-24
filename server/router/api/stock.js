@@ -19,12 +19,16 @@ module.exports = router => {
             .find()
             .then(result => {
                 if (!result.length) {
+                    let count = Object.keys(sizes)
+                        .map(size => sizes[size])
+                        .reduce((sum, cur) => (sum + cur));
                     return newShoe
                         .set('user', user)
                         .set('shoeId', shoeId)
                         .set('brand', brand)
                         .set('color', color)
                         .set('sizes', sizes)
+                        .set('count', count)
                         .save();
                 } else {
                     return Promise.reject({
@@ -39,8 +43,11 @@ module.exports = router => {
                     retData: { id }
                 });
             })
-            .catch(({ code, errMsg }) => {
-                res.send({ errNo: code, errMsg });
+            .catch(err => {
+                res.send({
+                    errNo: err.code,
+                    errMsg: err.errMsg
+                });
             });
     });
 
@@ -56,8 +63,12 @@ module.exports = router => {
                     .forEach(key => {
                         _sizes[key] = sizes[key];
                     });
+                let count = Object.keys(_sizes)
+                    .map(size => _sizes[size])
+                    .reduce((sum, cur) => (sum + cur));
                 return result
                     .set('sizes', _sizes)
+                    .set('count', count)
                     .set('returns', returns)
                     .set('delivered', delivered)
                     .set('purchased', purchased)

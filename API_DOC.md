@@ -48,9 +48,14 @@
 
 - `/api/show-all-shoes` (展示所有鞋子)
 
-- `/api/update-purchase-note` (更新出货单备注)
+- `/api/update-purchase-note` (更新进货货单备注)
   - orderId (objectId, required)
   - note (string, required)
+
+- `/api/purchase-to-stock` (进货到库存)
+  - orderId
+  - items (Array)
+    - [{itemId(required), s34-s44(if needed)}]
 
 ### 客户操作
 

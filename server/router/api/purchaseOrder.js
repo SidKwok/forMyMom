@@ -123,22 +123,52 @@ module.exports = router => {
     });
 
     // 更新进货单
-    router.post('/api/update-purchase-order', (req, res) => {
-        const { orderId, note, items } = req.body;
+    router.post('/api/purchase-to-stock', (req, res) => {
+        const { orderId, changedItems } = req.body;
         const order = av.Object.createWithoutData('PurchaseOrder', orderId);
-        // TODO: handle items
         order.relation('items')
             .query()
             .include(['shoeType'])
             .find()
-            .then(formerItems => {
-                console.log(items[0].get('shoeType').get('shoeId'));
-                res.send('1');
+            .then(orderItems => {
+                let saveObjects = [];
+                for (let changedItem of changedItems) {
+                    let { itemId, sizes } = changedItem;
+                    for (let orderItem of orderItems) {
+                        if (itemId === orderItem.id) {
+                            let orderItemSizes = orderItem.get('sizes');// {"s34": {needed: 0, sent: 0}}
+                            let shoe = orderItem.get('shoeType')
+                            let shoeSizes = shoe.get('sizes');
+                            let shoeCount = shoe.get('count');
+                            let shoePurchased = shoe.get('purchased');
+                            Object.keys(sizes).forEach(size => {
+                                // 进货单项sent的修改
+                                orderItemSizes[size].sent += sizes[size];
+                                // 库存数量修改
+                                shoeSizes[size] += sizes[size];
+                                shoeCount += sizes[size];
+                                // 进货量修改
+                                shoePurchased += sizes[size];
+                            });
+                            // 保存对象
+                            orderItem.set('sizes', orderItemSizes);
+                            shoe.set('sizes'. shoeSizes)
+                                .set('count', shoeCount);
+                            saveObjects.push(orderItem, shoe);
+                            break;
+                        }
+                    }
+                }
+                return av.Object.saveAll(saveObjects);
+            })
+            .then((param) => {
+                res.send(param);
             })
             .catch(err => {
-                console.log(err);
+                res.send({
+                    errNo: err.code
+                });
             });
-            // res.send('1');
     });
 
     // 更新进货单备注信息
