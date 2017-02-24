@@ -48,15 +48,6 @@
 
 - `/api/show-all-shoes` (展示所有鞋子)
 
-- `/api/update-purchase-note` (更新进货货单备注)
-  - orderId (objectId, required)
-  - note (string, required)
-
-- `/api/purchase-to-stock` (进货到库存)
-  - orderId
-  - items (Array)
-    - [{itemId(required), s34-s44(if needed)}]
-
 ### 客户操作
 
 - `/api/create-client` (新建客户) post
@@ -125,15 +116,19 @@
 - `/api/show-purchase-order-items` (展示进货单的详情) get
   - id (进货单objectId)
 
-- `/api/update-purchase-order` (更新进货单，修改了sent的话库存会有变化) post
-  - id (objectid)
-  - note (string, 备注)
-  - items (array, 进货单项)
-    - [{itemId(itemId, objectId), s34-s34: {needed: number, sent: number}}]
+- `/api/del-purchase-order` (删除进货单，只有当厂家未发货的时候才可以删除) get
+  - orderId (objectid)
 
-- `/api/del-purchase-order` (删除进货单，同时询问是否将库存的数据还原为该单进货之前) post
-  - id (objectid)
-  - isReset (boolean, 是否还原)
+- `/api/update-purchase-order` (更新进货单，只有当厂家未发货的时候才可以更新) post
+
+- `/api/update-purchase-note` (更新进货货单备注)
+  - orderId (objectId, required)
+  - note (string, required)
+
+- `/api/purchase-to-stock` (进货到库存)
+  - orderId
+  - items (Array)
+    - [{itemId(required), s34-s44(if needed)}]
 
 ### 出货单操作
 

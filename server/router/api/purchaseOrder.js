@@ -122,7 +122,7 @@ module.exports = router => {
             });
     });
 
-    // 更新进货单
+    // 进货到仓库
     router.post('/api/purchase-to-stock', (req, res) => {
         const { orderId, changedItems } = req.body;
         const order = av.Object.createWithoutData('PurchaseOrder', orderId);
@@ -131,7 +131,29 @@ module.exports = router => {
             .include(['shoeType'])
             .find()
             .then(orderItems => {
+                // TODO: handle status
+                // let status = orderItems
+                //     .map(item => {
+                //         let sizes = item.get('sizes');
+                //         return Object.keys(sizes)
+                //             .map(size => {
+                //                 let s = sizes[size];
+                //                 if (s.needed - s.sent === s.needed) {
+                //                     // 未发货
+                //                     return -1;
+                //                 } else if (s.needed - s.sent === 0) {
+                //                     // 已完成
+                //                     return 1;
+                //                 } else {
+                //                     // 发货中
+                //                     return 0;
+                //                 }
+                //             })
+                //             .every(ele => ele === 0);
+                //     })
+                //     .every(isSentAll => isSentAll);
                 let saveObjects = [];
+                // 检验订单并修改库存
                 for (let changedItem of changedItems) {
                     let { itemId, sizes } = changedItem;
                     for (let orderItem of orderItems) {
@@ -162,7 +184,7 @@ module.exports = router => {
                 return av.Object.saveAll(saveObjects);
             })
             .then((param) => {
-                res.send(param);
+                res.send({ errNo: 0 });
             })
             .catch(err => {
                 res.send({

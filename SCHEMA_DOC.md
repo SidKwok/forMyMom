@@ -41,6 +41,7 @@
  - isDel (boolean, 是否删除)
  - items (relations, PurchaseItems)
  - note (string, 备注)
+ - status (number, 状态，-1:未完成，0:发货中，1:已完成)
 
 * PurchaseItems (进货项)
  - shoeType (pointer, Stock)
