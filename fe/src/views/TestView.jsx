@@ -348,42 +348,10 @@ export default class TestView extends Component {
      */
     updatePurchaseOrder = () => {
         axios.post('/api/purchase-to-stock', {
-            orderId: '58b043d7ac502e006c95d6b0',
+            orderId: '58b04fa75c497d00677d801b',
             changedItems: [
                 {
-                    itemId: '58b043d7570c3500691e3003',
-                    sizes: {
-                        s34: 2,
-                        s35: 2,
-                        s36: 2,
-                        s37: 2,
-                        s38: 2,
-                        s39: 2,
-                        s40: 2,
-                        s41: 2,
-                        s42: 2,
-                        s43: 2,
-                        s44: 2
-                    }
-                },
-                {
-                    itemId: '58b043d7570c3500691e3002',
-                    sizes: {
-                        s34: 1,
-                        s35: 1,
-                        s36: 1,
-                        s37: 1,
-                        s38: 1,
-                        s39: 1,
-                        s40: 1,
-                        s41: 1,
-                        s42: 1,
-                        s43: 1,
-                        s44: 1
-                    }
-                },
-                {
-                    itemId: '58b043d7570c3500691e3001',
+                    itemId: '58b04fa65c497d00677d8017',
                     sizes: {
                         s34: 1,
                         s35: 1,
@@ -398,6 +366,38 @@ export default class TestView extends Component {
                         s44: 1
                     }
                 }
+                // {
+                //     itemId: '58b04fa65c497d00677d8016',
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // },
+                // {
+                //     itemId: '58b04fa65c497d00677d8015',
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // }
             ]
         })
         .then(({ data }) => {

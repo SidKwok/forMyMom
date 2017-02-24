@@ -168,24 +168,15 @@ module.exports = router => {
             .then(orderItems => {
                 let orderMap = new Map();
                 orderItems.forEach(item => orderMap.set(item.id, _.cloneDeep(item.get('sizes'))));
-                // let olderStatus = orderItems.map(item => {
-                //     // 提取所有size的needed和sent组成一个数组
-                //     let sizeArr = Object.values(item.sizes);
-                //     return {
-                //         [item.id]: defineStatus(sizeArr.map(defineSizeStatus))
-                //     };
-                // });
                 let saveObjects = [];
                 // 检验订单并修改库存
                 for (let changedItem of changedItems) {
                     let { itemId, sizes } = changedItem;
                     // handle status
                     if (orderMap.has(itemId)) {
-                        // buggy!
                         let formerSizes = orderMap.get(itemId);
-                        // console.log(formerSizes);
                         Object.keys(sizes).forEach(key => {
-                            formerSizes[key].sent = sizes[key];
+                            formerSizes[key].sent += sizes[key];
                         });
                         orderMap.set(itemId, formerSizes);
                     }
@@ -207,8 +198,10 @@ module.exports = router => {
                             });
                             // 保存对象
                             orderItem.set('sizes', orderItemSizes);
+                            // buggy!
                             shoe.set('sizes'. shoeSizes)
-                                .set('count', shoeCount);
+                                .set('count', shoeCount)
+                                .set('purchased', shoePurchased);
                             saveObjects.push(orderItem, shoe);
                             break;
                         }
