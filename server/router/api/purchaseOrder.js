@@ -3,6 +3,40 @@
  */
 
 const av = require('leanengine');
+const _ = require('lodash');
+
+function defineStatus (arr) {
+    if (arr.includes(-1)
+    && !arr.includes(0)
+    && !arr.includes(1)) {
+        // 未发货
+        return -1;
+    } else if (arr.includes(1)
+    && !arr.includes(0)
+    && !arr.includes(-1)) {
+        // 已完成
+        return 1;
+    } else {
+        // 发货中
+        return 0;
+    }
+}
+
+function defineSizeStatus({ needed, sent }) {
+    // 对于一种鞋子的一种尺码来说
+    let gap = needed - sent;
+    switch (gap) {
+        case needed:
+            // 未发货
+            return -1;
+        case 0:
+            // 已完成
+            return 1;
+        default:
+            // 发货中
+            return 0;
+        }
+}
 
 module.exports = router => {
     // 生成进货单
@@ -125,37 +159,36 @@ module.exports = router => {
     // 进货到仓库
     router.post('/api/purchase-to-stock', (req, res) => {
         const { orderId, changedItems } = req.body;
+        // 避免对象的多处引用所以用了一个deep clone
         const order = av.Object.createWithoutData('PurchaseOrder', orderId);
         order.relation('items')
             .query()
             .include(['shoeType'])
             .find()
             .then(orderItems => {
-                // TODO: handle status
-                // let status = orderItems
-                //     .map(item => {
-                //         let sizes = item.get('sizes');
-                //         return Object.keys(sizes)
-                //             .map(size => {
-                //                 let s = sizes[size];
-                //                 if (s.needed - s.sent === s.needed) {
-                //                     // 未发货
-                //                     return -1;
-                //                 } else if (s.needed - s.sent === 0) {
-                //                     // 已完成
-                //                     return 1;
-                //                 } else {
-                //                     // 发货中
-                //                     return 0;
-                //                 }
-                //             })
-                //             .every(ele => ele === 0);
-                //     })
-                //     .every(isSentAll => isSentAll);
+                let orderMap = new Map();
+                orderItems.forEach(item => orderMap.set(item.id, _.cloneDeep(item.get('sizes'))));
+                // let olderStatus = orderItems.map(item => {
+                //     // 提取所有size的needed和sent组成一个数组
+                //     let sizeArr = Object.values(item.sizes);
+                //     return {
+                //         [item.id]: defineStatus(sizeArr.map(defineSizeStatus))
+                //     };
+                // });
                 let saveObjects = [];
                 // 检验订单并修改库存
                 for (let changedItem of changedItems) {
                     let { itemId, sizes } = changedItem;
+                    // handle status
+                    if (orderMap.has(itemId)) {
+                        // buggy!
+                        let formerSizes = orderMap.get(itemId);
+                        // console.log(formerSizes);
+                        Object.keys(sizes).forEach(key => {
+                            formerSizes[key].sent = sizes[key];
+                        });
+                        orderMap.set(itemId, formerSizes);
+                    }
                     for (let orderItem of orderItems) {
                         if (itemId === orderItem.id) {
                             let orderItemSizes = orderItem.get('sizes');// {"s34": {needed: 0, sent: 0}}
@@ -181,12 +214,21 @@ module.exports = router => {
                         }
                     }
                 }
+                let status = defineStatus(
+                    [...orderMap.keys()].map(id => {
+                        let sizeArr = Object.values(orderMap.get(id));
+                        return defineStatus(sizeArr.map(defineSizeStatus));
+                    })
+                );
+                order.set('status', status);
+                saveObjects.push(order);
                 return av.Object.saveAll(saveObjects);
             })
             .then((param) => {
                 res.send({ errNo: 0 });
             })
             .catch(err => {
+                console.log(err);
                 res.send({
                     errNo: err.code
                 });

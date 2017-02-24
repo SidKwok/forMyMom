@@ -252,7 +252,7 @@ export default class TestView extends Component {
             note: 'yyo',
             items: [
                 {
-                    shoeObjectId: '58ae51b6ac502e0069bd9830',
+                    shoeObjectId: '58afcaf1128fe1006cb088c2',
                     s34: 1,
                     s35: 1,
                     s36: 1,
@@ -266,7 +266,7 @@ export default class TestView extends Component {
                     s44: 1
                 },
                 {
-                    shoeObjectId: '58ad8aba5c497d005f7d24da',
+                    shoeObjectId: '58afcadf5c497d0067797195',
                     s34: 1,
                     s35: 1,
                     s36: 1,
@@ -278,6 +278,20 @@ export default class TestView extends Component {
                     s42: 1,
                     s43: 1,
                     s44: 1
+                },
+                {
+                    shoeObjectId: '58afcabeac502e006c9213a6',
+                    s34: 2,
+                    s35: 2,
+                    s36: 2,
+                    s37: 2,
+                    s38: 2,
+                    s39: 2,
+                    s40: 2,
+                    s41: 2,
+                    s42: 2,
+                    s43: 2,
+                    s44: 2
                 }
             ]
         })
@@ -334,20 +348,54 @@ export default class TestView extends Component {
      */
     updatePurchaseOrder = () => {
         axios.post('/api/purchase-to-stock', {
-            orderId: '58ae5741ac502e006c88fe95',
+            orderId: '58b043d7ac502e006c95d6b0',
             changedItems: [
                 {
-                    itemId: '58ae5741570c350069119710',
+                    itemId: '58b043d7570c3500691e3003',
                     sizes: {
-                        s34: 1,
-                        s35: 1
+                        s34: 2,
+                        s35: 2,
+                        s36: 2,
+                        s37: 2,
+                        s38: 2,
+                        s39: 2,
+                        s40: 2,
+                        s41: 2,
+                        s42: 2,
+                        s43: 2,
+                        s44: 2
                     }
                 },
                 {
-                    itemId: '58ae5741570c35006911970f',
+                    itemId: '58b043d7570c3500691e3002',
                     sizes: {
+                        s34: 1,
+                        s35: 1,
                         s36: 1,
-                        s37: 1
+                        s37: 1,
+                        s38: 1,
+                        s39: 1,
+                        s40: 1,
+                        s41: 1,
+                        s42: 1,
+                        s43: 1,
+                        s44: 1
+                    }
+                },
+                {
+                    itemId: '58b043d7570c3500691e3001',
+                    sizes: {
+                        s34: 1,
+                        s35: 1,
+                        s36: 1,
+                        s37: 1,
+                        s38: 1,
+                        s39: 1,
+                        s40: 1,
+                        s41: 1,
+                        s42: 1,
+                        s43: 1,
+                        s44: 1
                     }
                 }
             ]
