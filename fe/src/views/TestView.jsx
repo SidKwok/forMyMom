@@ -250,6 +250,7 @@ export default class TestView extends Component {
             venderObjectId: '58ad90d5b123db00672fc72b',
             orderId: '0007',
             note: 'yyohoho',
+            isRetail: false,
             items: [
                 {
                     shoeObjectId: '58afcabeac502e006c9213a6',
@@ -260,7 +261,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58afcaf1128fe1006cb088c2',
+                    shoeObjectId: '58afcadf5c497d0067797195',
                     sizes: {
                         s37: 1,
                         s38: 1,
@@ -272,7 +273,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58afcadf5c497d0067797195',
+                    shoeObjectId: '58afca3b128fe1006cb07ca4',
                     sizes: {
                         s37: 2,
                         s38: 2,
@@ -336,56 +337,38 @@ export default class TestView extends Component {
      */
     updatePurchaseOrder = () => {
         axios.post('/api/purchase-to-stock', {
-            orderId: '58b10e94128fe1006cc2f18d',
+            orderObjectId: '58b17fca8ac24728d5419af1',
             changedItems: [
+                // {
+                //     itemId: '58b17fca1b69e60058a92155',
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1
+                //     }
+                // },
+                // {
+                //     itemId: '58b17fca1b69e60058a92156',
+                //     sizes: {
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1
+                //     }
+                // },
                 {
-                    itemId: '58b10e94570c3500696470fc',
+                    itemId: '58b17fca1b69e60058a92157',
                     sizes: {
-                        s34: 1,
-                        s35: 1,
-                        s36: 1,
                         s37: 1,
                         s38: 1,
                         s39: 1,
                         s40: 1,
-                        s41: 1,
-                        s42: 1,
-                        s43: 1,
-                        s44: 1
+                        s41: 1
                     }
                 }
-                // {
-                //     itemId: '58b10e94570c3500696470fb',
-                //     sizes: {
-                //         s34: 1,
-                //         s35: 1,
-                //         s36: 1,
-                //         s37: 1,
-                //         s38: 1,
-                //         s39: 1,
-                //         s40: 1,
-                //         s41: 1,
-                //         s42: 1,
-                //         s43: 1,
-                //         s44: 1
-                //     }
-                // },
-                // {
-                //     itemId: '58b10e94570c3500696470fa',
-                //     sizes: {
-                //         s34: 1,
-                //         s35: 1,
-                //         s36: 1,
-                //         s37: 1,
-                //         s38: 1,
-                //         s39: 1,
-                //         s40: 1,
-                //         s41: 1,
-                //         s42: 1,
-                //         s43: 1,
-                //         s44: 1
-                //     }
-                // }
             ]
         })
         .then(({ data }) => {
@@ -461,6 +444,34 @@ export default class TestView extends Component {
             console.log(err);
         });
     }
+    /**
+     * 展示出货单详情
+     */
+    showDeliveryOrderItems = () => {
+        axios.get('/api/show-delivery-order-items', {
+            params: { orderObjectId: '58b1222b8d6d810057e622d2' }
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 更新出货单详情
+     */
+    updateDeliveryOrder = () => {
+        axios.post('/api/stock-to-delivery', {
+            orderObjectId: '58b1611c8ac24728d540bc46'
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <div className='test-view'>
@@ -485,6 +496,8 @@ export default class TestView extends Component {
                 <Button onClick={this.updatePurchaseOrder}>Update Purchase Order</Button>
                 <Button onClick={this.deletePurchaseOrder}>Delete Purchase Order</Button>
                 <Button onClick={this.createDeliveryOrder}>Create Delivery Order</Button>
+                <Button onClick={this.showDeliveryOrderItems}>Show Delivery Order Items</Button>
+                <Button onClick={this.updateDeliveryOrder}>Update Delivery Order</Button>
             </div>
         );
     }

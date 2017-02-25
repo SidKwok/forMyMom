@@ -162,71 +162,84 @@ module.exports = router => {
 
     // 进货到仓库
     router.post('/api/purchase-to-stock', async (req, res) => {
-        const { orderId, changedItems } = req.body;
-        let order = av.Object.createWithoutData('PurchaseOrder', orderId);
         try {
             // 获取该订单的所有items
+            let order = av.Object.createWithoutData('PurchaseOrder', req.body.orderObjectId);
             let orderItems = await order
                 .relation('items')
                 .query()
                 .include(['shoeType'])
                 .find();
+            // 构建以id为键名的键值对
             let orderMap = new Map();
-            // 避免对象的多处引用所以用了一个deep clone
-            orderItems.forEach(item =>
-                orderMap.set(item.id, _.cloneDeep(item.get('sizes'))));
+            orderItems.forEach(orderItem =>
+                orderMap.set(orderItem.id, {
+                    orderItem,
+                    sizes: orderItem.get('sizes')
+                }));
+            // 需要保存的所有对象
             let saveObjects = [];
-            // 检验订单并修改库存
+            const { changedItems } = req.body;
             for (let changedItem of changedItems) {
-                let { itemId, sizes } = changedItem;
-                // handle status
-                if (orderMap.has(itemId)) {
-                    let formerSizes = orderMap.get(itemId);
-                    Object.keys(sizes).forEach(key => {
-                        formerSizes[key].sent += sizes[key];
-                    });
-                    orderMap.set(itemId, formerSizes);
-                }
-                for (let orderItem of orderItems) {
-                    if (itemId === orderItem.id) {
-                        let orderItemSizes = orderItem.get('sizes'); // {"s34": {needed: 0, sent: 0}}
-                        let shoe = orderItem.get('shoeType');
-                        let shoeSizes = shoe.get('sizes');
-                        let shoeCount = shoe.get('count');
-                        let shoePurchased = shoe.get('purchased');
-                        Object.keys(sizes).forEach(size => {
-                            // 进货单项sent的修改
-                            orderItemSizes[size].sent += sizes[size];
-                            // 库存数量修改
-                            shoeSizes[size] += sizes[size];
-                            shoeCount += sizes[size];
-                            // 进货量修改
-                            shoePurchased += sizes[size];
-                        });
-                        // 保存订单项的尺码
-                        orderItem.set('sizes', orderItemSizes);
-                        // 保存库存信息
-                        shoe
-                            .set('sizes'.shoeSizes)
-                            .set('count', shoeCount)
-                            .set('purchased', shoePurchased);
-                        saveObjects.push(orderItem, shoe);
-                        break;
-                    }
-                }
+                const { itemId } = changedItem;
+                // 原本order中的item
+                let originalItem = orderMap.get(itemId).orderItem;
+                // 用来计算status用的
+                let statusSizes = _.cloneDeep(orderMap.get(itemId).sizes);
+                let changedSizes = changedItem.sizes;
+                // 获取原来的item的sizes
+                let originalSizes = _.cloneDeep(originalItem.get('sizes'));
+                let shoe = originalItem.get('shoeType');
+                // 鞋子原来的总数
+                let shoeCount = shoe.get('count');
+                // 鞋子原来的进货量
+                let shoePurchased = shoe.get('purchased');
+                // 鞋子的尺码表
+                let shoeSizes = _.cloneDeep(shoe.get('sizes'));
+                // 遍历需要改变的size的同时
+                // 更新鞋子库存总量
+                // 具体的尺码数量
+                Object.keys(changedSizes).forEach(key => {
+                    // 根据changed的size添加进originalSizes的sent
+                    originalSizes[key].sent += changedSizes[key];
+                    // 同步一份，避免在云端获取一份新的重新计算
+                    statusSizes[key].sent += changedSizes[key];
+                    // 库存总数的增加
+                    shoeCount += changedSizes[key];
+                    // 进货量的增加
+                    shoePurchased += changedSizes[key];
+                    // 具体尺码的添加
+                    shoeSizes[key] += changedSizes[key]
+                });
+                // 保存数据
+                originalItem.set('sizes', originalSizes);
+                shoe.set('count', shoeCount);
+                shoe.set('purchased', shoePurchased);
+                shoe.set('sizes', shoeSizes);
+                saveObjects.push(originalItem, shoe);
+                // 同步status
+                orderMap.get(itemId).sizes = statusSizes;
             }
-            let status = defineStatus(
-                [...orderMap.keys()].map(id => {
-                    let sizeArr = Object.values(orderMap.get(id));
-                    return defineStatus(sizeArr.map(defineSizeStatus));
-                })
+            const status = defineStatus(
+                [...orderMap.values()]
+                    .map(({ sizes }) => {
+                        const sizeArr = Object.values(sizes);
+                        return defineStatus(
+                            sizeArr
+                                .filter(({ needed, sent}) => {
+                                    // needed 和 sent 同时为0的时候无意义
+                                    return (needed !== 0 && sent !== 0);
+                                })
+                                .map(defineSizeStatus)
+                        );
+                    })
             );
             order.set('status', status);
             saveObjects.push(order);
-            // 将所有需要保存的对象上传的云端
             await av.Object.saveAll(saveObjects);
             res.send({ errNo: 0 });
         } catch (e) {
+            console.log(e);
             res.send({
                 errNo: e.code
             });

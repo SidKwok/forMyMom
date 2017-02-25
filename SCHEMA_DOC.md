@@ -71,10 +71,10 @@
 
 * DeliveryItems (出货单项)
  - shoeType (pointer, stock)
- - unitprice (number, 单价)
+ - unitPrice (number, 单价)
  - sizes (object, 尺码)
    * s34-s44
-     - notyet (number, 未发货的数量)
+     - needed (number, 需要的数量)
      - delivered (number, 已发货的数量)
 
 * ReturnsOrder (退货单)

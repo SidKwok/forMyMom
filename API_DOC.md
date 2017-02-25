@@ -128,8 +128,8 @@
   - note (string, required)
 
 - `/api/purchase-to-stock` (进货到库存)
-  - orderId
-  - items (Array)
+  - orderObjectId
+  - changedItems (Array)
     - [{itemId(required), s34-s44(if needed)}]
 
 ### 出货单操作
@@ -149,8 +149,13 @@
 - `/api/update-delivery-order` (更新出货单，可用于一般信息例如note的修改，修改notyet会影响出货单总额，修改delivered会影响应付总额，修改unitPrice会影响所有的金额，出货、修改出货单的接口都是这个) post
   - id (objectId)
   - note (string，备注)
-  - items (object)
-   - {id(shoe, objectId), unitPrice: number, s34-s34: {notyet: number, delivered: number}}
+  - items (array)
+    - [{itemId, sizes: {s34-s44:}}]
+
+- `/api/stock-to-delivery` (库存出货)
+  - id (objectId)
+  - changedItems (array)
+    - [{itemId, sizes: {s34-s44: number}}]
 
 - `/api/pay-delivery-order` (支付出货单) post
   - id (object, 支付哪一张出货单)
@@ -159,6 +164,9 @@
   - cash (number, 现金支付的数量)
 
 - `/api/` (展示出货单)
+
+- `/api/show-delivery-order-items` (展示出货单详情) get
+ - id (objectId, 出货单objectId)
 
 - `/api/del-delivery-order` (删除出货单，later) post
   - id (object)
