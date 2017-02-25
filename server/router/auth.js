@@ -1,31 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const AV = require('leanengine');
-
-// 这一类路由都会先经过这一个函数操作
-// router.use(function(req, res, next) {
-//     console.log(req.body);
-//     next();
-// });
+const av = require('leanengine');
 
 // 登陆
-router.post('/auth/login', (req, res) => {
+router.post('/auth/login', async (req, res) => {
     const { username, password } = req.body;
-    AV.User
-        .logIn(username, password)
-        .then(user => {
-            res.saveCurrentUser(user);
-            res.send({
-                errNo: 0,
-                retData: {
-                    user: user.get('username'),
-                    userId: user.get('objectId')
-                }
-            });
-        })
-        .catch(err => {
-            res.send({ errNo: err.code });
+    try {
+        const user = await av.User.logIn(username, password);
+        res.saveCurrentUser(user);
+        res.send({
+            errNo: 0,
+            retData: {
+                user: user.get('username'),
+                userId: user.get('objectId')
+            }
         });
+    } catch (e) {
+        res.send({ errNo: e.code });
+    }
 });
 
 // 登出

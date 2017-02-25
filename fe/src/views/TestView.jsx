@@ -44,9 +44,9 @@ export default class TestView extends Component {
      */
     createShoe = () => {
         axios.post('/api/create-shoe', {
-            shoeId: '1105',
-            brand: 'nike',
-            color: 'blue',
+            shoeId: '1106',
+            brand: 'banasi',
+            color: 'spark',
             sizes: {
                 s34: 2,
                 s35: 2,
@@ -75,9 +75,9 @@ export default class TestView extends Component {
      */
     updateShoe = () => {
         axios.post('/api/update-shoe', {
-            stockObjectId: '58afcaf1128fe1006cb088c2',
+            stockObjectId: '58b1068c570c35006921cbaf',
             sizes: {
-                s34: 9,
+                s42: 9,
                 s35: 8
             }
         })
@@ -94,7 +94,7 @@ export default class TestView extends Component {
      */
     delShoe = () => {
         axios.post('/api/del-shoe', {
-            stockObjectId: '58ad764a8fd9c50067036510'
+            stockObjectId: '58b1068c570c35006921cbaf'
         })
         .then(({ data }) => {
             console.log(data);
@@ -121,11 +121,11 @@ export default class TestView extends Component {
      */
     createClient = () => {
         axios.post('/api/create-client', {
-            name: '孙小姐',
-            mobilephone: '18204405111',
-            telephone: '85247111',
-            address: '厚街',
-            note: 'wtfwtf'
+            name: 'mingen',
+            mobilephone: '5201314',
+            telephone: '1314520',
+            address: '浙江',
+            note: 'love'
         })
         .then(({ data }) => {
             console.log(data);
@@ -139,11 +139,11 @@ export default class TestView extends Component {
      */
     updateClient = () => {
         axios.post('/api/update-client', {
-            clientObjectId: '58ad8b54570c35006bd10e30',
-            address: '茶山',
+            clientObjectId: '58b0fbdd5c497d006780897f',
+            address: '虎门',
             mobilephone: '13580707233',
             telephone: '85245077',
-            note: ''
+            note: 'love sid'
         })
         .then(({ data }) => {
             console.log(data);
@@ -157,7 +157,7 @@ export default class TestView extends Component {
      */
     delClient = () => {
         axios.post('/api/del-client', {
-            clientObjectId: '58ad8b3e2f301e006be6160a'
+            clientObjectId: '58b0fbdd5c497d006780897f'
         })
         .then(({ data }) => {
             console.log(data);
@@ -184,11 +184,11 @@ export default class TestView extends Component {
      */
     createVender = () => {
         axios.post('/api/create-vender', {
-            name: '阿迪达斯',
-            mobilephone: '18202724405',
-            telephone: '85245077',
-            address: '北京',
-            note: 'wtf'
+            name: '巴纳斯',
+            mobilephone: '110',
+            telephone: '120',
+            address: '浙江',
+            note: 'heyhey'
         })
         .then(({ data }) => {
             console.log(data);
@@ -202,8 +202,8 @@ export default class TestView extends Component {
      */
     updateVender = () => {
         axios.post('/api/update-vender', {
-            venderObjectId: '58ad90d5b123db00672fc72b',
-            address: '天津',
+            venderObjectId: '58b100a28fd9c50063d1297e',
+            address: '新疆',
             mobilephone: '13580707233',
             telephone: '85245077',
             note: ''
@@ -220,7 +220,7 @@ export default class TestView extends Component {
      */
     delVender = () => {
         axios.post('/api/del-vender', {
-            venderObjectId: '58ad90d5b123db00672fc72b'
+            venderObjectId: '58b100a28fd9c50063d1297e'
         })
         .then(({ data }) => {
             console.log(data);
@@ -247,10 +247,24 @@ export default class TestView extends Component {
      */
     createPurchaseOrder = () => {
         axios.post('/api/create-purchase-order', {
-            venderObjectId: '58ad917e2f301e006be64e14',
-            orderId: '0002',
-            note: 'yyo',
+            venderObjectId: '58ad90d5b123db00672fc72b',
+            orderId: '0007',
+            note: 'yyohoho',
             items: [
+                {
+                    shoeObjectId: '58afcabeac502e006c9213a6',
+                    s34: 1,
+                    s35: 1,
+                    s36: 1,
+                    s37: 1,
+                    s38: 1,
+                    s39: 1,
+                    s40: 1,
+                    s41: 1,
+                    s42: 1,
+                    s43: 1,
+                    s44: 1
+                },
                 {
                     shoeObjectId: '58afcaf1128fe1006cb088c2',
                     s34: 1,
@@ -267,20 +281,6 @@ export default class TestView extends Component {
                 },
                 {
                     shoeObjectId: '58afcadf5c497d0067797195',
-                    s34: 1,
-                    s35: 1,
-                    s36: 1,
-                    s37: 1,
-                    s38: 1,
-                    s39: 1,
-                    s40: 1,
-                    s41: 1,
-                    s42: 1,
-                    s43: 1,
-                    s44: 1
-                },
-                {
-                    shoeObjectId: '58afcabeac502e006c9213a6',
                     s34: 2,
                     s35: 2,
                     s36: 2,
@@ -319,7 +319,7 @@ export default class TestView extends Component {
      */
     showPurchaseOrderItems = () => {
         axios.get('/api/show-purchase-order-items', {
-            params: { id: '58ae5741ac502e006c88fe95' }
+            params: { id: '58b04fa75c497d00677d801b' }
         })
         .then(({ data }) => {
             console.log(data);
@@ -333,7 +333,7 @@ export default class TestView extends Component {
      */
     updatePurchaseNote = () => {
         axios.post('/api/update-purchase-note', {
-            orderId: '58ae5741ac502e006c88fe95',
+            orderId: '58b10e94128fe1006cc2f18d',
             note: 'yahahahahaha'
         })
         .then(({ data }) => {
@@ -348,10 +348,10 @@ export default class TestView extends Component {
      */
     updatePurchaseOrder = () => {
         axios.post('/api/purchase-to-stock', {
-            orderId: '58b04fa75c497d00677d801b',
+            orderId: '58b10e94128fe1006cc2f18d',
             changedItems: [
                 {
-                    itemId: '58b04fa65c497d00677d8017',
+                    itemId: '58b10e94570c3500696470fc',
                     sizes: {
                         s34: 1,
                         s35: 1,
@@ -367,7 +367,7 @@ export default class TestView extends Component {
                     }
                 }
                 // {
-                //     itemId: '58b04fa65c497d00677d8016',
+                //     itemId: '58b10e94570c3500696470fb',
                 //     sizes: {
                 //         s34: 1,
                 //         s35: 1,
@@ -383,7 +383,7 @@ export default class TestView extends Component {
                 //     }
                 // },
                 // {
-                //     itemId: '58b04fa65c497d00677d8015',
+                //     itemId: '58b10e94570c3500696470fa',
                 //     sizes: {
                 //         s34: 1,
                 //         s35: 1,
@@ -399,6 +399,20 @@ export default class TestView extends Component {
                 //     }
                 // }
             ]
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 删除
+     */
+    deletePurchaseOrder = () => {
+        axios.get('/api/del-purchase-order', {
+            params: { id: '58b1131f128fe1006cc33487' }
         })
         .then(({ data }) => {
             console.log(data);
@@ -429,6 +443,7 @@ export default class TestView extends Component {
                 <Button onClick={this.showPurchaseOrderItems}>Show Purchase Order Items</Button>
                 <Button onClick={this.updatePurchaseNote}>Update Purchase Note</Button>
                 <Button onClick={this.updatePurchaseOrder}>Update Purchase Order</Button>
+                <Button onClick={this.deletePurchaseOrder}>Delete Purchase Order</Button>
             </div>
         );
     }
