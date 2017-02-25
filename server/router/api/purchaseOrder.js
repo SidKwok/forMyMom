@@ -4,8 +4,9 @@
 
 const av = require('leanengine');
 const _ = require('lodash');
+const sizeKeys = _.cloneDeep(require('./utils').sizeKeys);
 
-function defineStatus(arr) {
+const defineStatus = (arr) => {
     if (arr.includes(-1) && !arr.includes(0) && !arr.includes(1)) {
         // 未发货
         return -1;
@@ -18,7 +19,7 @@ function defineStatus(arr) {
     }
 }
 
-function defineSizeStatus({ needed, sent }) {
+const defineSizeStatus = ({ needed, sent }) => {
     // 对于一种鞋子的一种尺码来说
     let gap = needed - sent;
     switch (gap) {
@@ -50,22 +51,24 @@ module.exports = router => {
                 // 整理出货单的每一项，保存每一项stock的pointer
                 let _items = items.map(item => {
                     let newItem = new av.Object('PurchaseItems');
-                    let sizes = {};
-                    for (let key in item) {
-                        if (key === 'shoeObjectId') {
-                            let shoeType = av.Object.createWithoutData(
-                                'Stock',
-                                item[key]
-                            );
-                            newItem.set('shoeType', shoeType);
-                        } else {
-                            sizes[key] = {
-                                needed: item[key],
-                                sent: 0
-                            };
+                    let { shoeObjectId, sizes } = item;
+                    let _sizes = {};
+                    sizeKeys.forEach(k => {
+                        let struc = {
+                            needed: 0,
+                            sent: 0
+                        };
+                        if (Object.keys(sizes).includes(k)) {
+                            struc.needed = sizes[k];
                         }
-                    }
-                    newItem.set('sizes', sizes);
+                        _sizes[k] = struc;
+                    });
+                    const shoe = av.Object.createWithoutData(
+                        'Stock',
+                        shoeObjectId
+                    );
+                    newItem.set('shoeType', shoe);
+                    newItem.set('sizes', _sizes);
                     return newItem;
                 });
                 // 获取保存之后的出货单项，然后添加到出货单的relation
@@ -244,7 +247,6 @@ module.exports = router => {
 
     // 删除进货单
     router.get('/api/del-purchase-order', async (req, res) => {
-        // test it tommorow
         const { id } = req.query;
         let purchaseOrder = av.Object.createWithoutData('PurchaseOrder', id);
         try {

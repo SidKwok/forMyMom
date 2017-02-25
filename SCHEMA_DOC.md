@@ -61,7 +61,8 @@
  - paid (number, 已付金额)
  - notyetCount (number, 欠货价值，可用于还款)
  - used (boolean, 是否已经用于还款)
- - isSentAll (boolean, 是否已经全部发货)
+ <!-- - isSentAll (boolean, 是否已经全部发货) -->
+ - status (number, 状态，-1:未完成，0:发货中，1:已完成)
  - reliedDelivery: (relations, DeliveryOrder, 用于归还此订单的金额的出货单)
  - reliedReturns (relations, ReturnsOrder, 用于归还此订单的金额的退货记录)
  - isRetailed (boolean, 是否零售，如果是，则该订单的items长度应为1，且该订单的items只支持换)

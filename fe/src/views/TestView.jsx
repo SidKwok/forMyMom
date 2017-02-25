@@ -253,45 +253,33 @@ export default class TestView extends Component {
             items: [
                 {
                     shoeObjectId: '58afcabeac502e006c9213a6',
-                    s34: 1,
-                    s35: 1,
-                    s36: 1,
-                    s37: 1,
-                    s38: 1,
-                    s39: 1,
-                    s40: 1,
-                    s41: 1,
-                    s42: 1,
-                    s43: 1,
-                    s44: 1
+                    sizes: {
+                        s34: 1,
+                        s35: 1,
+                        s36: 1
+                    }
                 },
                 {
                     shoeObjectId: '58afcaf1128fe1006cb088c2',
-                    s34: 1,
-                    s35: 1,
-                    s36: 1,
-                    s37: 1,
-                    s38: 1,
-                    s39: 1,
-                    s40: 1,
-                    s41: 1,
-                    s42: 1,
-                    s43: 1,
-                    s44: 1
+                    sizes: {
+                        s37: 1,
+                        s38: 1,
+                        s39: 1,
+                        s40: 1,
+                        s41: 1,
+                        s42: 1,
+                        s43: 1
+                    }
                 },
                 {
                     shoeObjectId: '58afcadf5c497d0067797195',
-                    s34: 2,
-                    s35: 2,
-                    s36: 2,
-                    s37: 2,
-                    s38: 2,
-                    s39: 2,
-                    s40: 2,
-                    s41: 2,
-                    s42: 2,
-                    s43: 2,
-                    s44: 2
+                    sizes: {
+                        s37: 2,
+                        s38: 2,
+                        s39: 2,
+                        s40: 2,
+                        s41: 2
+                    }
                 }
             ]
         })
@@ -421,6 +409,58 @@ export default class TestView extends Component {
             console.log(err);
         });
     }
+    /**
+     * 新建出货单
+     */
+    createDeliveryOrder = () => {
+        axios.post('/api/create-delivery-order', {
+            clientObjectId: '58afb0c3b123db0052baa4d3',
+            orderId: '0001',
+            note: 'yyohoho',
+            items: [
+                {
+                    shoeObjectId: '58afcadf5c497d0067797195',
+                    unitPrice: 30,
+                    sizes: {
+                        s39: 1,
+                        s40: 1,
+                        s41: 1,
+                        s42: 1,
+                        s43: 1,
+                        s44: 1
+                    }
+                },
+                {
+                    shoeObjectId: '58afcabeac502e006c9213a6',
+                    unitPrice: 40,
+                    sizes: {
+                        s36: 1,
+                        s37: 1,
+                        s38: 1,
+                        s39: 1,
+                        s40: 1,
+                        s41: 1
+                    }
+                },
+                {
+                    shoeObjectId: '58afcaf1128fe1006cb088c2',
+                    unitPrice: 50,
+                    sizes: {
+                        s39: 2,
+                        s40: 2,
+                        s41: 2,
+                        s42: 2
+                    }
+                }
+            ]
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <div className='test-view'>
@@ -444,6 +484,7 @@ export default class TestView extends Component {
                 <Button onClick={this.updatePurchaseNote}>Update Purchase Note</Button>
                 <Button onClick={this.updatePurchaseOrder}>Update Purchase Order</Button>
                 <Button onClick={this.deletePurchaseOrder}>Delete Purchase Order</Button>
+                <Button onClick={this.createDeliveryOrder}>Create Delivery Order</Button>
             </div>
         );
     }

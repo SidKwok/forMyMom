@@ -108,8 +108,10 @@
   - venderObjectId (objectid)
   - orderId (string, 进货单号, unique)
   - note (string, 备注)
-  - items (object, 进货单项)
-    - {shoeObjectId(shoe, objectid), s34-s34: {needed: number, sent: number}}
+  - items (array, 进货单项)
+    - [{
+        shoeObjectId(shoe, objectid),
+        sizes: {s34-s34: {needed: number, sent: number}}}]
 
 - `/api/show-purchase-order` (显示全部进货单) get
 
@@ -133,18 +135,22 @@
 ### 出货单操作
 
 - `/api/create-delivery-order` (新建出货单) post
-  - client (objectid)
+  - clientObjectId (objectId)
   - isRetail (boolean, 是否零售)
-  - orderid (string, 出货单号，unique)
+  - orderId (string, 出货单号，unique)
   - note (string，备注)
-  - items (object, 出货单项)
-    - {id(shoe, objectid), unitprice: number, s34-s34: {notyet: number, delivered: number}}
+  - items (array, 出货单项)
+    - [{
+        shoeObjectId(shoe, objectId),
+        unitPrice: number,
+        sizes: {s34-s34: {notyet: number, delivered: number}}
+        }]
 
-- `/api/update-delivery-order` (更新出货单，可用于一般信息例如note的修改，修改notyet会影响出货单总额，修改delivered会影响应付总额，修改unitprice会影响所有的金额，出货、修改出货单的接口都是这个) post
-  - id (objectid)
+- `/api/update-delivery-order` (更新出货单，可用于一般信息例如note的修改，修改notyet会影响出货单总额，修改delivered会影响应付总额，修改unitPrice会影响所有的金额，出货、修改出货单的接口都是这个) post
+  - id (objectId)
   - note (string，备注)
   - items (object)
-   - {id(shoe, objectid), unitprice: number, s34-s34: {notyet: number, delivered: number}}
+   - {id(shoe, objectId), unitPrice: number, s34-s34: {notyet: number, delivered: number}}
 
 - `/api/pay-delivery-order` (支付出货单) post
   - id (object, 支付哪一张出货单)
