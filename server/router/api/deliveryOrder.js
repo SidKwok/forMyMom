@@ -4,7 +4,10 @@
 
 const av = require('leanengine');
 const _ = require('lodash');
-const sizeKeys = _.cloneDeep(require('./utils').sizeKeys);
+const utils = require('./utils');
+const sizeKeys = _.cloneDeep(utils.sizeKeys);
+const defineStatus = utils.defineStatus;
+const defineSizeStatus = utils.defineSizeStatus;
 
 module.exports = router => {
     // 生成出货单
@@ -32,10 +35,10 @@ module.exports = router => {
                     sizeKeys.forEach(k => {
                         let struc = {
                             needed: 0,
-                            delivered: 0
+                            sent: 0
                         };
                         if (Object.keys(sizes).includes(k)) {
-                            struc.notyet = sizes[k];
+                            struc.needed = sizes[k];
                             count += (sizes[k] * unitPrice);
                         }
                         _sizes[k] = struc;
@@ -123,11 +126,95 @@ module.exports = router => {
 
     // 从仓库出货
     router.post('/api/stock-to-delivery', async (req, res) => {
-        const { orderObjectId, changedItems } = req.body;
         try {
-            // TODO
+            // 获取该订单的所有items
+            let order = av.Object.createWithoutData('DeliveryOrder', req.body.orderObjectId);
+            let orderItems = await order
+                .relation('items')
+                .query()
+                .include(['shoeType'])
+                .find();
+            // 构建以id为键名的键值对
+            let orderMap = new Map();
+            orderItems.forEach(orderItem =>
+                orderMap.set(orderItem.id, {
+                    orderItem,
+                    sizes: orderItem.get('sizes')
+                }));
+            // 需要保存的所有对象
+            let saveObjects = [];
+            const { changedItems } = req.body;
+            for (let changedItem of changedItems) {
+                const { itemId } = changedItem;
+                // 原本order中的item
+                let originalItem = orderMap.get(itemId).orderItem;
+                // 用来计算status用的
+                let statusSizes = _.cloneDeep(orderMap.get(itemId).sizes);
+                let changedSizes = changedItem.sizes;
+                // 获取原来的item的sizes
+                let originalSizes = _.cloneDeep(originalItem.get('sizes'));
+                let shoe = originalItem.get('shoeType');
+                // 鞋子原来的总数
+                let shoeCount = shoe.get('count');
+                // 鞋子原来的进货量
+                let shoeDelivered = shoe.get('delivered');
+                // 鞋子的尺码表
+                let shoeSizes = _.cloneDeep(shoe.get('sizes'));
+                // 遍历需要改变的size的同时
+                // 更新鞋子库存总量
+                // 具体的尺码数量
+                Object.keys(changedSizes).forEach(key => {
+                    // 根据changed的size添加进originalSizes的delivered
+                    originalSizes[key].sent += changedSizes[key];
+                    // 同步一份，避免在云端获取一份新的重新计算
+                    statusSizes[key].sent += changedSizes[key];
+                    // 库存总数的增加
+                    shoeCount -= changedSizes[key];
+                    // 出货量的增加
+                    shoeDelivered += changedSizes[key];
+                    // 具体尺码的添加
+                    shoeSizes[key] -= changedSizes[key]
+                });
+                // 保存数据
+                originalItem.set('sizes', originalSizes);
+                shoe.set('count', shoeCount);
+                shoe.set('delivered', shoeDelivered);
+                shoe.set('sizes', shoeSizes);
+                saveObjects.push(originalItem, shoe);
+                // 同步status
+                orderMap.get(itemId).sizes = statusSizes;
+            }
+            const status = defineStatus(
+                [...orderMap.values()]
+                    .map(({ sizes }) => {
+                        const sizeArr = Object.values(sizes);
+                        return defineStatus(
+                            sizeArr.filter(({ needed, sent }) => {
+                                // needed 和 delivered 同时为0的时候无意义
+                                return (needed !== 0 && sent !== 0);
+                            })
+                            .map(defineSizeStatus)
+                        );
+                    })
+            );
+            const notyetCount = [...orderMap.values()]
+                .map(({ orderItem, sizes }) => {
+                    const unitPrice = orderItem.get('unitPrice');
+                    let itemNotyetCount = 0;
+                    Object.values(sizes).forEach(size => {
+                        itemNotyetCount += ((size.needed - size.sent) * unitPrice);
+                    });
+                    return itemNotyetCount;
+                })
+                .reduce((sum, cur) => sum + cur);
+            console.log(status, notyetCount);
+            order.set('status', status);
+            order.set('notyetCount', notyetCount);
+            saveObjects.push(order);
+            await av.Object.saveAll(saveObjects);
             res.send({ errNo: 0 });
         } catch (e) {
+            console.log(e);
             res.send({
                 errNo: e.code
             });

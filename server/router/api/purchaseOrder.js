@@ -4,36 +4,10 @@
 
 const av = require('leanengine');
 const _ = require('lodash');
-const sizeKeys = _.cloneDeep(require('./utils').sizeKeys);
-
-const defineStatus = (arr) => {
-    if (arr.includes(-1) && !arr.includes(0) && !arr.includes(1)) {
-        // 未发货
-        return -1;
-    } else if (arr.includes(1) && !arr.includes(0) && !arr.includes(-1)) {
-        // 已完成
-        return 1;
-    } else {
-        // 发货中
-        return 0;
-    }
-}
-
-const defineSizeStatus = ({ needed, sent }) => {
-    // 对于一种鞋子的一种尺码来说
-    let gap = needed - sent;
-    switch (gap) {
-        case needed:
-            // 未发货
-            return -1;
-        case 0:
-            // 已完成
-            return 1;
-        default:
-            // 发货中
-            return 0;
-    }
-}
+const utils = require('./utils');
+const sizeKeys = _.cloneDeep(utils.sizeKeys);
+const defineStatus = utils.defineStatus;
+const defineSizeStatus = utils.defineSizeStatus;
 
 module.exports = router => {
     // 生成进货单
@@ -164,7 +138,10 @@ module.exports = router => {
     router.post('/api/purchase-to-stock', async (req, res) => {
         try {
             // 获取该订单的所有items
-            let order = av.Object.createWithoutData('PurchaseOrder', req.body.orderObjectId);
+            let order = av.Object.createWithoutData(
+                'PurchaseOrder',
+                req.body.orderObjectId
+            );
             let orderItems = await order
                 .relation('items')
                 .query()
@@ -172,11 +149,10 @@ module.exports = router => {
                 .find();
             // 构建以id为键名的键值对
             let orderMap = new Map();
-            orderItems.forEach(orderItem =>
-                orderMap.set(orderItem.id, {
-                    orderItem,
-                    sizes: orderItem.get('sizes')
-                }));
+            orderItems.forEach(orderItem => orderMap.set(orderItem.id, {
+                orderItem,
+                sizes: orderItem.get('sizes')
+            }));
             // 需要保存的所有对象
             let saveObjects = [];
             const { changedItems } = req.body;
@@ -209,7 +185,7 @@ module.exports = router => {
                     // 进货量的增加
                     shoePurchased += changedSizes[key];
                     // 具体尺码的添加
-                    shoeSizes[key] += changedSizes[key]
+                    shoeSizes[key] += changedSizes[key];
                 });
                 // 保存数据
                 originalItem.set('sizes', originalSizes);
@@ -221,18 +197,17 @@ module.exports = router => {
                 orderMap.get(itemId).sizes = statusSizes;
             }
             const status = defineStatus(
-                [...orderMap.values()]
-                    .map(({ sizes }) => {
-                        const sizeArr = Object.values(sizes);
-                        return defineStatus(
-                            sizeArr
-                                .filter(({ needed, sent}) => {
-                                    // needed 和 sent 同时为0的时候无意义
-                                    return (needed !== 0 && sent !== 0);
-                                })
-                                .map(defineSizeStatus)
-                        );
-                    })
+                [...orderMap.values()].map(({ sizes }) => {
+                    const sizeArr = Object.values(sizes);
+                    return defineStatus(
+                        sizeArr
+                            .filter(({ needed, sent }) => {
+                                // needed 和 sent 同时为0的时候无意义
+                                return needed !== 0 && sent !== 0;
+                            })
+                            .map(defineSizeStatus)
+                    );
+                })
             );
             order.set('status', status);
             saveObjects.push(order);

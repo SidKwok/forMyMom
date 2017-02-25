@@ -463,7 +463,40 @@ export default class TestView extends Component {
      */
     updateDeliveryOrder = () => {
         axios.post('/api/stock-to-delivery', {
-            orderObjectId: '58b1611c8ac24728d540bc46'
+            orderObjectId: '58b1900eb123db0052c6b923',
+            changedItems: [
+                // {
+                //     itemId: '58b1900eb123db0052c6b91f',
+                //     sizes: {
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // },
+                // {
+                //     itemId: '58b1900eb123db0052c6b920',
+                //     sizes: {
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1
+                //     }
+                // },
+                {
+                    itemId: '58b1900eb123db0052c6b921',
+                    sizes: {
+                        s39: 1,
+                        s40: 1,
+                        s41: 1,
+                        s42: 1
+                    }
+                }
+            ]
         })
         .then(({ data }) => {
             console.log(data);
