@@ -9,6 +9,8 @@ const sizeKeys = _.cloneDeep(utils.sizeKeys);
 const defineStatus = utils.defineStatus;
 const defineSizeStatus = utils.defineSizeStatus;
 
+// TODO: relation转pointer
+
 module.exports = router => {
     // 生成出货单
     router.post('/api/create-delivery-order', async (req, res) => {
@@ -83,7 +85,6 @@ module.exports = router => {
                 };
             }
         } catch (e) {
-            console.log(e);
             res.send({
                 errNo: e.code,
                 errMsg: e.msg

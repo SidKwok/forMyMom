@@ -178,7 +178,7 @@
   - clientObjectId (objectId)
   - note (string, 备注)
   - items (array, 退货单项)
-    [{
+    - [{
         shoeObjectId(shoe, objectId),
         unitPrice: number,
         sizes: {s34-s44: number}
@@ -188,7 +188,7 @@
   - orderObjectId (objectId)
   - note (string, 备注)
   - changedItems (array, 要修改的单项)
-    [{
+    - [{
         itemId(objectId),
         unitPrice: number,
         sizes: {s34-s44: number}

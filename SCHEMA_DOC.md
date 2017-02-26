@@ -45,13 +45,14 @@
 
 * PurchaseItems (进货项)
  - shoeType (pointer, Stock)
+ - dependent (pointer, PurchaseOrder)
  - sizes (object, 尺码)
    * s34-s44
      - needed (number, 需要的进货)
      - sent (number, 已到的进货)
 
 * DeliveryOrder (出货单)
- - orderid (string, 进货单编号)
+ - orderId (string, 进货单编号)
  - createdAt (生成时间)
  - user (pointer, _User)
  - client (pointer, Client)
@@ -72,6 +73,7 @@
 * DeliveryItems (出货单项)
  - shoeType (pointer, stock)
  - unitPrice (number, 单价)
+ - dependent (pointer, DeliveryOrder)
  - sizes (object, 尺码)
    * s34-s44
      - needed (number, 需要的数量)
@@ -89,6 +91,7 @@
 
 * ReturnsItems (退货单项)
  - shoeType (pointer, Stock)
- - unitprice (number, 单价)
+ - unitPrice (number, 单价)
+ - dependent (pointer, ReturnsOrder)
  - sizes (object, 尺码)
    * s34-s44 (number, 数量)

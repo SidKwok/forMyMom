@@ -9,6 +9,8 @@ const sizeKeys = _.cloneDeep(utils.sizeKeys);
 const defineStatus = utils.defineStatus;
 const defineSizeStatus = utils.defineSizeStatus;
 
+// TODO: relation转pointer
+
 module.exports = router => {
     // 生成进货单
     router.post('/api/create-purchase-order', async (req, res) => {

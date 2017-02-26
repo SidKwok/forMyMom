@@ -534,34 +534,88 @@ export default class TestView extends Component {
             console.log(err);
         });
     }
+    /**
+     * 新建退货单
+     */
+    createReturnsOrder = () => {
+        axios.post('/api/create-returns-order', {
+            clientObjectId: '',
+            note: 'returns order',
+            items: [
+                {
+                    itemId: '58afcaf1128fe1006cb088c2',
+                    unitPrice: 20,
+                    sizes: {
+                        s34: 1,
+                        s35: 1,
+                        s36: 1,
+                        s37: 1
+                    }
+                },
+                {
+                    itemId: '58afcabeac502e006c9213a6',
+                    unitPrice: 30,
+                    sizes: {
+                        s38: 1,
+                        s39: 1,
+                        s40: 1,
+                        s41: 1
+                    }
+                },
+                {
+                    itemId: '58afcadf5c497d0067797195',
+                    unitPrice: 40,
+                    sizes: {
+                        s41: 1,
+                        s42: 1,
+                        s43: 1,
+                        s44: 1
+                    }
+                }
+            ]
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <div className='test-view'>
                 <Button onClick={this.logIn}>Log In</Button>
                 <Button onClick={this.logOut}>Log Out</Button>
+                <br />
                 <Button onClick={this.createShoe}>Create Shoe</Button>
                 <Button onClick={this.updateShoe}>Update Shoe</Button>
                 <Button onClick={this.delShoe}>Delete Shoe</Button>
                 <Button onClick={this.showShoes}>Show Shoes</Button>
+                <br />
                 <Button onClick={this.createClient}>Create Client</Button>
                 <Button onClick={this.updateClient}>Update Client</Button>
                 <Button onClick={this.delClient}>Delete Client</Button>
                 <Button onClick={this.showClients}>Show Clients</Button>
+                <br />
                 <Button onClick={this.createVender}>Create Vender</Button>
                 <Button onClick={this.updateVender}>Update Vender</Button>
                 <Button onClick={this.delVender}>Delete Vender</Button>
                 <Button onClick={this.showVenders}>Show Venders</Button>
+                <br />
                 <Button onClick={this.createPurchaseOrder}>Create Purchase Order</Button>
                 <Button onClick={this.showPurchaseOrders}>Show Purchase Orders</Button>
                 <Button onClick={this.showPurchaseOrderItems}>Show Purchase Order Items</Button>
                 <Button onClick={this.updatePurchaseNote}>Update Purchase Note</Button>
                 <Button onClick={this.updatePurchaseOrder}>Update Purchase Order</Button>
                 <Button onClick={this.deletePurchaseOrder}>Delete Purchase Order</Button>
+                <br />
                 <Button onClick={this.createDeliveryOrder}>Create Delivery Order</Button>
                 <Button onClick={this.showDeliveryOrderItems}>Show Delivery Order Items</Button>
                 <Button onClick={this.updateDeliveryOrder}>Update Delivery Order</Button>
                 <Button onClick={this.deleteDeliveryOrder}>Delete Delivery Order</Button>
                 <Button onClick={this.updateDeliveryNote}>Update Delivery Note</Button>
+                <br />
+                <Button onClick={this.createReturnsOrder}>CreateReturns Order</Button>
             </div>
         );
     }
