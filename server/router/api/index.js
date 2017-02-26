@@ -18,5 +18,6 @@ require('./client')(router);
 require('./vender')(router);
 require('./purchaseOrder')(router);
 require('./deliveryOrder')(router);
+require('./returnsOrder')(router);
 
 module.exports = router;

@@ -83,7 +83,8 @@
  - items (relations, ReturnsItems)
  - createdAt
  - count (number, 该退货记录的价值, 由退货的单价和数量决定)
- - used (是否用来还款)
+ - used (boolean, 是否用来还款)
+ - isDone (boolean, -1: 未完成, 1: 已完成，未完成才可以删除和修改, 完成之后才可以用来还款)
  - note (string, 备注)
 
 * ReturnsItems (退货单项)

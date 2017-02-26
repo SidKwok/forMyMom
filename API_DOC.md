@@ -117,7 +117,7 @@
 - `/api/show-purchase-order` (显示全部进货单) get
 
 - `/api/show-purchase-order-items` (展示进货单的详情) get
-  - id (进货单objectId)
+  - orderObjectId (进货单objectId)
 
 - `/api/del-purchase-order` (删除进货单，只有当厂家未发货的时候才可以删除) get
   - orderId (objectid)
@@ -159,7 +159,7 @@
     - [{itemId, sizes: {s34-s44: number}}]
 
 - `/api/pay-delivery-order` (支付出货单) post
-  - id (object, 支付哪一张出货单)
+  - orderObjectId (object, 支付哪一张出货单)
   - reliedDelivery (Array, 用哪些有余额的出货单支付)
   - reliedReturns (Array, 用哪些退货单支付)
   - cash (number, 现金支付的数量)
@@ -171,3 +171,37 @@
 
 - `/api/del-delivery-order` (删除出货单，later) get
   - id (object)
+
+### 退货单操作
+
+- `/api/create-returns-order` (生成退货单) post
+  - clientObjectId (objectId)
+  - note (string, 备注)
+  - items (array, 退货单项)
+    [{
+        shoeObjectId(shoe, objectId),
+        unitPrice: number,
+        sizes: {s34-s44: number}
+        }]
+
+- `/api/update-returns-order` (修改退货单) post
+  - orderObjectId (objectId)
+  - note (string, 备注)
+  - changedItems (array, 要修改的单项)
+    [{
+        itemId(objectId),
+        unitPrice: number,
+        sizes: {s34-s44: number}
+        }]
+
+- `/api/del-returns-order` (删除退货单) get
+  - orderObjectId (objectId)
+
+- `/api/done-returns-order` (完成退货单) get
+  - orderObjectId (objectId)
+
+- `/api/show-returns-order` (展示退货单, later) get
+  -
+
+- `/api/show-returns-items` (展示退货单详情) get
+  - orderObjectId (objectId)

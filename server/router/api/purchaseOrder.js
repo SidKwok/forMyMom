@@ -18,6 +18,7 @@ module.exports = router => {
         const Order = new av.Query('PurchaseOrder');
         try {
             const orders = await Order.equalTo('orderId', orderId)
+                .equalTo('user', user)
                 .equalTo('vender', vender)
                 .equalTo('isDel', false)
                 .find();
@@ -107,8 +108,8 @@ module.exports = router => {
 
     // 展示进货单详情
     router.get('/api/show-purchase-order-items', async (req, res) => {
-        const { id } = req.query;
-        const order = av.Object.createWithoutData('PurchaseOrder', id);
+        const { orderObjectId } = req.query;
+        const order = av.Object.createWithoutData('PurchaseOrder', orderObjectId);
         try {
             const items = await order
                 .relation('items')
@@ -236,7 +237,10 @@ module.exports = router => {
     // 删除进货单
     router.get('/api/del-purchase-order', async (req, res) => {
         const { orderObjectId } = req.query;
-        let purchaseOrder = av.Object.createWithoutData('PurchaseOrder', orderObjectId);
+        let purchaseOrder = av.Object.createWithoutData(
+            'PurchaseOrder',
+            orderObjectId
+        );
         try {
             const order = await purchaseOrder.fetch({ keys: 'status' });
             const status = order.get('status');
