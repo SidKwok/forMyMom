@@ -39,7 +39,7 @@ module.exports = router => {
                         };
                         if (Object.keys(sizes).includes(k)) {
                             struc.needed = sizes[k];
-                            count += (sizes[k] * unitPrice);
+                            count += sizes[k] * unitPrice;
                         }
                         _sizes[k] = struc;
                     });
@@ -128,7 +128,10 @@ module.exports = router => {
     router.post('/api/stock-to-delivery', async (req, res) => {
         try {
             // 获取该订单的所有items
-            let order = av.Object.createWithoutData('DeliveryOrder', req.body.orderObjectId);
+            let order = av.Object.createWithoutData(
+                'DeliveryOrder',
+                req.body.orderObjectId
+            );
             let orderItems = await order
                 .relation('items')
                 .query()
@@ -136,11 +139,10 @@ module.exports = router => {
                 .find();
             // 构建以id为键名的键值对
             let orderMap = new Map();
-            orderItems.forEach(orderItem =>
-                orderMap.set(orderItem.id, {
-                    orderItem,
-                    sizes: orderItem.get('sizes')
-                }));
+            orderItems.forEach(orderItem => orderMap.set(orderItem.id, {
+                orderItem,
+                sizes: orderItem.get('sizes')
+            }));
             // 需要保存的所有对象
             let saveObjects = [];
             const { changedItems } = req.body;
@@ -173,7 +175,7 @@ module.exports = router => {
                     // 出货量的增加
                     shoeDelivered += changedSizes[key];
                     // 具体尺码的添加
-                    shoeSizes[key] -= changedSizes[key]
+                    shoeSizes[key] -= changedSizes[key];
                 });
                 // 保存数据
                 originalItem.set('sizes', originalSizes);
@@ -185,29 +187,29 @@ module.exports = router => {
                 orderMap.get(itemId).sizes = statusSizes;
             }
             const status = defineStatus(
-                [...orderMap.values()]
-                    .map(({ sizes }) => {
-                        const sizeArr = Object.values(sizes);
-                        return defineStatus(
-                            sizeArr.filter(({ needed, sent }) => {
+                [...orderMap.values()].map(({ sizes }) => {
+                    const sizeArr = Object.values(sizes);
+                    return defineStatus(
+                        sizeArr
+                            .filter(({ needed, sent }) => {
                                 // needed 和 delivered 同时为0的时候无意义
-                                return (needed !== 0 && sent !== 0);
+                                return needed !== 0 && sent !== 0;
                             })
                             .map(defineSizeStatus)
-                        );
-                    })
+                    );
+                })
             );
             const notyetCount = [...orderMap.values()]
                 .map(({ orderItem, sizes }) => {
                     const unitPrice = orderItem.get('unitPrice');
                     let itemNotyetCount = 0;
                     Object.values(sizes).forEach(size => {
-                        itemNotyetCount += ((size.needed - size.sent) * unitPrice);
+                        itemNotyetCount += (size.needed - size.sent) *
+                            unitPrice;
                     });
                     return itemNotyetCount;
                 })
                 .reduce((sum, cur) => sum + cur);
-            console.log(status, notyetCount);
             order.set('status', status);
             order.set('notyetCount', notyetCount);
             saveObjects.push(order);
@@ -221,5 +223,39 @@ module.exports = router => {
         }
     });
 
+    // 删除订单
+    router.get('/api/del-delivery-order', async (req, res) => {
+        const { orderObjectId } = req.query;
+        let purchaseOrder = av.Object.createWithoutData('DeliveryOrder', orderObjectId);
+        try {
+            const order = await purchaseOrder.fetch({ keys: 'status' });
+            const status = order.get('status');
+            if (status === -1) {
+                await order.set('isDel', true).save();
+                res.send({ errNo: 0 });
+            } else {
+                throw {
+                    code: -1,
+                    msg: `出货单已经${status === 0 ? '开始发货' : '完成'}，无法删除`
+                };
+            }
+        } catch (e) {
+            res.send({
+                errNo: e.code,
+                errMsg: e.msg
+            });
+        }
+    });
 
+    // 更新出货单备注信息
+    router.post('/api/update-delivery-note', async (req, res) => {
+        const { orderObjectId, note } = req.body;
+        let order = av.Object.createWithoutData('DeliveryOrder', orderObjectId);
+        try {
+            await order.set('note', note).save();
+            res.send({ errNo: 0 });
+        } catch (e) {
+            res.send({ errNo: e.code });
+        }
+    });
 };

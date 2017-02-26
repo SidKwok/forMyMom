@@ -6,6 +6,7 @@
 * 对于所有项目都不应该支持批量删除
 * 标注later的表示先不实现
 * 删除操作应该是不让用户看到，但是数据库中还是有的
+* better error reporter.
 
 ## apis
 
@@ -168,5 +169,5 @@
 - `/api/show-delivery-order-items` (展示出货单详情) get
  - id (objectId, 出货单objectId)
 
-- `/api/del-delivery-order` (删除出货单，later) post
+- `/api/del-delivery-order` (删除出货单，later) get
   - id (object)

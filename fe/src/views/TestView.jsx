@@ -322,7 +322,7 @@ export default class TestView extends Component {
      */
     updatePurchaseNote = () => {
         axios.post('/api/update-purchase-note', {
-            orderId: '58b10e94128fe1006cc2f18d',
+            orderObjectId: '58b10e94128fe1006cc2f18d',
             note: 'yahahahahaha'
         })
         .then(({ data }) => {
@@ -379,11 +379,11 @@ export default class TestView extends Component {
         });
     }
     /**
-     * 删除
+     * 删除出货单
      */
     deletePurchaseOrder = () => {
         axios.get('/api/del-purchase-order', {
-            params: { id: '58b1131f128fe1006cc33487' }
+            params: { orderObjectId: '58b1131f128fe1006cc33487' }
         })
         .then(({ data }) => {
             console.log(data);
@@ -505,6 +505,35 @@ export default class TestView extends Component {
             console.log(err);
         });
     }
+    /**
+     * 删除进货单
+     */
+    deleteDeliveryOrder = () => {
+        axios.get('/api/del-delivery-order', {
+            params: { orderObjectId: '58b25190570c3500696ba9f8' }
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 更新进货单备注
+     */
+    updateDeliveryNote = () => {
+        axios.post('/api/update-delivery-note', {
+            orderObjectId: '58b1900eb123db0052c6b923',
+            note: 'this is delivery note'
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <div className='test-view'>
@@ -531,6 +560,8 @@ export default class TestView extends Component {
                 <Button onClick={this.createDeliveryOrder}>Create Delivery Order</Button>
                 <Button onClick={this.showDeliveryOrderItems}>Show Delivery Order Items</Button>
                 <Button onClick={this.updateDeliveryOrder}>Update Delivery Order</Button>
+                <Button onClick={this.deleteDeliveryOrder}>Delete Delivery Order</Button>
+                <Button onClick={this.updateDeliveryNote}>Update Delivery Note</Button>
             </div>
         );
     }

@@ -3,7 +3,7 @@
 
 ## Goals
 * [ ] 确定原型
-* [ ] 数据表
+* [x] 数据表
 * [ ] 框架
  - How to figure out `containers` and `components`
 

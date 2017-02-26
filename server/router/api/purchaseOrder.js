@@ -223,8 +223,8 @@ module.exports = router => {
 
     // 更新进货单备注信息
     router.post('/api/update-purchase-note', async (req, res) => {
-        const { orderId, note } = req.body;
-        let order = av.Object.createWithoutData('PurchaseOrder', orderId);
+        const { orderObjectId, note } = req.body;
+        let order = av.Object.createWithoutData('PurchaseOrder', orderObjectId);
         try {
             await order.set('note', note).save();
             res.send({ errNo: 0 });
@@ -235,8 +235,8 @@ module.exports = router => {
 
     // 删除进货单
     router.get('/api/del-purchase-order', async (req, res) => {
-        const { id } = req.query;
-        let purchaseOrder = av.Object.createWithoutData('PurchaseOrder', id);
+        const { orderObjectId } = req.query;
+        let purchaseOrder = av.Object.createWithoutData('PurchaseOrder', orderObjectId);
         try {
             const order = await purchaseOrder.fetch({ keys: 'status' });
             const status = order.get('status');
