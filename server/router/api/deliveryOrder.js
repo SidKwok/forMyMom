@@ -304,6 +304,7 @@ module.exports = router => {
                     const paid = order.get('paid');
                     deliveryAmount += notyetAmount - (amount - paid);
                     order.set('used', true);
+                    deliveryOrder.relation('reliedDelivery').add(order);
                     saveObjects.push(order);
                 }
             });
@@ -323,17 +324,20 @@ module.exports = router => {
                 } else {
                     returnsAmount += order.get('amount');
                     order.set('used', true);
+                    deliveryOrder.relation('reliedReturns').add(order);
                     saveObjects.push(order);
                 }
             });
+            // 原来已经还款了的价值
+            const paid = deliveryOrder.get('paid');
             // 所有的总额
-            const total = cash + deliveryAmount + returnsAmount;
+            const total = cash + deliveryAmount + returnsAmount + paid;
             // 订单总额
             const amount = deliveryOrder.get('amount');
             if (total > amount) {
                 throw {
                     code: -1,
-                    msg: '用于还款的订单总价值大于该订单的价值，无法还款'
+                    msg: '所还款已经超过订单总额，无法还款'
                 };
             }
             deliveryOrder.set('paid', total);

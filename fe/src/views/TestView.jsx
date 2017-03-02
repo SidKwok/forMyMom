@@ -774,8 +774,8 @@ export default class TestView extends Component {
                 '58b7d22eac502e006cff4d82'
             ],
             reliedReturns: [
-                '58b7d3628d6d81006528bf19',
-                '58b7d350a22b9d005ed00362'
+                // '58b7d3628d6d81006528bf19',
+                // '58b7d350a22b9d005ed00362'
             ],
             cash: 0
         })
