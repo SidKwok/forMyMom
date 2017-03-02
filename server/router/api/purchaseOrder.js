@@ -102,12 +102,13 @@ module.exports = router => {
 
     // 展示进货单详情
     router.get('/api/show-purchase-order-items', async (req, res) => {
-        const { orderObjectId } = req.query;
         const PurchaseItems = new av.Query('PurchaseItems');
-        const order = av.Object.createWithoutData('PurchaseOrder', orderObjectId);
+        const order = av.Object.createWithoutData(
+            'PurchaseOrder',
+            req.query.orderObjectId
+        );
         try {
-            const items = await PurchaseItems
-                .equalTo('purchaseOrder', order)
+            const items = await PurchaseItems.equalTo('purchaseOrder', order)
                 .include(['shoeType'])
                 .find();
             const retData = items.map(item => ({
@@ -125,7 +126,6 @@ module.exports = router => {
                 retData
             });
         } catch (e) {
-            console.log(e);
             res.send({ errNo: e.code });
         }
     });
@@ -138,9 +138,8 @@ module.exports = router => {
                 'PurchaseOrder',
                 req.body.orderObjectId
             );
-            const PurchaseItems = new av.Query('PurchaseItems')
-            let orderItems = await PurchaseItems
-                .equalTo('purchaseOrder', order)
+            const PurchaseItems = new av.Query('PurchaseItems');
+            let orderItems = await PurchaseItems.equalTo('purchaseOrder', order)
                 .include(['shoeType'])
                 .find();
             // 构建以id为键名的键值对
@@ -210,7 +209,6 @@ module.exports = router => {
             await av.Object.saveAll(saveObjects);
             res.send({ errNo: 0 });
         } catch (e) {
-            console.log(e);
             res.send({
                 errNo: e.code
             });

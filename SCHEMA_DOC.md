@@ -58,9 +58,10 @@
  - client (pointer, Client)
  - isDel (boolean, 是否删除)
  - items (relations, 出货单项)
- - count (number, 出货单总价值，由items的单价和数量决定)
+ - amount (number, 出货单总价值，由items的单价和数量决定)
  - paid (number, 已付金额)
- - notyetCount (number, 欠货价值，可用于还款)
+ - notyetAmount (number, 欠货价值，可用于还款)
+ - count (number, 订单鞋子总数)
  - used (boolean, 是否已经用于还款)
  <!-- - isSentAll (boolean, 是否已经全部发货) -->
  - status (number, 状态，-1:未完成，0:发货中，1:已完成)
@@ -87,6 +88,7 @@
  - count (number, 该退货记录的价值, 由退货的单价和数量决定)
  - used (boolean, 是否用来还款)
  - isDone (boolean, -1: 未完成, 1: 已完成，未完成才可以删除和修改, 完成之后才可以用来还款)
+ - isDel (boolean, 是否删除)
  - note (string, 备注)
 
 * ReturnsItems (退货单项)

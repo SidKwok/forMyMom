@@ -306,8 +306,8 @@ export default class TestView extends Component {
     /**
      * 展示进货单详情
      */
-    showPurchaseOrderItems = () => {
-        axios.get('/api/show-purchase-order-items', {
+    showPurchaseItems = () => {
+        axios.get('/api/show-purchase-items', {
             params: { orderObjectId: '58b788b88d6d810065264291' }
         })
         .then(({ data }) => {
@@ -447,8 +447,8 @@ export default class TestView extends Component {
     /**
      * 展示出货单详情
      */
-    showDeliveryOrderItems = () => {
-        axios.get('/api/show-delivery-order-items', {
+    showDeliveryItems = () => {
+        axios.get('/api/show-delivery-items', {
             params: { orderObjectId: '58b792272f301e006c4f43c8' }
         })
         .then(({ data }) => {
@@ -543,7 +543,7 @@ export default class TestView extends Component {
             note: 'returns order',
             items: [
                 {
-                    itemId: '58afcaf1128fe1006cb088c2',
+                    shoeObjectId: '58b78c20a22b9d005ecda087',
                     unitPrice: 20,
                     sizes: {
                         s34: 1,
@@ -553,7 +553,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    itemId: '58afcabeac502e006c9213a6',
+                    shoeObjectId: '58b78c0d128fe1007e3a06a9',
                     unitPrice: 30,
                     sizes: {
                         s38: 1,
@@ -563,7 +563,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    itemId: '58afcadf5c497d0067797195',
+                    shoeObjectId: '58b78be3ac502e006bc59739',
                     unitPrice: 40,
                     sizes: {
                         s41: 1,
@@ -571,6 +571,90 @@ export default class TestView extends Component {
                         s43: 1,
                         s44: 1
                     }
+                }
+            ]
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 完成退货单
+     */
+    doneReturnsOrder = () => {
+        axios.get('/api/done-returns-order', {
+            params: { orderObjectId: '58b795038ac24766f55fde9c' }
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 删除退货单
+     */
+    deleteReturnsOrder = () => {
+        axios.get('/api/del-returns-order', {
+            params: { orderObjectId: '58b795038ac24766f55fde9c' }
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 展示退货单详情
+     */
+    showReturnsItems = () => {
+        axios.get('/api/show-returns-items', {
+            params: { orderObjectId: '58b795038ac24766f55fde9c' }
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    /**
+     * 修改退货单
+     */
+    updateReturnsOrder = () => {
+        axios.post('/api/update-returns-order', {
+            orderObjectId: '58b7b267ac502e006cfe2dc1',
+            note: 'yay',
+            changedItems: [
+                {
+                    itemId: '58b7b2688fd9c55539eeb024',
+                    unitPrice: 30,
+                    sizes: {
+                        s41: 1,
+                        s42: 1,
+                        s43: 1,
+                        s44: 1
+                    }
+                },
+                {
+                    itemId: '58b7b2688fd9c55539eeb023',
+                    unitPrice: 20,
+                    sizes: {
+                        s38: 2,
+                        s39: 2,
+                        s40: 2,
+                        s41: 2
+                    }
+                },
+                {
+                    itemId: '58b7b2688fd9c55539eeb022',
+                    unitPrice: 10,
+                    sizes: {}
                 }
             ]
         })
@@ -604,18 +688,22 @@ export default class TestView extends Component {
                 <br />
                 <Button onClick={this.createPurchaseOrder}>Create Purchase Order</Button>
                 <Button onClick={this.showPurchaseOrders}>Show Purchase Orders</Button>
-                <Button onClick={this.showPurchaseOrderItems}>Show Purchase Order Items</Button>
+                <Button onClick={this.showPurchaseItems}>Show Purchase Items</Button>
                 <Button onClick={this.updatePurchaseNote}>Update Purchase Note</Button>
                 <Button onClick={this.updatePurchaseOrder}>Update Purchase Order</Button>
                 <Button onClick={this.deletePurchaseOrder}>Delete Purchase Order</Button>
                 <br />
                 <Button onClick={this.createDeliveryOrder}>Create Delivery Order</Button>
-                <Button onClick={this.showDeliveryOrderItems}>Show Delivery Order Items</Button>
+                <Button onClick={this.showDeliveryItems}>Show Delivery Items</Button>
                 <Button onClick={this.updateDeliveryOrder}>Update Delivery Order</Button>
                 <Button onClick={this.deleteDeliveryOrder}>Delete Delivery Order</Button>
                 <Button onClick={this.updateDeliveryNote}>Update Delivery Note</Button>
                 <br />
-                <Button onClick={this.createReturnsOrder}>CreateReturns Order</Button>
+                <Button onClick={this.createReturnsOrder}>Create Returns Order</Button>
+                <Button onClick={this.doneReturnsOrder}>Done Returns Order</Button>
+                <Button onClick={this.deleteReturnsOrder}>delete Returns Order</Button>
+                <Button onClick={this.showReturnsItems}>show Returns Items</Button>
+                <Button onClick={this.updateReturnsOrder}>update Returns Order</Button>
             </div>
         );
     }

@@ -32,6 +32,9 @@ module.exports = router => {
                 newOrder.set('user', user);
                 newOrder.set('orderId', orderId);
                 newOrder.set('note', note);
+                // 订单价值
+                let amount = 0;
+                // 订单鞋子总数
                 let count = 0;
                 let _items = items.map(item => {
                     let newItem = new av.Object('DeliveryItems');
@@ -44,7 +47,8 @@ module.exports = router => {
                         };
                         if (Object.keys(sizes).includes(k)) {
                             struc.needed = sizes[k];
-                            count += sizes[k] * unitPrice;
+                            count += sizes[key];
+                            amount += sizes[k] * unitPrice;
                         }
                         _sizes[k] = struc;
                     });
@@ -62,9 +66,11 @@ module.exports = router => {
                     return newItem;
                 });
                 // 设置总额
+                newOrder.set('amount', amount);
+                // 设置鞋子总数
                 newOrder.set('count', count);
                 // 新建出货单的时候，由于没有发货所以欠货总额应该和总额一样
-                newOrder.set('notyetCount', count);
+                newOrder.set('notyetAmount', amount);
                 const results = await av.Object.saveAll(_items);
                 res.send({
                     errNo: 0,
@@ -195,19 +201,19 @@ module.exports = router => {
                     );
                 })
             );
-            const notyetCount = [...orderMap.values()]
+            const notyetAmount = [...orderMap.values()]
                 .map(({ orderItem, sizes }) => {
                     const unitPrice = orderItem.get('unitPrice');
-                    let itemNotyetCount = 0;
+                    let itemNotyetAmount = 0;
                     Object.values(sizes).forEach(size => {
-                        itemNotyetCount += (size.needed - size.sent) *
+                        itemNotyetAmount += (size.needed - size.sent) *
                             unitPrice;
                     });
-                    return itemNotyetCount;
+                    return itemNotyetAmount;
                 })
                 .reduce((sum, cur) => sum + cur);
             order.set('status', status);
-            order.set('notyetCount', notyetCount);
+            order.set('notyetAmount', notyetAmount);
             saveObjects.push(order);
             await av.Object.saveAll(saveObjects);
             res.send({ errNo: 0 });

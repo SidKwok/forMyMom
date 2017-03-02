@@ -116,7 +116,7 @@
 
 - `/api/show-purchase-order` (显示全部进货单) get
 
-- `/api/show-purchase-order-items` (展示进货单的详情) get
+- `/api/show-purchase-items` (展示进货单的详情) get
   - orderObjectId (进货单objectId)
 
 - `/api/del-purchase-order` (删除进货单，只有当厂家未发货的时候才可以删除) get
@@ -166,7 +166,7 @@
 
 - `/api/` (展示出货单)
 
-- `/api/show-delivery-order-items` (展示出货单详情) get
+- `/api/show-delivery-items` (展示出货单详情) get
  - id (objectId, 出货单objectId)
 
 - `/api/del-delivery-order` (删除出货单，later) get
