@@ -44,21 +44,21 @@ export default class TestView extends Component {
      */
     createShoe = () => {
         axios.post('/api/create-shoe', {
-            shoeId: '1102',
-            brand: 'adidas',
-            color: 'white',
+            shoeId: '1106',
+            brand: 'lining',
+            color: 'pink',
             sizes: {
-                s34: 2,
-                s35: 2,
-                s36: 2,
-                s37: 2,
-                s38: 2,
-                s39: 2,
-                s40: 2,
-                s41: 2,
-                s42: 2,
-                s43: 2,
-                s44: 2
+                s34: 20,
+                s35: 20,
+                s36: 20,
+                s37: 20,
+                s38: 20,
+                s39: 20,
+                s40: 20,
+                s41: 20,
+                s42: 20,
+                s43: 20,
+                s44: 20
             }
         })
         .then(({ data }) => {
@@ -398,13 +398,86 @@ export default class TestView extends Component {
     createDeliveryOrder = () => {
         axios.post('/api/create-delivery-order', {
             clientObjectId: '58afb0c3b123db0052baa4d3',
-            orderId: '0001',
-            note: 'yyohoho',
+            orderId: '0003',
+            note: 'hey',
             items: [
+                // {
+                //     shoeObjectId: '58b7d103128fe1007e3c5554',
+                //     unitPrice: 10,
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // },
+                // {
+                //     shoeObjectId: '58b7d0d48d6d81006528a6b4',
+                //     unitPrice: 10,
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // }
+                // {
+                //     shoeObjectId: '58b7d0b861ff4b006cd6c084',
+                //     unitPrice: 20,
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // },
+                // {
+                //     shoeObjectId: '58b7d0a4ac502e006cff3c99',
+                //     unitPrice: 20,
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1,
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1,
+                //         s42: 1,
+                //         s43: 1,
+                //         s44: 1
+                //     }
+                // }
                 {
-                    shoeObjectId: '58b78be3ac502e006bc59739',
+                    shoeObjectId: '58b7d07e8fd9c56d16bf1b1c',
                     unitPrice: 30,
                     sizes: {
+                        s34: 1,
+                        s35: 1,
+                        s36: 1,
+                        s37: 1,
+                        s38: 1,
                         s39: 1,
                         s40: 1,
                         s41: 1,
@@ -414,25 +487,20 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58b78c0d128fe1007e3a06a9',
-                    unitPrice: 40,
+                    shoeObjectId: '58b7d06c8d6d81006528a348',
+                    unitPrice: 30,
                     sizes: {
+                        s34: 1,
+                        s35: 1,
                         s36: 1,
                         s37: 1,
                         s38: 1,
                         s39: 1,
                         s40: 1,
-                        s41: 1
-                    }
-                },
-                {
-                    shoeObjectId: '58b78c20a22b9d005ecda087',
-                    unitPrice: 50,
-                    sizes: {
-                        s39: 2,
-                        s40: 2,
-                        s41: 2,
-                        s42: 2
+                        s41: 1,
+                        s42: 1,
+                        s43: 1,
+                        s44: 1
                     }
                 }
             ]
@@ -539,12 +607,12 @@ export default class TestView extends Component {
      */
     createReturnsOrder = () => {
         axios.post('/api/create-returns-order', {
-            clientObjectId: '',
+            clientObjectId: '58afb0c3b123db0052baa4d3',
             note: 'returns order',
             items: [
                 {
-                    shoeObjectId: '58b78c20a22b9d005ecda087',
-                    unitPrice: 20,
+                    shoeObjectId: '58b7d103128fe1007e3c5554',
+                    unitPrice: 10,
                     sizes: {
                         s34: 1,
                         s35: 1,
@@ -553,25 +621,55 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58b78c0d128fe1007e3a06a9',
-                    unitPrice: 30,
+                    shoeObjectId: '58b7d0d48d6d81006528a6b4',
+                    unitPrice: 10,
                     sizes: {
                         s38: 1,
                         s39: 1,
                         s40: 1,
                         s41: 1
                     }
-                },
-                {
-                    shoeObjectId: '58b78be3ac502e006bc59739',
-                    unitPrice: 40,
-                    sizes: {
-                        s41: 1,
-                        s42: 1,
-                        s43: 1,
-                        s44: 1
-                    }
                 }
+                // {
+                //     shoeObjectId: '58b7d103128fe1007e3c5554',
+                //     unitPrice: 20,
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1
+                //     }
+                // },
+                // {
+                //     shoeObjectId: '58b7d0d48d6d81006528a6b4',
+                //     unitPrice: 20,
+                //     sizes: {
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1
+                //     }
+                // }
+                // {
+                //     shoeObjectId: '58b7d103128fe1007e3c5554',
+                //     unitPrice: 30,
+                //     sizes: {
+                //         s34: 1,
+                //         s35: 1,
+                //         s36: 1,
+                //         s37: 1
+                //     }
+                // },
+                // {
+                //     shoeObjectId: '58b7d0d48d6d81006528a6b4',
+                //     unitPrice: 30,
+                //     sizes: {
+                //         s38: 1,
+                //         s39: 1,
+                //         s40: 1,
+                //         s41: 1
+                //     }
+                // }
             ]
         })
         .then(({ data }) => {
@@ -665,6 +763,29 @@ export default class TestView extends Component {
             console.log(err);
         });
     }
+    /**
+     * 还款出货单
+     */
+    payDeliveryOrder = () => {
+        axios.post('/api/pay-delivery-order', {
+            orderObjectId: '58b7d269ac502e006bca3133',
+            reliedDelivery: [
+                '58b7d25144d904006aca8fae',
+                '58b7d22eac502e006cff4d82'
+            ],
+            reliedReturns: [
+                '58b7d3628d6d81006528bf19',
+                '58b7d350a22b9d005ed00362'
+            ],
+            cash: 0
+        })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <div className='test-view'>
@@ -698,6 +819,7 @@ export default class TestView extends Component {
                 <Button onClick={this.updateDeliveryOrder}>Update Delivery Order</Button>
                 <Button onClick={this.deleteDeliveryOrder}>Delete Delivery Order</Button>
                 <Button onClick={this.updateDeliveryNote}>Update Delivery Note</Button>
+                <Button onClick={this.payDeliveryOrder}>Pay Delivery Order</Button>
                 <br />
                 <Button onClick={this.createReturnsOrder}>Create Returns Order</Button>
                 <Button onClick={this.doneReturnsOrder}>Done Returns Order</Button>

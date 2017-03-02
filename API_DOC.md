@@ -22,14 +22,14 @@
 ### 库存操作
 
 - `/api/create-shoe` (添加鞋子) POST
-  - shoeid (string, 型号)
+  - shoed (string, 型号)
   - brand (string, 品牌)
   - color (string, 颜色)
   - sizes (object, 尺码)
     - s34-s34 (number)
 
 - `/api/update-shoe` (更新鞋子) post
-  - stockObjectId (objectid)
+  - stockObjectId (objectId)
   - returns (number, 退货量)
   - purchased  (number, 进货量)
   - delivered (number，出货量)
@@ -37,13 +37,13 @@
     - s34-s34 (number)
 
 - `/api/del-shoe` (删除鞋子，应该尽量避免) post
-  - id (objectid, required)
+  - id (objectId, required)
 
 - `/api/search-shoe` (根据条件查看鞋子，条件为空则显示全部, later) get
   - page (number, 页码)
   - pageCount (number, 每页容纳数)
   - sort (number, -1: 降序, 1: 升序)
-  - shoeid (string, 型号)
+  - shoeId (string, 型号)
   - brand (string, 品牌)
   - color (string, 颜色)
 
@@ -66,7 +66,7 @@
   - note (string, 备注)
 
 - `/api/del-client` (删除客户，尽量避免) post
-  - clientid (objectid)
+  - clientId (objectId)
 
 - `/api/search-client` (查询客户, 条件为空则显示全部, later) get
   - name (string, 姓名, 不能修改这个)
@@ -93,7 +93,7 @@
   - note (string, 备注)
 
 - `/api/del-vender` (删除厂家，尽量避免) post
-  - venderid (objectid)
+  - venderId (objectId)
 
 - `/api/search-vender` (查询厂家, 条件为空则显示全部, later) get
   - name (string, 姓名, 不能修改这个)
@@ -106,12 +106,12 @@
 ### 进货单操作
 
 - `/api/create-purchase-order` (新建进货单) post
-  - venderObjectId (objectid)
+  - venderObjectId (objectId)
   - orderId (string, 进货单号, unique)
   - note (string, 备注)
   - items (array, 进货单项)
     - [{
-        shoeObjectId(shoe, objectid),
+        shoeObjectId(shoe, objectId),
         sizes: {s34-s34: {needed: number, sent: number}}}]
 
 - `/api/show-purchase-order` (显示全部进货单) get
@@ -120,7 +120,7 @@
   - orderObjectId (进货单objectId)
 
 - `/api/del-purchase-order` (删除进货单，只有当厂家未发货的时候才可以删除) get
-  - orderId (objectid)
+  - orderId (objectId)
 
 - `/api/update-purchase-order` (更新进货单，只有当厂家未发货的时候才可以更新) post
 
@@ -158,7 +158,7 @@
   - changedItems (array)
     - [{itemId, sizes: {s34-s44: number}}]
 
-- `/api/pay-delivery-order` (支付出货单) post
+- `/api/pay-delivery-order` (支付出货单, 出货单的价值是 notyetAmount - (amount - paid)) post
   - orderObjectId (object, 支付哪一张出货单)
   - reliedDelivery (Array, 用哪些有余额的出货单支付)
   - reliedReturns (Array, 用哪些退货单支付)

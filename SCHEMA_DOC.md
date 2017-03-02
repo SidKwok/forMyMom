@@ -63,7 +63,6 @@
  - notyetAmount (number, 欠货价值，可用于还款)
  - count (number, 订单鞋子总数)
  - used (boolean, 是否已经用于还款)
- <!-- - isSentAll (boolean, 是否已经全部发货) -->
  - status (number, 状态，-1:未完成，0:发货中，1:已完成)
  - reliedDelivery: (relations, DeliveryOrder, 用于归还此订单的金额的出货单)
  - reliedReturns (relations, ReturnsOrder, 用于归还此订单的金额的退货记录)
@@ -85,7 +84,8 @@
  - client (pointer, Client)
  - items (relations, ReturnsItems)
  - createdAt
- - count (number, 该退货记录的价值, 由退货的单价和数量决定)
+ - amount (number, 该退货记录的价值, 由退货的单价和数量决定)
+ - count (number, 退货鞋子总数)
  - used (boolean, 是否用来还款)
  - isDone (boolean, -1: 未完成, 1: 已完成，未完成才可以删除和修改, 完成之后才可以用来还款)
  - isDel (boolean, 是否删除)

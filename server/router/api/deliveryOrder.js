@@ -47,7 +47,7 @@ module.exports = router => {
                         };
                         if (Object.keys(sizes).includes(k)) {
                             struc.needed = sizes[k];
-                            count += sizes[key];
+                            count += sizes[k];
                             amount += sizes[k] * unitPrice;
                         }
                         _sizes[k] = struc;
@@ -103,8 +103,7 @@ module.exports = router => {
         );
         const DeliveryItems = new av.Query('DeliveryItems');
         try {
-            const items = await DeliveryItems
-                .equalTo('deliveryOrder', order)
+            const items = await DeliveryItems.equalTo('deliveryOrder', order)
                 .include(['shoeType'])
                 .find();
             const retData = items.map(item => ({
@@ -135,8 +134,7 @@ module.exports = router => {
                 req.body.orderObjectId
             );
             const DeliveryItems = new av.Query('DeliveryItems');
-            let orderItems = await DeliveryItems
-                .equalTo('deliveryOrder', order)
+            let orderItems = await DeliveryItems.equalTo('deliveryOrder', order)
                 .include(['shoeType'])
                 .find();
             // 构建以id为键名的键值对
@@ -218,7 +216,6 @@ module.exports = router => {
             await av.Object.saveAll(saveObjects);
             res.send({ errNo: 0 });
         } catch (e) {
-            console.log(e);
             res.send({
                 errNo: e.code
             });
@@ -261,6 +258,94 @@ module.exports = router => {
             res.send({ errNo: 0 });
         } catch (e) {
             res.send({ errNo: e.code });
+        }
+    });
+
+    // 还款
+    router.post('/api/pay-delivery-order', async (req, res) => {
+        const { orderObjectId } = req.body;
+        const reliedDelivery = req.body.reliedDelivery || [];
+        // delivery 和 returns 的分割线
+        const divided = reliedDelivery.length + 1;
+        const reliedReturns = req.body.reliedReturns || [];
+        const cash = req.body.cash || 0;
+        // 所有需要搜索的对象
+        let queryObjects = [
+            av.Object.createWithoutData('DeliveryOrder', orderObjectId)
+        ];
+        reliedDelivery.forEach(deliveryOrder =>
+            queryObjects.push(
+                av.Object.createWithoutData('DeliveryOrder', deliveryOrder)
+            ));
+        reliedReturns.forEach(returnsOrder =>
+            queryObjects.push(
+                av.Object.createWithoutData('ReturnsOrder', returnsOrder)
+            ));
+        try {
+            const results = await av.Object.fetchAll(queryObjects);
+            let saveObjects = [];
+            // 需要操作的出货单
+            let deliveryOrder = results[0];
+            // 所依赖出货单的总额
+            let deliveryAmount = 0;
+            // 所依赖的退货单的总额
+            let returnsAmount = 0;
+            // 计算出货单总额
+            // 的同时标记出货单为已经使用
+            results.slice(1, divided).forEach(order => {
+                if (order.get('used')) {
+                    throw {
+                        code: -1,
+                        msg: `出货单${order.get('orderId')}已经用于还款`
+                    };
+                } else {
+                    const notyetAmount = order.get('notyetAmount');
+                    const amount = order.get('amount');
+                    const paid = order.get('paid');
+                    deliveryAmount += notyetAmount - (amount - paid);
+                    order.set('used', true);
+                    saveObjects.push(order);
+                }
+            });
+            // 计算退货单总额
+            // 的同时标记退货单为已经使用
+            results.slice(divided).forEach(order => {
+                if (order.get('isDone')) {
+                    throw {
+                        code: -1,
+                        msg: '退货单未完成，不可以用于还款'
+                    };
+                } else if (order.get('used')) {
+                    throw {
+                        code: -1,
+                        msg: `退货单已经用于还款`
+                    };
+                } else {
+                    returnsAmount += order.get('amount');
+                    order.set('used', true);
+                    saveObjects.push(order);
+                }
+            });
+            // 所有的总额
+            const total = cash + deliveryAmount + returnsAmount;
+            // 订单总额
+            const amount = deliveryOrder.get('amount');
+            if (total > amount) {
+                throw {
+                    code: -1,
+                    msg: '用于还款的订单总价值大于该订单的价值，无法还款'
+                };
+            }
+            deliveryOrder.set('paid', total);
+            saveObjects.push(deliveryOrder);
+            await av.Object.saveAll(saveObjects);
+            res.send({ errNo: 0 });
+        } catch (e) {
+            console.log(e);
+            res.send({
+                errNo: e.code,
+                errMsg: e.msg
+            });
         }
     });
 };
