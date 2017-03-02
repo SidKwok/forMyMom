@@ -10,19 +10,17 @@ const sizeKeys = _.cloneDeep(utils.sizeKeys);
 module.exports = router => {
     // 新建退货单
     router.post('/api/create-returns-order', async (req, res) => {
+        const user = req.currentUser;
+        const { clientObjectId, note, items } = req.body;
+        let client = av.Object.createWithoutData('Clients', clientObjectId);
         try {
-            const user = req.currentUser;
-            const { clientObjectId, note, items } = req.body;
-            const client = av.Object.createWithoutData('Clients', clientObjectId);
-
             let newOrder = new av.Object('ReturnsOrder');
             newOrder.set('client', client);
             newOrder.set('user', user);
             newOrder.set('note', note);
 
             let count = 0;
-            let saveObjects = [];
-            items.forEach(item => {
+            let saveObjects = items.map(item => {
                 let newItem = new av.Object('ReturnsItems');
                 let { shoeObjectId, unitPrice, sizes } = item;
                 let _sizes = {};
@@ -43,17 +41,16 @@ module.exports = router => {
                 // 设置订单每一项的单价
                 newItem.set('unitPrice', unitPrice);
                 // 设置订单每一项的所属订单
-                newItem.set('dependent', newOrder);
-                saveObjects.push(newItem);
+                newItem.set('returnsOrder', newOrder);
+                return newItem;
             });
             newOrder.set('count', count);
             const results = await av.Object.saveAll(saveObjects);
             res.send({
                 errNo: 0,
-                retData: { id: results[0].get('dependent').id }
+                retData: { id: results[0].get('returnsOrder').id }
             });
         } catch (e) {
-            console.log(e);
             res.send({
                 errNo: e.code,
                 errMsg: e.msg

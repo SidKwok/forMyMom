@@ -45,7 +45,7 @@
 
 * PurchaseItems (进货项)
  - shoeType (pointer, Stock)
- - dependent (pointer, PurchaseOrder)
+ - purchaseOrder (pointer, PurchaseOrder)
  - sizes (object, 尺码)
    * s34-s44
      - needed (number, 需要的进货)
@@ -73,7 +73,7 @@
 * DeliveryItems (出货单项)
  - shoeType (pointer, stock)
  - unitPrice (number, 单价)
- - dependent (pointer, DeliveryOrder)
+ - purchaseOrder (pointer, DeliveryOrder)
  - sizes (object, 尺码)
    * s34-s44
      - needed (number, 需要的数量)

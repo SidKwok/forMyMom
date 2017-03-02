@@ -9,8 +9,6 @@ const sizeKeys = _.cloneDeep(utils.sizeKeys);
 const defineStatus = utils.defineStatus;
 const defineSizeStatus = utils.defineSizeStatus;
 
-// TODO: relation转pointer
-
 module.exports = router => {
     // 生成进货单
     router.post('/api/create-purchase-order', async (req, res) => {
@@ -25,8 +23,13 @@ module.exports = router => {
                 .equalTo('isDel', false)
                 .find();
             if (!orders.length) {
-                // 整理出货单的每一项，保存每一项stock的pointer
-                let _items = items.map(item => {
+                let newOrder = new av.Object('PurchaseOrder');
+                newOrder.set('vender', vender);
+                newOrder.set('user', user);
+                newOrder.set('orderId', orderId);
+                newOrder.set('note', note);
+
+                let saveObjects = items.map(item => {
                     let newItem = new av.Object('PurchaseItems');
                     let { shoeObjectId, sizes } = item;
                     let _sizes = {};
@@ -46,24 +49,13 @@ module.exports = router => {
                     );
                     newItem.set('shoeType', shoe);
                     newItem.set('sizes', _sizes);
+                    newItem.set('purchaseOrder', newOrder);
                     return newItem;
                 });
-                // 获取保存之后的出货单项，然后添加到出货单的relation
-                const saveItems = await av.Object.saveAll(_items);
-                let newOrder = new av.Object('PurchaseOrder');
-                let relation = newOrder.relation('items');
-                saveItems.forEach(item => {
-                    relation.add(item);
-                });
-                // 设置出货单的基本信息
-                newOrder.set('vender', vender);
-                newOrder.set('user', user);
-                newOrder.set('orderId', orderId);
-                newOrder.set('note', note);
-                const { id } = await newOrder.save();
+                const results = await av.Object.saveAll(saveObjects);
                 res.send({
                     errNo: 0,
-                    retData: { id }
+                    retData: { id: results[0].get('purchaseOrder').id }
                 });
             } else {
                 throw {
@@ -111,11 +103,11 @@ module.exports = router => {
     // 展示进货单详情
     router.get('/api/show-purchase-order-items', async (req, res) => {
         const { orderObjectId } = req.query;
+        const PurchaseItems = new av.Query('PurchaseItems');
         const order = av.Object.createWithoutData('PurchaseOrder', orderObjectId);
         try {
-            const items = await order
-                .relation('items')
-                .query()
+            const items = await PurchaseItems
+                .equalTo('purchaseOrder', order)
                 .include(['shoeType'])
                 .find();
             const retData = items.map(item => ({
@@ -133,6 +125,7 @@ module.exports = router => {
                 retData
             });
         } catch (e) {
+            console.log(e);
             res.send({ errNo: e.code });
         }
     });
@@ -145,9 +138,9 @@ module.exports = router => {
                 'PurchaseOrder',
                 req.body.orderObjectId
             );
-            let orderItems = await order
-                .relation('items')
-                .query()
+            const PurchaseItems = new av.Query('PurchaseItems')
+            let orderItems = await PurchaseItems
+                .equalTo('purchaseOrder', order)
                 .include(['shoeType'])
                 .find();
             // 构建以id为键名的键值对
@@ -232,6 +225,7 @@ module.exports = router => {
             await order.set('note', note).save();
             res.send({ errNo: 0 });
         } catch (e) {
+            console.log(e);
             res.send({ errNo: e.code });
         }
     });

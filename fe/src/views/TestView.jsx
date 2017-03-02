@@ -44,9 +44,9 @@ export default class TestView extends Component {
      */
     createShoe = () => {
         axios.post('/api/create-shoe', {
-            shoeId: '1106',
-            brand: 'banasi',
-            color: 'spark',
+            shoeId: '1102',
+            brand: 'adidas',
+            color: 'white',
             sizes: {
                 s34: 2,
                 s35: 2,
@@ -253,7 +253,7 @@ export default class TestView extends Component {
             isRetail: false,
             items: [
                 {
-                    shoeObjectId: '58afcabeac502e006c9213a6',
+                    shoeObjectId: '58b78c20a22b9d005ecda087',
                     sizes: {
                         s34: 1,
                         s35: 1,
@@ -261,7 +261,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58afcadf5c497d0067797195',
+                    shoeObjectId: '58b78c0d128fe1007e3a06a9',
                     sizes: {
                         s37: 1,
                         s38: 1,
@@ -273,7 +273,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58afca3b128fe1006cb07ca4',
+                    shoeObjectId: '58b78be3ac502e006bc59739',
                     sizes: {
                         s37: 2,
                         s38: 2,
@@ -308,7 +308,7 @@ export default class TestView extends Component {
      */
     showPurchaseOrderItems = () => {
         axios.get('/api/show-purchase-order-items', {
-            params: { id: '58b04fa75c497d00677d801b' }
+            params: { orderObjectId: '58b788b88d6d810065264291' }
         })
         .then(({ data }) => {
             console.log(data);
@@ -337,10 +337,10 @@ export default class TestView extends Component {
      */
     updatePurchaseOrder = () => {
         axios.post('/api/purchase-to-stock', {
-            orderObjectId: '58b17fca8ac24728d5419af1',
+            orderObjectId: '58b78c5d1b69e6006b051195',
             changedItems: [
                 // {
-                //     itemId: '58b17fca1b69e60058a92155',
+                //     itemId: '58b78c5d1b69e6006b051198',
                 //     sizes: {
                 //         s34: 1,
                 //         s35: 1,
@@ -348,7 +348,7 @@ export default class TestView extends Component {
                 //     }
                 // },
                 // {
-                //     itemId: '58b17fca1b69e60058a92156',
+                //     itemId: '58b78c5d1b69e6006b051199',
                 //     sizes: {
                 //         s37: 1,
                 //         s38: 1,
@@ -360,7 +360,7 @@ export default class TestView extends Component {
                 //     }
                 // },
                 {
-                    itemId: '58b17fca1b69e60058a92157',
+                    itemId: '58b78c5d1b69e6006b05119a',
                     sizes: {
                         s37: 1,
                         s38: 1,
@@ -402,7 +402,7 @@ export default class TestView extends Component {
             note: 'yyohoho',
             items: [
                 {
-                    shoeObjectId: '58afcadf5c497d0067797195',
+                    shoeObjectId: '58b78be3ac502e006bc59739',
                     unitPrice: 30,
                     sizes: {
                         s39: 1,
@@ -414,7 +414,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58afcabeac502e006c9213a6',
+                    shoeObjectId: '58b78c0d128fe1007e3a06a9',
                     unitPrice: 40,
                     sizes: {
                         s36: 1,
@@ -426,7 +426,7 @@ export default class TestView extends Component {
                     }
                 },
                 {
-                    shoeObjectId: '58afcaf1128fe1006cb088c2',
+                    shoeObjectId: '58b78c20a22b9d005ecda087',
                     unitPrice: 50,
                     sizes: {
                         s39: 2,
@@ -449,7 +449,7 @@ export default class TestView extends Component {
      */
     showDeliveryOrderItems = () => {
         axios.get('/api/show-delivery-order-items', {
-            params: { orderObjectId: '58b1222b8d6d810057e622d2' }
+            params: { orderObjectId: '58b792272f301e006c4f43c8' }
         })
         .then(({ data }) => {
             console.log(data);
@@ -463,10 +463,10 @@ export default class TestView extends Component {
      */
     updateDeliveryOrder = () => {
         axios.post('/api/stock-to-delivery', {
-            orderObjectId: '58b1900eb123db0052c6b923',
+            orderObjectId: '58b792272f301e006c4f43c8',
             changedItems: [
                 // {
-                //     itemId: '58b1900eb123db0052c6b91f',
+                //     itemId: '58b79227ac502e006cfd3da9',
                 //     sizes: {
                 //         s39: 1,
                 //         s40: 1,
@@ -477,7 +477,7 @@ export default class TestView extends Component {
                 //     }
                 // },
                 // {
-                //     itemId: '58b1900eb123db0052c6b920',
+                //     itemId: '58b79227ac502e006cfd3daa',
                 //     sizes: {
                 //         s36: 1,
                 //         s37: 1,
@@ -488,7 +488,7 @@ export default class TestView extends Component {
                 //     }
                 // },
                 {
-                    itemId: '58b1900eb123db0052c6b921',
+                    itemId: '58b79227ac502e006cfd3dab',
                     sizes: {
                         s39: 1,
                         s40: 1,

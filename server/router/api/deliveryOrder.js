@@ -9,8 +9,6 @@ const sizeKeys = _.cloneDeep(utils.sizeKeys);
 const defineStatus = utils.defineStatus;
 const defineSizeStatus = utils.defineSizeStatus;
 
-// TODO: relation转pointer
-
 module.exports = router => {
     // 生成出货单
     router.post('/api/create-delivery-order', async (req, res) => {
@@ -28,9 +26,13 @@ module.exports = router => {
                 .find();
             if (!orders.length) {
                 // 订单初始金额
+                let newOrder = new av.Object('DeliveryOrder');
+                // 设置出货单的基本信息
+                newOrder.set('client', client);
+                newOrder.set('user', user);
+                newOrder.set('orderId', orderId);
+                newOrder.set('note', note);
                 let count = 0;
-                // 整理出货单的每一项，保存每一项stock的pointer
-                // 并计算出订单总额
                 let _items = items.map(item => {
                     let newItem = new av.Object('DeliveryItems');
                     let { shoeObjectId, unitPrice, sizes } = item;
@@ -56,27 +58,17 @@ module.exports = router => {
                     newItem.set('sizes', _sizes);
                     // 设置订单每一项的单价
                     newItem.set('unitPrice', unitPrice);
+                    newItem.set('deliveryOrder', newOrder);
                     return newItem;
                 });
-                // 获取保存之后的出货单项，然后添加到出货单的relation
-                const saveItems = await av.Object.saveAll(_items);
-                let newOrder = new av.Object('DeliveryOrder');
-                let relation = newOrder.relation('items');
-                saveItems.forEach(item => {
-                    relation.add(item);
-                });
-                // 设置出货单的基本信息
-                newOrder.set('client', client);
-                newOrder.set('user', user);
-                newOrder.set('orderId', orderId);
-                newOrder.set('note', note);
+                // 设置总额
                 newOrder.set('count', count);
                 // 新建出货单的时候，由于没有发货所以欠货总额应该和总额一样
                 newOrder.set('notyetCount', count);
-                const { id } = await newOrder.save();
+                const results = await av.Object.saveAll(_items);
                 res.send({
                     errNo: 0,
-                    retData: { id }
+                    retData: { id: results[0].get('deliveryOrder').id }
                 });
             } else {
                 throw {
@@ -99,12 +91,14 @@ module.exports = router => {
 
     // 展示出货单详情
     router.get('/api/show-delivery-order-items', async (req, res) => {
-        const { orderObjectId } = req.query;
-        const order = av.Object.createWithoutData('DeliveryOrder', orderObjectId);
+        const order = av.Object.createWithoutData(
+            'DeliveryOrder',
+            req.query.orderObjectId
+        );
+        const DeliveryItems = new av.Query('DeliveryItems');
         try {
-            const items = await order
-                .relation('items')
-                .query()
+            const items = await DeliveryItems
+                .equalTo('deliveryOrder', order)
                 .include(['shoeType'])
                 .find();
             const retData = items.map(item => ({
@@ -134,9 +128,9 @@ module.exports = router => {
                 'DeliveryOrder',
                 req.body.orderObjectId
             );
-            let orderItems = await order
-                .relation('items')
-                .query()
+            const DeliveryItems = new av.Query('DeliveryItems');
+            let orderItems = await DeliveryItems
+                .equalTo('deliveryOrder', order)
                 .include(['shoeType'])
                 .find();
             // 构建以id为键名的键值对
