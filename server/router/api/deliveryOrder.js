@@ -345,7 +345,6 @@ module.exports = router => {
             await av.Object.saveAll(saveObjects);
             res.send({ errNo: 0 });
         } catch (e) {
-            console.log(e);
             res.send({
                 errNo: e.code,
                 errMsg: e.msg

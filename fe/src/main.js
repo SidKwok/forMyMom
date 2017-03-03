@@ -1,19 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import Vue from 'vue';
 import App from './App';
-import { AppContainer } from 'react-hot-loader';
+import router from './router';
 
-const render = Component => {
-    ReactDOM.render(
-        <AppContainer>
-            <Component />
-        </AppContainer>,
-        document.getElementById('root')
-    );
-};
+Vue.config.productionTip = false;
 
-render(App);
-
-if (module.hot) {
-    module.hot.accept('./App', () => render(App));
-}
+/* eslint-disable no-new */
+new Vue({
+    el: '#app',
+    router,
+    template: '<App/>',
+    components: { App }
+});

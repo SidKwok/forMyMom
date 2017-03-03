@@ -1,0 +1,20 @@
+{
+    "presets": [
+        ["es2015", {"modules": false}],
+        "stage-3",
+        "react"
+    ],
+    "comments": false,
+    "plugins": [
+        "transform-runtime",
+        "transform-class-properties",
+        ["import", { "libraryName": "antd", "style": "css" }]
+    ],
+    "env": {
+        "development": {
+            "plugins": [
+                "react-hot-loader/babel"
+            ]
+        }
+    }
+}
