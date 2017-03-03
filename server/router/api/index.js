@@ -7,7 +7,7 @@ router.use((req, res, next) => {
         next();
     } else {
         res.send({
-            errNo: -1,
+            errNo: 12,
             errMsg: '用户未登陆'
         });
     }

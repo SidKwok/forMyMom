@@ -2,6 +2,19 @@ const express = require('express');
 const router = express.Router();
 const av = require('leanengine');
 
+router.get('/auth/init', (req, res) => {
+    if (req.currentUser) {
+        res.send({
+            errNo: 0,
+            isLogin: true,
+            user: req.currentUser.get('username'),
+            userId: req.currentUser.id
+        });
+    } else {
+        res.send({ isLogin: false });
+    }
+});
+
 // 登陆
 router.post('/auth/login', async (req, res) => {
     const { username, password } = req.body;
@@ -12,7 +25,7 @@ router.post('/auth/login', async (req, res) => {
             errNo: 0,
             retData: {
                 user: user.get('username'),
-                userId: user.get('objectId')
+                userId: user.id
             }
         });
     } catch (e) {

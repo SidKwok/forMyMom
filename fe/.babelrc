@@ -5,7 +5,9 @@
     }],
     "stage-3"
   ],
-  "plugins": ["transform-runtime"],
+  "plugins": [
+    "transform-runtime"
+  ],
   "comments": false,
   "env": {
     "test": {
