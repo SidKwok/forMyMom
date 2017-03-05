@@ -5,7 +5,11 @@
 * [ ] 确定原型
 * [x] 数据表
 * [ ] 框架
- - How to figure out `containers` and `components`
+ - attend to use vue2.x and iview(2.0branch, need to wait)
+ - react is another branch of trial, with antd.
+
+## Ideas
+* update to koa 2.0?
 
 ## 一键部署
 [![Deploy to LeanEngine](http://ac-32vx10b9.clouddn.com/109bd02ee9f5875a.png)](https://leancloud.cn/1.1/engine/deploy-button)
