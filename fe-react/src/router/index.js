@@ -20,6 +20,8 @@ import TestView from 'views/TestView';
 import store from '$redux/store';
 import * as actions from '$redux/actions';
 
+// TODO: handle status when in login view
+
 const onEnter = async ({ location }, replace, cb) => {
     try {
         const { isOn } = store.getState().status;
@@ -47,12 +49,12 @@ const onEnter = async ({ location }, replace, cb) => {
 };
 
 export default () => (
-    <Router history={history}>
-        <Route path='/login' component={LoginView} key={Math.random()} />
-        <Route path='/' component={HomeContainer}>
+    <Router history={history} key={Math.random()} >
+        <Route path='/login' component={LoginView} />
+        <Route path='/' component={HomeContainer} onEnter={onEnter}>
             <IndexRoute component={WarehouseView} />
             <Route path='warehouse' component={WarehouseView} />
-            <Route path='client' component={ClientAllView} onEnter={onEnter} />
+            <Route path='client' component={ClientAllView} />
             <Route path='client/:id' component={ClientView} />
             <Route path='vender' component={VenderAllView} />
             <Route path='vender/:id' component={VenderView} />

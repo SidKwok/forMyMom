@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { browserHistory as history } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Form, Input, Button } from 'antd';
 import * as actions from '$redux/actions';
-// import axios from 'axios';
+import axios from 'axios';
 import './LoginView.less';
 
 const mapStateToProps = state => ({
@@ -20,14 +21,20 @@ export default connect(
 )(Form.create()(class LoginView extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.actions.login();
-        // axios.post('/auth/login', {
-        //     username: this.props.form.getFieldValue('username'),
-        //     password: this.props.form.getFieldValue('password')
-        // })
-        // .then(({data}) => {
-        //     console.log(data);
-        // });
+        const { setUser, login } = this.props.actions;
+        (async () => {
+            try {
+                const { user, userId } = await axios.post('/auth/login', {
+                    username: this.props.form.getFieldValue('username'),
+                    password: this.props.form.getFieldValue('password')
+                }).then(({data}) => data.retData);
+                login();
+                setUser(user, userId);
+                history.push('/warehouse');
+            } catch (e) {
+                console.log(e);
+            }
+        })();
     }
     handleClick = e => {
         e.preventDefault();
