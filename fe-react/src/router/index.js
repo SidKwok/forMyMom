@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-    browserHistory as history,
+    browserHistory,
     Router,
     Route,
     IndexRoute
 } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import axios from 'axios';
 
 import LoginView from 'views/LoginView';
@@ -14,11 +15,17 @@ import ClientAllView from 'views/ClientAllView';
 import ClientView from 'views/ClientView';
 import VenderAllView from 'views/VenderAllView';
 import VenderView from 'views/VenderView';
+import DeliveryView from 'views/DeliveryView';
+import PurchaseView from 'views/PurchaseView';
 import AnalysisView from 'views/AnalysisView';
 import TestView from 'views/TestView';
 
+import { routes } from './routes';
+
 import store from '$redux/store';
 import * as actions from '$redux/actions';
+
+const history = syncHistoryWithStore(browserHistory, store);
 
 // TODO: handle status when in login view
 
@@ -36,10 +43,10 @@ const onEnter = async ({ location }, replace, cb) => {
             }
         }
         const { isLogin } = store.getState().status;
-        if (location.pathname === '/login' || isLogin) {
+        if (location.pathname === routes.LOGIN || isLogin) {
             cb();
         } else {
-            replace('/login');
+            replace(routes.LOGIN);
             cb();
         }
     } catch (e) {
@@ -53,13 +60,15 @@ export default () => (
         <Route path='/login' component={LoginView} />
         <Route path='/' component={HomeContainer} onEnter={onEnter}>
             <IndexRoute component={WarehouseView} />
-            <Route path='warehouse' component={WarehouseView} />
-            <Route path='client' component={ClientAllView} />
-            <Route path='client/:id' component={ClientView} />
-            <Route path='vender' component={VenderAllView} />
-            <Route path='vender/:id' component={VenderView} />
-            <Route path='analysis' component={AnalysisView} />
+            <Route path={routes.WAREHOUSE} component={WarehouseView} />
+            <Route path={routes.CLIENT_ALL} component={ClientAllView} />
+            <Route path={routes.CLIENT} component={ClientView} />
+            <Route path={routes.VENDER_ALL} component={VenderAllView} />
+            <Route path={routes.VENDER} component={VenderView} />
+            <Route path={routes.DELIVERY} component={DeliveryView} />
+            <Route path={routes.PURCHASE} component={PurchaseView} />
+            <Route path={routes.ANALYSIS} component={AnalysisView} />
         </Route>
-        <Route path='/test' component={TestView} />
+        <Route path={routes.TEST} component={TestView} />
     </Router>
 );

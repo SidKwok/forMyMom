@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory as history } from 'react-router';
+import HeaderContent from 'components/HeaderContent';
 import classNames from 'classnames';
 import 'hamburgers/dist/hamburgers.css';
 import './HomeContainer.less';
 
 import { Layout, Menu, Icon } from 'antd';
 const { Header, Sider, Content } = Layout;
+
+import { routes } from 'router/routes';
 
 export default class HomeContainer extends Component {
     state = {
@@ -17,6 +20,7 @@ export default class HomeContainer extends Component {
         });
     }
     render() {
+        const { pathname } = history.getCurrentLocation();
         const { collapsed } = this.state;
         const logo = classNames([
             'logo',
@@ -39,27 +43,39 @@ export default class HomeContainer extends Component {
                     <div className={logo}>
                         <div className='img' />
                     </div>
-                    <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
-                        <Menu.Item key='1'>
-                            <Link to='/warehouse'>
+                    <Menu theme='dark' mode='inline' defaultSelectedKeys={[pathname]}>
+                        <Menu.Item key={routes.WAREHOUSE}>
+                            <Link to={routes.WAREHOUSE}>
                                 <Icon type='home' />
                                 <span className='nav-text'>仓库</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key='2'>
-                            <Link to='/client'>
+                        <Menu.Item key={routes.CLIENT_ALL}>
+                            <Link to={routes.CLIENT_ALL}>
                                 <Icon type='team' />
                                 <span className='nav-text'>客户</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key='3'>
-                            <Link to='/vender'>
+                        <Menu.Item key={routes.VENDER_ALL}>
+                            <Link to={routes.VENDER_ALL}>
                                 <Icon type='solution' />
                                 <span className='nav-text'>厂家</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key='4'>
-                            <Link to='/analysis'>
+                        <Menu.Item key={routes.DELIVERY}>
+                            <Link to={routes.DELIVERY}>
+                                <Icon type='paper-clip' />
+                                <span className='nav-text'>出货单</span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key={routes.PURCHASE}>
+                            <Link to={routes.PURCHASE}>
+                                <Icon type='inbox' />
+                                <span className='nav-text'>出货单</span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key={routes.ANALYSIS}>
+                            <Link to={routes.ANALYSIS}>
                                 <Icon type='line-chart' />
                                 <span className='nav-text'>深度分析</span>
                             </Link>
@@ -68,7 +84,7 @@ export default class HomeContainer extends Component {
                 </Sider>
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
-                        {'asd'}
+                        <HeaderContent />
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
                         {this.props.children}
