@@ -27,7 +27,7 @@ module.exports = {
             'src': resolve('src'),
             'assets': resolve('src/assets'),
             'components': resolve('src/components'),
-            'routes': resolve('src/routes'),
+            'router': resolve('src/router'),
             'views': resolve('src/views'),
             '$redux': resolve('src/redux')
         }

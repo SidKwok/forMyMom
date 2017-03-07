@@ -1,18 +1,37 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Form, Input, Button } from 'antd';
-import axios from 'axios';
+import * as actions from '$redux/actions';
+// import axios from 'axios';
 import './LoginView.less';
 
-export default Form.create()(class LoginView extends Component {
+const mapStateToProps = state => ({
+    isLogin: state.status.isLogin
+});
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Form.create()(class LoginView extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/auth/login', {
-            username: this.props.form.getFieldValue('username'),
-            password: this.props.form.getFieldValue('password')
-        })
-        .then(({data}) => {
-            console.log(data);
-        });
+        this.props.actions.login();
+        // axios.post('/auth/login', {
+        //     username: this.props.form.getFieldValue('username'),
+        //     password: this.props.form.getFieldValue('password')
+        // })
+        // .then(({data}) => {
+        //     console.log(data);
+        // });
+    }
+    handleClick = e => {
+        e.preventDefault();
+        this.props.actions.logout();
     }
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -23,6 +42,7 @@ export default Form.create()(class LoginView extends Component {
                     height: '500px',
                     margin: '60px auto'
                 }}>
+                    <p>{this.props.isLogin ? 'login' : 'logout'}</p>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Item>
                             {getFieldDecorator('username')(
@@ -45,4 +65,4 @@ export default Form.create()(class LoginView extends Component {
             </div>
         );
     }
-});
+}));

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-export default class FooView extends Component {
+export default class ClientView extends Component {
     constructor(props) {
         super(props);
-        this.state = { name: 'foo' };
+        this.state = { name: 'client' };
     }
 
     render() {

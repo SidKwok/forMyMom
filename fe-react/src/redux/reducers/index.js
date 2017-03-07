@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import counter from './counter';
+import status from './status';
 
 export default combineReducers({
-    counter
+    status
 });
