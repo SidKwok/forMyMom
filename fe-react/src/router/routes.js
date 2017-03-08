@@ -2,7 +2,7 @@ export const routes = {
     HOME: '/',
     LOGIN: '/login',
     TEST: '/test',
-    WAREHOUSE: '/warehouse',
+    STOCK: '/stock',
     CLIENT: '/client/:id',
     CLIENT_ALL: '/client',
     VENDER: '/vender/:id',

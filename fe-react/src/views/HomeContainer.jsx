@@ -44,8 +44,8 @@ export default class HomeContainer extends Component {
                         <div className='img' />
                     </div>
                     <Menu theme='dark' mode='inline' defaultSelectedKeys={[pathname]}>
-                        <Menu.Item key={routes.WAREHOUSE}>
-                            <Link to={routes.WAREHOUSE}>
+                        <Menu.Item key={routes.STOCK}>
+                            <Link to={routes.STOCK}>
                                 <Icon type='home' />
                                 <span className='nav-text'>仓库</span>
                             </Link>

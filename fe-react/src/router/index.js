@@ -10,7 +10,7 @@ import axios from 'axios';
 
 import LoginView from 'views/LoginView';
 import HomeContainer from 'views/HomeContainer';
-import WarehouseView from 'views/WarehouseView';
+import StockView from 'views/StockView';
 import ClientAllView from 'views/ClientAllView';
 import ClientView from 'views/ClientView';
 import VenderAllView from 'views/VenderAllView';
@@ -23,7 +23,7 @@ import TestView from 'views/TestView';
 import { routes } from './routes';
 
 import store from '$redux/store';
-import * as actions from '$redux/actions';
+import { statusActions } from '$redux/actions';
 
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -34,12 +34,12 @@ const onEnter = async ({ location }, replace, cb) => {
         const { isOn } = store.getState().status;
         if (!isOn) {
             const { isLogin, user, userId } = await axios.get('/auth/init').then(res => res.data);
-            store.dispatch(actions.turnon());
+            store.dispatch(statusActions.turnon());
             if (isLogin) {
-                store.dispatch(actions.login());
-                store.dispatch(actions.setUser(user, userId));
+                store.dispatch(statusActions.login());
+                store.dispatch(statusActions.setUser(user, userId));
             } else {
-                store.dispatch(actions.logout());
+                store.dispatch(statusActions.logout());
             }
         }
         const { isLogin } = store.getState().status;
@@ -59,8 +59,8 @@ export default () => (
     <Router history={history} key={Math.random()} >
         <Route path='/login' component={LoginView} />
         <Route path='/' component={HomeContainer} onEnter={onEnter}>
-            <IndexRoute component={WarehouseView} />
-            <Route path={routes.WAREHOUSE} component={WarehouseView} />
+            <IndexRoute component={StockView} />
+            <Route path={routes.STOCK} component={StockView} />
             <Route path={routes.CLIENT_ALL} component={ClientAllView} />
             <Route path={routes.CLIENT} component={ClientView} />
             <Route path={routes.VENDER_ALL} component={VenderAllView} />
