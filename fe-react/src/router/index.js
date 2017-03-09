@@ -6,8 +6,8 @@ import {
     IndexRoute
 } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import axios from 'axios';
 
+import RootContainer from 'views/RootContainer';
 import LoginView from 'views/LoginView';
 import HomeContainer from 'views/HomeContainer';
 import StockView from 'views/StockView';
@@ -23,7 +23,7 @@ import TestView from 'views/TestView';
 import { routes } from './routes';
 
 import store from '$redux/store';
-import { statusActions } from '$redux/actions';
+import actions from '$redux/actions';
 
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -31,23 +31,23 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 const onEnter = async ({ location }, replace, cb) => {
     try {
-        const { isOn } = store.getState().status;
-        if (!isOn) {
-            const { isLogin, user, userId } = await axios.get('/auth/init').then(res => res.data);
-            store.dispatch(statusActions.turnon());
-            if (isLogin) {
-                store.dispatch(statusActions.login());
-                store.dispatch(statusActions.setUser(user, userId));
-            } else {
-                store.dispatch(statusActions.logout());
-            }
-        }
+        await store.dispatch(actions.init());
         const { isLogin } = store.getState().status;
-        if (location.pathname === routes.LOGIN || isLogin) {
-            cb();
+        const isLoginView = location.pathname === routes.LOGIN;
+        if (isLogin) {
+            if (isLoginView) {
+                replace(routes.STOCK);
+                cb();
+            } else {
+                cb();
+            }
         } else {
-            replace(routes.LOGIN);
-            cb();
+            if (isLoginView) {
+                cb();
+            } else {
+                replace(routes.LOGIN);
+                cb();
+            }
         }
     } catch (e) {
         console.log(e);
@@ -57,18 +57,20 @@ const onEnter = async ({ location }, replace, cb) => {
 
 export default () => (
     <Router history={history} key={Math.random()} >
-        <Route path='/login' component={LoginView} />
-        <Route path='/' component={HomeContainer} onEnter={onEnter}>
-            <IndexRoute component={StockView} />
-            <Route path={routes.STOCK} component={StockView} />
-            <Route path={routes.CLIENT_ALL} component={ClientAllView} />
-            <Route path={routes.CLIENT} component={ClientView} />
-            <Route path={routes.VENDER_ALL} component={VenderAllView} />
-            <Route path={routes.VENDER} component={VenderView} />
-            <Route path={routes.DELIVERY} component={DeliveryView} />
-            <Route path={routes.PURCHASE} component={PurchaseView} />
-            <Route path={routes.ANALYSIS} component={AnalysisView} />
+        <Route path={routes.ROOT} component={RootContainer} onEnter={onEnter}>
+            <Route path={routes.LOGIN} component={LoginView} />
+            <Route path={routes.HOME} component={HomeContainer}>
+                <IndexRoute component={StockView} />
+                <Route path={routes.STOCK} component={StockView} />
+                <Route path={routes.CLIENT_ALL} component={ClientAllView} />
+                <Route path={routes.CLIENT} component={ClientView} />
+                <Route path={routes.VENDER_ALL} component={VenderAllView} />
+                <Route path={routes.VENDER} component={VenderView} />
+                <Route path={routes.DELIVERY} component={DeliveryView} />
+                <Route path={routes.PURCHASE} component={PurchaseView} />
+                <Route path={routes.ANALYSIS} component={AnalysisView} />
+            </Route>
+            <Route path={routes.TEST} component={TestView} />
         </Route>
-        <Route path={routes.TEST} component={TestView} />
     </Router>
 );

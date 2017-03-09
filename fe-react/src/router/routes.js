@@ -1,13 +1,14 @@
 export const routes = {
-    HOME: '/',
-    LOGIN: '/login',
-    TEST: '/test',
-    STOCK: '/stock',
-    CLIENT: '/client/:id',
-    CLIENT_ALL: '/client',
-    VENDER: '/vender/:id',
-    VENDER_ALL: '/vender',
-    DELIVERY: '/delivery',
-    ANALYSIS: '/analysis',
-    PURCHASE: '/purchase'
+    ROOT: '/',
+    HOME: '/app',
+    LOGIN: '/app/login',
+    TEST: '/app/test',
+    STOCK: '/app/stock',
+    CLIENT: '/app/client/:id',
+    CLIENT_ALL: '/app/client',
+    VENDER: '/app/vender/:id',
+    VENDER_ALL: '/app/vender',
+    DELIVERY: '/app/delivery',
+    ANALYSIS: '/app/analysis',
+    PURCHASE: '/app/purchase'
 };

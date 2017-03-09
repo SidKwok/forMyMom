@@ -1,75 +1,64 @@
 import React, { Component } from 'react';
-import { browserHistory as history } from 'react-router';
+import { Card, Form, Icon, Input, Button } from 'antd';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Form, Input, Button } from 'antd';
-import * as actions from '$redux/actions';
-import axios from 'axios';
+import actions from '$redux/actions';
+import { routes } from 'router/routes';
 import './LoginView.less';
 
-const mapStateToProps = state => ({
-    isLogin: state.status.isLogin
-});
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        signIn: actions.signIn
+    }, dispatch);
+};
 
-const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Form.create()(class LoginView extends Component {
+class LoginView extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
-        const { setUser, login } = this.props.actions;
-        (async () => {
-            try {
-                const { user, userId } = await axios.post('/auth/login', {
-                    username: this.props.form.getFieldValue('username'),
-                    password: this.props.form.getFieldValue('password')
-                }).then(({data}) => data.retData);
-                login();
-                setUser(user, userId);
-                history.push('/warehouse');
-            } catch (e) {
-                console.log(e);
+        const { form, signIn, router } = this.props;
+        form.validateFields(async (err, { username, password }) => {
+            if (!err) {
+                const errNo = await signIn(username, password);
+                if (errNo === 0) {
+                    router.push(routes.STOCK);
+                }
             }
-        })();
-    }
-    handleClick = e => {
-        e.preventDefault();
-        this.props.actions.logout();
+        });
     }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
             <div className='login-view'>
-                <div style={{
-                    width: '500px',
-                    height: '500px',
-                    margin: '60px auto'
-                }}>
-                    <p>{this.props.isLogin ? 'login' : 'logout'}</p>
-                    <Form onSubmit={this.handleSubmit}>
+                <Card className='card'>
+                    <h1>Welcome Back</h1>
+                    <Form onSubmit={this.handleSubmit} className='form'>
                         <Form.Item>
-                            {getFieldDecorator('username')(
-                                <Input placeholder='username' />
+                            {getFieldDecorator('username', {
+                                rules: [{ required: true, message: '请输入用户名' }]
+                            })(
+                                <Input prefix={<Icon type='user' style={{ fontSize: 13 }} />}
+                                    placeholder='用户名' />
                             )}
                         </Form.Item>
                         <Form.Item>
-                            {getFieldDecorator('password')(
-                                <Input placeholder='password' type='password' />
+                            {getFieldDecorator('password', {
+                                rules: [{ required: true, message: '请输入密码' }]
+                            })(
+                                <Input prefix={<Icon type='lock' style={{ fontSize: 13 }} />}
+                                    type='password'
+                                    placeholder='密码' />
                             )}
                         </Form.Item>
                         <Form.Item>
-                            <Button htmlType='submit'>Log In</Button>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button onClick={this.handleClick}>Log Out</Button>
+                            <Button type='primary' htmlType='submit' className='login-button'>
+                                登陆
+                            </Button>
                         </Form.Item>
                     </Form>
-                </div>
+                </Card>
             </div>
         );
     }
-}));
+}
+
+export default connect(null, mapDispatchToProps)(Form.create()(LoginView));
