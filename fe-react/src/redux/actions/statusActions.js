@@ -39,7 +39,7 @@ export const init = () => async (dispatch, getState) => {
 };
 
 export const signIn = (username, password) => async dispatch => {
-    let sinal = 0;
+    let signal = 0;
     try {
         const { errNo, retData } = await axios
             .post('/auth/login', {
@@ -55,10 +55,9 @@ export const signIn = (username, password) => async dispatch => {
     } catch (e) {
         // handle error
         console.log(e);
-        sinal = -1;
-    } finally {
-        return signal;
+        signal = -1;
     }
+    return signal;
 };
 
 export const signOut = () => async dispatch => {
