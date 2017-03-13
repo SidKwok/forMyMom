@@ -80,9 +80,17 @@ module.exports = router => {
         const user = req.currentUser;
         let Client = new av.Query('Clients');
         try {
-            const clients = await Client.equalTo('user', user)
+            const results = await Client.equalTo('user', user)
                 .equalTo('isDel', false)
                 .find();
+            const clients = results.map(client => ({
+                objectId: client.id,
+                address: client.get('address'),
+                telephone: client.get('telephone'),
+                mobilephone: client.get('mobilephone'),
+                name: client.get('name'),
+                note: client.get('note')
+            }));
             res.send({
                 errNo: 0,
                 retData: { clients }

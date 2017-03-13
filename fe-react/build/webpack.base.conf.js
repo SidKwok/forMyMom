@@ -29,7 +29,8 @@ module.exports = {
             'components': resolve('src/components'),
             'router': resolve('src/router'),
             'views': resolve('src/views'),
-            '$redux': resolve('src/redux')
+            '$redux': resolve('src/redux'),
+            'utils': resolve('src/utils')
         }
     },
     module: {

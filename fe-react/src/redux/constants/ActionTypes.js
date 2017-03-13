@@ -21,3 +21,6 @@ export const EDIT_SEARCH = 'EDIT_SEARCH';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 export const FOCUS_SEARCH = 'FOCUS_SEARCH';
 export const BLUR_SEARCH = 'BLUR_SEARCH';
+
+// client
+export const SET_CLIENTS = 'SET_CLIENTS';

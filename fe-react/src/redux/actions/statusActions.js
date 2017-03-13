@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
     TURN_ON,
     TURN_OFF,
@@ -6,6 +5,10 @@ import {
     LOGOUT,
     SET_USER
 } from '../constants/ActionTypes';
+import { routes } from 'router/routes';
+
+import axios from 'axios';
+import { browserHistory as history } from 'react-router';
 
 export const turnon = () => ({ type: TURN_ON });
 
@@ -13,7 +16,10 @@ export const turnoff = () => ({ type: TURN_OFF });
 
 export const login = () => ({ type: LOGIN });
 
-export const logout = () => ({ type: LOGOUT });
+export const logout = () => {
+    history.replace(routes.LOGIN);
+    return { type: LOGOUT };
+};
 
 export const setUser = (user, userId) => ({
     type: SET_USER,
@@ -38,7 +44,7 @@ export const init = () => async (dispatch, getState) => {
     }
 };
 
-export const signIn = (username, password) => async dispatch => {
+export const signIn = (username, password) => async (dispatch) => {
     let signal = 0;
     try {
         const { errNo, retData } = await axios
@@ -60,7 +66,7 @@ export const signIn = (username, password) => async dispatch => {
     return signal;
 };
 
-export const signOut = () => async dispatch => {
+export const signOut = () => async (dispatch) => {
     try {
         await axios.post('/auth/logout');
         dispatch(logout());
