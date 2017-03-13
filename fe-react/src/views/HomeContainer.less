@@ -1,85 +1,45 @@
 .home-container {
     height: 100%;
 
-    .trigger {
-        font-size: 18px;
-        line-height: 64px;
-        padding: 0 16px;
-        cursor: pointer;
-        transition: color .3s;
+    .sider {
+        background-color: #293b5a;
+        position: relative;
+        .logo {
+            background-color: #21324f;
+            height: 64px;
+            line-height: 64px;
+            text-align: center;
+            font-size: 18px;
+            color: #fff;
+        }
 
-        &:hover {
-            color: #108ee9;
+        ul {
+            padding: 24px 16px 0;
         }
     }
 
-    .title {
-        height: 64px;
-        color: #fff;
-        background-color: #333;
+    .header {
+        background-color: #f7faff;
+        border-bottom: 1px solid #e4eaf4;
+        padding: 0 16px;
         position: relative;
 
-        p {
-            position: absolute;
-            height: 64px;
-            width: 136px;
-            line-height: 64px;
-            font-size: 24px;
-            text-align: center;
-            left: 0;
-        }
-
         .collapse {
-            position: absolute;
-            right: 0;
-            width: 64px;
-            height: 64px;
-            line-height: 72px;
-            text-align: center;
+            position: relative;
+            font-size: 24px;
             cursor: pointer;
+            color: #e3e9f4;
+            top: 4px;
+        }
 
-            &-logo {
-                font-size: 18px;
-            }
+        .search-block {
+            position: relative;
+            padding: 0 12px;
+            text-align: right;
         }
     }
 
-    .normal-logo,
-    .collapsed-logo {
-        padding: 16px 0;
-
-        .img {
-            border-radius: 100%;
-            background-color: #333;
-            margin: 0 auto;
-            transition: .3s;
-        }
-    }
-
-    .normal-logo {
-        padding: 16px 0;
-
-        .img {
-            width: 120px;
-            height: 120px;
-        }
-    }
-
-    .collapsed-logo {
-        padding: 8px 0;
-
-        .img {
-            width: 56px;
-            height: 56px;
-        }
-    }
-
-    .ant-layout-sider-collapsed {
-        .anticon {
-            font-size: 16px;
-        }
-        .nav-text {
-            display: none;
-        }
+    .content {
+        background-color: #fff;
     }
 }

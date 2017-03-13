@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-export default class WarehouseView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { name: 'Warehouse' };
-    }
+const mapStateToProps = ({ search }) => ({
+    searchStr: search.str
+});
 
+class StockView extends Component {
     render() {
         return (
-            <p>I'm {this.state.name}.</p>
+            <p>{this.props.searchStr}</p>
         );
     }
 }
+
+export default connect(mapStateToProps)(StockView);
