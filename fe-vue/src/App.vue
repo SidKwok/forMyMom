@@ -13,6 +13,8 @@ export default {
 <style>
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html,
@@ -22,6 +24,14 @@ body,
     min-width: 1200px;
     width: 100%;
     height: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+input:focus {
+    outline: none;
 }
 
 #app {
