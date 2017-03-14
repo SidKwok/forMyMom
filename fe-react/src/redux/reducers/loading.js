@@ -4,21 +4,27 @@
  */
 
 import {
-    START_LOADING,
-    END_LOADING,
-    TOGGLE_LOADING
+    START_GLOBAL_LOADING,
+    END_GLOBAL_LOADING,
+    START_LOCAL_LOADING,
+    END_LOCAL_LOADING
 } from '../constants/ActionTypes';
 
-const initialState = false;
+const initialState = {
+    global: false,
+    local: false
+};
 
 export default function status(state = initialState, { type }) {
     switch (type) {
-        case START_LOADING:
-            return true;
-        case END_LOADING:
-            return false;
-        case TOGGLE_LOADING:
-            return !state;
+        case START_GLOBAL_LOADING:
+            return { ...state, global: true };
+        case END_GLOBAL_LOADING:
+            return { ...state, global: false };
+        case START_LOCAL_LOADING:
+            return { ...state, local: true };
+        case END_LOCAL_LOADING:
+            return { ...state, local: false };
         default:
             return state;
     }

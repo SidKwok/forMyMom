@@ -99,4 +99,28 @@ module.exports = router => {
             res.send({ errNo: e.code });
         }
     });
+
+    // 导入数据
+    // router.get('/api/to-clients', async (req, res) => {
+    //     try {
+    //         const Client = new av.Query('Client');
+    //         const results = await Client.equalTo('uid', 'mingyou').limit(200).find();
+    //         const user = req.currentUser;
+    //         const saveObjects = results.map(client => {
+    //             let newClient = new av.Object('Clients');
+    //             newClient
+    //                 .set('user', user)
+    //                 .set('name',client.get('name'))
+    //                 .set('mobilephone', client.get('mobilephone'))
+    //                 .set('address', client.get('address'))
+    //                 .set('note', client.get('telephone'));
+    //             return newClient;
+    //         });
+    //         await av.Object.saveAll(saveObjects);
+    //     } catch (e) {
+    //         console.log(e);
+    //     } finally {
+    //         res.send('done')
+    //     }
+    // });
 };

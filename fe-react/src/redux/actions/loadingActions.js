@@ -1,11 +1,14 @@
 import {
-    START_LOADING,
-    END_LOADING,
-    TOGGLE_LOADING
+    START_GLOBAL_LOADING,
+    END_GLOBAL_LOADING,
+    START_LOCAL_LOADING,
+    END_LOCAL_LOADING
 } from '../constants/ActionTypes';
 
-export const startLoading = () => ({ type: START_LOADING });
+export const startGlobalLoading = () => ({ type: START_GLOBAL_LOADING });
 
-export const endLoading = () => ({ type: END_LOADING });
+export const endGlobalLoading = () => ({ type: END_GLOBAL_LOADING });
 
-export const toggleLoading = () => ({ type: TOGGLE_LOADING });
+export const startLocalLoading = () => ({ type: START_LOCAL_LOADING });
+
+export const endLocalLoading = () => ({ type: END_LOCAL_LOADING });

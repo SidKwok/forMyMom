@@ -8,7 +8,10 @@ export default ({ type, to, name, isCollapsed }) => {
     return (
         <li className='nav-link'>
             <Link to={to} activeClassName='active'>
-                <Icon type={type} />{name}
+                <Icon type={type} style={{
+                    transition: 'all .3s',
+                    fontSize: isCollapsed ? '18px' : null
+                }} />{name}
             </Link>
         </li>
     );

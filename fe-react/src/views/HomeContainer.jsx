@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { routes } from 'router/routes';
 import { Layout, Icon, Row, Col } from 'antd';
 import NavLink from 'components/NavLink';
 import Title from 'components/Title';
 import SearchBlock from 'components/SearchBlock';
+// import OperationBlock from 'components/OperationBlock';
+import GlobalSpin from 'components/GlobalSpin';
 import './HomeContainer.less';
 
 const { Header, Content, Sider } = Layout;
 
-export default class HomeContainer extends Component {
+const mapStateToProps = ({ loading }) => ({ loading: loading.global });
+
+class HomeContainer extends Component {
     state = {
         collapsed: false
     }
@@ -19,6 +24,7 @@ export default class HomeContainer extends Component {
     }
     render() {
         const { collapsed } = this.state;
+        const { loading } = this.props;
         return (
             <Layout className='home-container'>
                 <Sider
@@ -60,7 +66,8 @@ export default class HomeContainer extends Component {
                         />
                     </ul>
                 </Sider>
-                <Layout>
+                <Layout style={{position: 'relative'}}>
+                    <GlobalSpin loading={loading} />
                     <Header className='header'>
                         <Row>
                             <Col span={2}>
@@ -73,10 +80,9 @@ export default class HomeContainer extends Component {
                             <Col span={6}>
                                 <Title />
                             </Col>
-                            <Col span={8} className='search-block'>
+                            <Col span={16} className='search-block'>
                                 <SearchBlock />
                             </Col>
-                            <Col span={8}>操作</Col>
                         </Row>
                     </Header>
                     <Content className='content'>
@@ -87,3 +93,5 @@ export default class HomeContainer extends Component {
         );
     }
 }
+
+export default connect(mapStateToProps)(HomeContainer);

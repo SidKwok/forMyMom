@@ -3,7 +3,8 @@
  * @author SidKwok
  */
 import {
-    SET_CLIENTS
+    SET_CLIENTS,
+    CREATE_CLIENT
 } from '../constants/ActionTypes';
 
 /**
@@ -21,7 +22,10 @@ export default function status(state = initialState, { type, payload }) {
         case SET_CLIENTS:
             // it is ok to cover the original data
             // for it is use for initing and recover
-            return payload.clients;
+            const clients = payload.clients ? payload.clients : {};
+            return clients;
+        case CREATE_CLIENT:
+            return { ...state, payload };
         default:
             return state;
     }

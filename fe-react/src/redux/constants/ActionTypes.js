@@ -12,9 +12,10 @@ export const SET_USER = 'SET_USER';
 export const GET_STOCK = 'GET_STOCK';
 
 // loading
-export const START_LOADING = 'START_LOADING';
-export const END_LOADING = 'END_LOADING';
-export const TOGGLE_LOADING = 'TOGGLE_LOADING';
+export const START_GLOBAL_LOADING = 'START_GLOBAL_LOADING';
+export const END_GLOBAL_LOADING = 'END_GLOBAL_LOADING';
+export const START_LOCAL_LOADING = 'START_LOCAL_LOADING';
+export const END_LOCAL_LOADING = 'END_LOCAL_LOADING';
 
 // search
 export const EDIT_SEARCH = 'EDIT_SEARCH';
@@ -24,3 +25,4 @@ export const BLUR_SEARCH = 'BLUR_SEARCH';
 
 // client
 export const SET_CLIENTS = 'SET_CLIENTS';
+export const CREATE_CLIENT = 'CREATE_CLIENT';
