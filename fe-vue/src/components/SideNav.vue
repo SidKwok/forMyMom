@@ -12,14 +12,21 @@
                 >
                     <i class="el-icon-check"
                         :style="{fontSize: isCollapsed ? '18px' : ''}"
-                    />{{ isCollapsed ? '' : nav.name }}
+                    /><span>{{ isCollapsed ? '' : nav.name }}</span>
                 </router-link>
             </li>
         </ul>
+        <button class="logout"
+            href="javascript: void(0);"
+            @click="signOut"
+            >
+            <i class="el-icon-check" />
+        </button>
     </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
     name: 'side-nav',
     data() {
@@ -58,6 +65,9 @@ export default {
             type: Boolean,
             default: false
         }
+    },
+    methods: {
+        ...mapActions(['signOut'])
     }
 };
 </script>
@@ -92,7 +102,6 @@ export default {
                     width: 100%;
                     height: 100%;
                     display: inline-block;
-                    transition: all .3s;
 
                     &:hover {
                         text-shadow: 0 0 8px #7b96c4;
@@ -102,10 +111,35 @@ export default {
                     color: #55e4d4;
                     text-shadow: 0 0 8px #55e4d4;
                 }
+                span,
+                i {
+                    transition: all .3s;
+                }
                 i {
                     margin: 0 6px 0;
                     font-size: 12px;
                 }
+            }
+        }
+
+        .logout {
+            display: block;
+            position: absolute;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            color: #7b96c4;
+            background-color: #21324f;
+            opacity: .7;
+            transition: all .1s;
+
+            &:hover {
+                opacity: 1;
             }
         }
     }

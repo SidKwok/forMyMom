@@ -1,3 +1,7 @@
+/**
+ * @file   搜索模块
+ * @author SidKwok
+ */
 import * as types from '../mutations';
 
 const state = {

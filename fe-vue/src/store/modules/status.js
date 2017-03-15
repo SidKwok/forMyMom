@@ -73,6 +73,14 @@ const actions = {
         } catch (e) {
             console.log(e);
         }
+    },
+    signOut: async({ commit }) => {
+        try {
+            await axios.post('/auth/logout');
+            commit(types.LOGOUT);
+        } catch (e) {
+            console.log(e);
+        }
     }
 };
 

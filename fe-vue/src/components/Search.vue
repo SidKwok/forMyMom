@@ -54,9 +54,13 @@ export default {
             border-radius: 32px;
             transition: all .3s;
 
+            &:hover,
+            &:focus {
+                border-color: #55e4d4;
+            }
+
             &:focus {
                 width: 240px;
-                border-color: #55e4d4;
             }
         }
     }

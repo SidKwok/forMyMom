@@ -81,6 +81,7 @@ module.exports = router => {
         let Client = new av.Query('Clients');
         try {
             const results = await Client.equalTo('user', user)
+                .limit(300)
                 .equalTo('isDel', false)
                 .find();
             const clients = results.map(client => ({
