@@ -1,34 +1,22 @@
 <template lang="html">
     <div class="client-all-view">
-        <el-table :data="clients">
-            <el-table-column
-                prop="name"
-                label="姓名"
-                width="" />
-            <el-table-column
-                prop="address"
-                label="地址"
-                width="" />
-            <el-table-column
-                prop="mobilephone"
-                label="移动电话"
-                width="" />
-            <el-table-column
-                prop="telephone"
-                label="固定电话"
-                width="" />
-            <el-table-column
-                prop="note"
-                label="备注"
-                width="" />
-        </el-table>
+        <div class="left">
+            <person-list></person-list>
+        </div>
+        <div class="right">
+            yo
+        </div>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import PersonList from 'components/PersonList';
 export default {
-    name: 'CLIENT_ALL',
+    name: 'CLIENT',
+    components: {
+        PersonList
+    },
     methods: {
         ...mapActions(['fetchClients'])
     },
@@ -47,4 +35,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+    .client-all-view {
+        position: relative;
+        height: 100%;
+        padding-left: 400px;
+        .left {
+            position: absolute;
+            left: 0;
+            width: 400px;
+            top: 0;
+            bottom: 0;
+        }
+        .right {
+            position: relative;
+            width: 100%;
+        }
+    }
 </style>

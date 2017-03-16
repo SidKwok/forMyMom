@@ -1,22 +1,29 @@
 <template lang="html">
-    <div class="home-container"
-        :style="{
-            paddingLeft: isCollapsed ? '64px' : ''
-        }"
-    >
-        <side-nav :is-collapsed="isCollapsed" />
-        <div class="right">
-            <header-bar @click-icon="isCollapsed = !isCollapsed" />
-            <div class="content">
+    <v-app class="home-container">
+        <v-toolbar>
+            <v-toolbar-side-icon @click.native.stop="isCollapsed = !isCollapsed" />
+            <v-toolbar-title>仓库</v-toolbar-title>
+            <v-btn icon dark>
+                <v-icon>account_circle</v-icon>
+             </v-btn>
+        </v-toolbar>
+        <main>
+            <v-sidebar
+                class="side-bar"
+                v-model="isCollapsed"
+                fixed
+                drawer>
+                <side-nav />
+            </v-sidebar>
+            <v-content class="router-content">
                 <router-view />
-            </div>
-        </div>
-    </div>
+            </v-content>
+        </main>
+    </v-app>
 </template>
 
 <script>
 import SideNav from 'components/SideNav';
-import HeaderBar from 'components/HeaderBar';
 export default {
     name: 'HOME_CONTAINER',
     data() {
@@ -25,8 +32,7 @@ export default {
         };
     },
     components: {
-        SideNav,
-        HeaderBar
+        SideNav
     }
 };
 </script>
@@ -34,14 +40,17 @@ export default {
 <style lang="less" scoped>
     .home-container {
         height: 100%;
-        position: relative;
-        padding-left: 200px;
-        transition: .3s;
 
-        .right {
-            .content {
-                padding: 12px;
-            }
+        main {
+            position: absolute;
+            width: 100%;
+            top: 64px;
+            bottom: 0;
+        }
+
+        .router-content {
+            padding: 12px 16px;
+            height: 100%;
         }
     }
 </style>

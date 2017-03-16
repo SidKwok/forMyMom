@@ -1,12 +1,12 @@
 <template lang="html">
-    <div class="vender-all-view">
-        vender-all
+    <div class="delivery-all-view">
+        delivery-all
     </div>
 </template>
 
 <script>
 export default {
-    name: 'VENDER'
+    name: 'DELIVERY_ALL'
 };
 </script>
 
