@@ -19,6 +19,7 @@ html,
 body,
 #app {
     height: 100%;
+    min-width: 1680px;
 }
 
 #app {

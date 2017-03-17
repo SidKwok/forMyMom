@@ -1,6 +1,6 @@
 # fe-vue
 
-> A Vue.js project
+> Feel tired about this project, need to have some rest for days. Restart it in maybe April.
 
 ## Build Setup
 

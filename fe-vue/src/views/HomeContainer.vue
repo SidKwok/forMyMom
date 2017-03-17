@@ -7,7 +7,7 @@
                 <v-icon>account_circle</v-icon>
              </v-btn>
         </v-toolbar>
-        <main>
+        <div class="main">
             <v-sidebar
                 class="side-bar"
                 v-model="isCollapsed"
@@ -18,7 +18,7 @@
             <v-content class="router-content">
                 <router-view />
             </v-content>
-        </main>
+        </div class="main">
     </v-app>
 </template>
 
@@ -41,16 +41,19 @@ export default {
     .home-container {
         height: 100%;
 
-        main {
+        .main {
             position: absolute;
             width: 100%;
-            top: 64px;
+            top: 68px;
             bottom: 0;
-        }
 
-        .router-content {
-            padding: 12px 16px;
-            height: 100%;
+            .router-content {
+                // padding: 12px 16px;
+                height: 100%;
+                width: 1440px;
+                border: 1px solid #ddd;
+                margin: 0 auto;
+            }
         }
     }
 </style>
